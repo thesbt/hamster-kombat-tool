@@ -80,7 +80,8 @@ html {
 }
 
 .dashboard-header span {
-  font-weight: bold;
+  font-weight: 300;
+  font-size: 0.9em;
   color: var(--button-bg);
 }
 
