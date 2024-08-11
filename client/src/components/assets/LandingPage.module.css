@@ -1,47 +1,147 @@
-/* styles/LandingPage.css */
+:root {
+  --primary-color: #ff7f50;
+  --secondary-color: #ff4500;
+  --text-color: #ffffff;
+  --background-top: #141414;
+  --background-bottom: #242424;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom, var(--background-top), var(--background-bottom));
+  color: var(--text-color);
+  font-family: 'Arial', sans-serif;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Navbar */
+.navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background: rgba(30, 30, 30, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+}
+
+.header-links {
+  display: flex;
+  gap: 10px;
+}
+
+.link-button {
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  border: none;
+  color: var(--text-color);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.link-button:hover {
+  opacity: 0.9;
+}
+
+/* Landing Page içerik alanı */
 .landing-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #333; /* Koyu gri ton */
-    color: #ecf0f1; /* Açık gri metin */
-    text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  padding: 60px 20px 20px;
+  box-sizing: border-box;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.image-container {
+  width: 100%;
+  max-width: 200px;
+  margin-bottom: 20px;
+}
+
+.main-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+
+}
+
+.text-content {
+  text-align: center;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.description {
+  font-size: 16px;
+  color: var(--text-color);
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .navbar {
+    padding: 15px 20px;
   }
-  
+
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .link-button {
+    font-size: 16px;
+    padding: 10px 20px;
+  }
+
   .content {
-    max-width: 600px;
+    flex-direction: row;
+    align-items: flex-start;
   }
-  
+
+  .image-container {
+    margin-right: 40px;
+    margin-bottom: 0;
+  }
+
+  .text-content {
+    text-align: left;
+    flex-grow: 1;
+  }
+
   .title {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 36px;
   }
-  
+
   .description {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
+    font-size: 18px;
   }
-  
-  .buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-  }
-  
-  .button {
-    background-color: #0056b3; /* Mavi ton */
-    
-    color: #fff;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .button:hover {
-    background-color: #2980b9; /* Daha koyu mavi ton */
-  }
-  
+}

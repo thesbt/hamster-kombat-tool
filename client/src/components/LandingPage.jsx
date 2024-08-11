@@ -1,46 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './assets/LandingPage.module.css';
+import styles from './assets/LandingPage.module.css';
 import hamsterImage from './assets/img/Hamster.webp';
-import logoImage from './assets/img/Logo.webp'; // logonuzun yolu
-
-function Navbar() {
-  const navigate = useNavigate();
-
-  return (
-    <div className="navbar">
-      <img src={logoImage} alt="Logo" className="logo" />
-      <div className="header-links">
-        <button onClick={() => navigate('/login')} className="link-button">Login</button>
-        <button onClick={() => navigate('/register')} className="link-button">Register</button>
-      </div>
-    </div>
-  );
-}
-
-function LandingPage() {
-  document.title = "Hamster Kombat Tool";
-
-  return (
-    <div className="landing-page">
-      <div className="content">
-        <div className="image-container">
-          <img src={hamsterImage} alt="Hamster" className="main-image" />
-        </div>
-        <div className="text-content">
-          <h1 className="title">Hamster Kombat Tool</h1>
-          <p className="description">The ultimate tool for Hamster Kombat enthusiasts. Join now and start your journey!</p>
-        </div>
-      </div>
-    </div>
-  );
-}
+import logoImage from './assets/img/Logo.webp';
 
 function App() {
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    document.title = "Hamster Kombat Tool";
+    
+    // Sayfa yüklendiğinde animasyon efekti
+    const content = document.querySelector(`.${styles.content}`);
+    content.style.opacity = '0';
+    content.style.transform = 'translateY(20px)';
+    
+    setTimeout(() => {
+      content.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      content.style.opacity = '1';
+      content.style.transform = 'translateY(0)';
+    }, 100);
+  }, []);
+
   return (
     <>
-      <Navbar />
-      <LandingPage />
+      <div className={styles.navbar}>
+        <img src={logoImage} alt="Logo" className={styles.logo}/>
+        <div className={styles['header-links']}>
+          <button onClick={() => navigate('/login')} className={styles['link-button']}>Login</button>
+          <button onClick={() => navigate('/register')} className={styles['link-button']}>Register</button>
+        </div>
+      </div>
+      <div className={styles['landing-page']}>
+        <div className={styles.content}>
+          <div className={styles['image-container']}>
+            <img src={hamsterImage} alt="Hamster" className={styles['main-image']} />
+          </div>
+          <div className={styles['text-content']}>
+            <h1 className={styles.title}>Hamster Kombat Tool</h1>
+
+            <p className={styles.description}>Enter the world of strategic hamster battles. Train, compete, and become the ultimate Hamster Kombat master!</p>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
