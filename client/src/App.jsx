@@ -27,7 +27,7 @@ function AppContent() {
   }, [isDarkMode]);
 
   if (loading) {
-    return <div className='spinner'></div>;
+    return <div className='spinner'>Test..</div>;
   }
 
   return (
