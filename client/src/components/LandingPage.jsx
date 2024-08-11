@@ -10,6 +10,7 @@ function LandingPage() {
   return (
     <div className="landing-page">
       <div className="content">
+        <img src="../client/src/components/assets/img/Hamster.webp" alt="31" />
         <h1 className="title">Hamster Kombat Tool</h1>
         <p className="description">The ultimate tool for Hamster Kombat enthusiasts. Join now and start your journey!</p>
         <div className="buttons">
