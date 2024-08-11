@@ -259,20 +259,10 @@ app.get('/api/user-cards', authenticateToken, async (req, res) => {
 });
 
 app.post('/api/user-cards', authenticateToken, async (req, res) => {
-  const userId = req.user.id;
-  const { card_id, level, current_cost, current_hourly_earnings } = req.body;
-
-  if (!Number.isInteger(level) || level <= 0 || level >= 1000 ) {
-    return res.status(400).json({ error: 'Invalid level' });
-  }
-  if (current_cost <= 0 || current_cost >= 9999999999999) {
-    return res.status(400).json({ error: 'Invalid current_cost' });
-  }
-  if (current_hourly_earnings <= 0 || current_hourly_earnings >= 9999999999) {
-    return res.status(400).json({ error: 'Invalid current_hourly_earnings' });
-  }
-
   try {
+    const userId = req.user.id;
+    const { card_id, level, current_cost, current_hourly_earnings } = req.body;
+
     const result = await pool.query(
       'INSERT INTO User_Cards (user_id, card_id, level, current_cost, current_hourly_earnings) ' +
       'VALUES ($1, $2, $3, $4, $5) ' +
@@ -290,31 +280,15 @@ app.post('/api/user-cards', authenticateToken, async (req, res) => {
 
 app.put('/api/user-cards/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { level, current_cost, current_hourly_earnings } = req.body;
-
-  // Doğrulama
-  if (typeof level !== 'number' || level <= 0 || level >= 1000) {
-    return res.status(400).json({ error: 'Invalid Level' });
-  }
-  if (current_cost <= 0 || current_cost >= 9999999999999) {
-    return res.status(400).json({ error: 'Invalid current_cost' });
-  }
-  if (current_hourly_earnings <= 0 || current_hourly_earnings >= 9999999999) {
-    return res.status(400).json({ error: 'Invalid current_hourly_earnings' });
-  }
-
+  const { current_cost, current_hourly_earnings } = req.body;
   try {
-    const cardCheck = await pool.query('SELECT * FROM user_cards WHERE card_id = $1 AND user_id = $2', [id, req.user.id]);
-
-    if (cardCheck.rows.length === 0) {
-      return res.status(404).json({ error: 'Card not found or you do not have permission to update it' });
-    }
-
     const result = await pool.query(
       'UPDATE user_cards SET current_cost = $1, current_hourly_earnings = $2 WHERE card_id = $3 AND user_id = $4 RETURNING *',
       [current_cost, current_hourly_earnings, id, req.user.id]
     );
-
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Card not found or you do not have permission to update it' });
+    }
     res.json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: 'An error occurred while updating the card' });
