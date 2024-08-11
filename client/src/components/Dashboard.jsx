@@ -460,7 +460,7 @@ function Dashboard({ setIsAuthenticated }) {
 
 
   if (loading) {
-    return <div className={`spinner ${isDarkMode ? "dark" : ""}`}></div>;
+    return <div className={`spinner ${isDarkMode ? "dark" : ""}`}>31...</div>;
   }
 
   return (
