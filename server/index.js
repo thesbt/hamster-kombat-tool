@@ -259,10 +259,21 @@ app.get('/api/user-cards', authenticateToken, async (req, res) => {
 });
 
 app.post('/api/user-cards', authenticateToken, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { card_id, level, current_cost, current_hourly_earnings } = req.body;
+  const userId = req.user.id;
+  const { card_id, level, current_cost, current_hourly_earnings } = req.body;
 
+  // Doğrulama
+  if (!Number.isInteger(level) || level <= 0 || level >= 1000 ) {
+    return res.status(400).json({ error: 'Invalid level' });
+  }
+  if (current_cost <= 0 || level >= 9999999999999) {
+    return res.status(400).json({ error: 'Invalid current_cost' });
+  }
+  if (current_hourly_earnings <= 0 || level >= 9999999999) {
+    return res.status(400).json({ error: 'Invalid current_hourly_earnings' });
+  }
+
+  try {
     const result = await pool.query(
       'INSERT INTO User_Cards (user_id, card_id, level, current_cost, current_hourly_earnings) ' +
       'VALUES ($1, $2, $3, $4, $5) ' +
