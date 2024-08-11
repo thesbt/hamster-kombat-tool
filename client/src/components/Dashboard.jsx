@@ -384,7 +384,7 @@ function Dashboard({ setIsAuthenticated }) {
       setError("");
       setSearchTerm("");
     } catch (error) {
-      setError("Failed to delete card. It may be a default card.");
+      setError("Default cards cannot be deleted.");
       setSuccess("");
       setSearchTerm("");
     } finally {
@@ -678,7 +678,7 @@ const clearSearch = () => {
             )}
             <h2>{userCards.find((card) => card.id === cardToEdit)?.name}</h2>
             <p className="card-category">
-              Category:{" "}
+              {" "}
               {userCards.find((card) => card.id === cardToEdit)?.card_category}
             </p>
           </div>
