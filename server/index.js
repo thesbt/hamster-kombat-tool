@@ -70,20 +70,6 @@ app.get('/api/user-info', authenticateToken, async (req, res) => {
   }
 });
 
-app.get('/api/user-info', authenticateToken, async (req, res) => {
-  try {
-    const result = await pool.query('SELECT username, email FROM Users WHERE id = $1', [req.user.id]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    res.json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: 'An error occurred while fetching user info' });
-  }
-});
-
-
-
 const addDefaultCardsToUser = async (userId) => {
   const client = await pool.connect();
   try {
@@ -295,14 +281,19 @@ app.post('/api/user-cards', authenticateToken, async (req, res) => {
 app.put('/api/user-cards/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { current_cost, current_hourly_earnings } = req.body;
+
   try {
+    const cardCheck = await pool.query('SELECT * FROM user_cards WHERE card_id = $1 AND user_id = $2', [id, req.user.id]);
+
+    if (cardCheck.rows.length === 0) {
+      return res.status(404).json({ error: 'Card not found or you do not have permission to update it' });
+    }
+
     const result = await pool.query(
       'UPDATE user_cards SET current_cost = $1, current_hourly_earnings = $2 WHERE card_id = $3 AND user_id = $4 RETURNING *',
       [current_cost, current_hourly_earnings, id, req.user.id]
     );
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Card not found or you do not have permission to update it' });
-    }
+
     res.json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: 'An error occurred while updating the card' });
