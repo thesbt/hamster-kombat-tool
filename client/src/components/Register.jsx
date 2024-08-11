@@ -30,7 +30,7 @@ function Register() {
     }
   
     try {
-      await axios.post('https://hamster-kombat-tool-server.vercel.app/api/register', { username, password, email });
+      await axios.post('https://hamster-kombat-tool-server.vercel.app:3000/api/register', { username, password, email });
       setSuccess('Registration successful! Redirecting to login page...');
       setTimeout(() => {
         navigate('/login');
