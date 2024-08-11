@@ -730,7 +730,7 @@ function Dashboard({ setIsAuthenticated }) {
           <div className="modal-buttons">
             <button className="confirm-button" onClick={handleDeleteCard}>
               <FaCheck />
-              Yes, Delete
+              Delete
             </button>
             <button className="cancel-button" onClick={closeDeleteModal}>
               <FaTimes />
@@ -754,7 +754,7 @@ function Dashboard({ setIsAuthenticated }) {
           <div className="modal-buttons">
             <button className="confirm-button" onClick={handleLogout}>
               <FaCheck />
-              Yes, Logout
+              Logout
             </button>
             <button className="cancel-button" onClick={closeLogoutModal}>
               <FaTimes />
