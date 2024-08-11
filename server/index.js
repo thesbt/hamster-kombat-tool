@@ -294,12 +294,12 @@ app.put('/api/user-cards/:id', authenticateToken, async (req, res) => {
 
   // Doğrulama
   if (typeof level !== 'number' || level <= 0 || level >= 1000) {
-    return res.status(400).json({ error: 'Invalid current_hourly_earnings' });
+    return res.status(400).json({ error: 'Invalid Level' });
   }
-  if (typeof current_cost !== 'number' || current_cost <= 0 || current_cost >= 9999999999999) {
+  if (current_cost <= 0 || current_cost >= 9999999999999) {
     return res.status(400).json({ error: 'Invalid current_cost' });
   }
-  if (typeof current_hourly_earnings !== 'number' || current_hourly_earnings <= 0 || current_hourly_earnings >= 9999999999) {
+  if (current_hourly_earnings <= 0 || current_hourly_earnings >= 9999999999) {
     return res.status(400).json({ error: 'Invalid current_hourly_earnings' });
   }
 
