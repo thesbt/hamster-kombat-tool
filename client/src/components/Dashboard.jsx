@@ -849,7 +849,7 @@ const clearSearch = () => {
                 value={newCard.base_cost}
                 onChange={handleAdminInputChange}
                 placeholder="Base Cost"
-                required
+                
               />
             </div>
             <div className="input-group">
