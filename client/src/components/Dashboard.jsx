@@ -548,7 +548,7 @@ function Dashboard({ setIsAuthenticated }) {
         </p>
       )}
       <h3 className="your-cards">Your Cards</h3>
-<div className="search-container">
+      <div className="search-container">
   <input
     type="text"
     placeholder="Search cards..."
@@ -557,7 +557,11 @@ function Dashboard({ setIsAuthenticated }) {
     className="search-input"
   />
   <FaSearch className="search-icon" />
+  {searchTerm && (
+    <FaTimes className="clear-search-icon" onClick={clearSearch} />
+  )}
 </div>
+
 {cardsLoading || !allImagesLoaded ? (
     <div className="loading-cards">
     <div className="spinner"></div>
