@@ -250,6 +250,10 @@ html {
   font-size: 0.9rem;
 }
 
+.card-body span {
+  font-weight: 700;
+}
+
 .card-footer {
   display: flex;
   justify-content: center;
@@ -262,6 +266,11 @@ html {
   object-fit: cover;
   border-radius: 40%;
 
+}
+
+.card-second-header p{
+  font-weight: 300;
+  font-size: 0.8em;
 }
 
 /* Modal ve Spinner */
@@ -449,6 +458,9 @@ html {
   --error-bg: #f8d7da;
   --error-text: #721c24;
   --modal-bg: #ffffff;
+  --ratio-green: #28a745;
+  --ratio-orange: #ffc107;
+  --ratio-red: #dc3545;
   --modal-overlay: rgba(0, 0, 0, 0.5);
 }
 
@@ -468,6 +480,9 @@ html {
   --error-bg: #4a1e1e;
   --error-text: #d19e8f;
   --modal-bg: #2a2a2a;
+  --ratio-green: #4caf50;
+  --ratio-orange: #ff9800;
+  --ratio-red: #f44336;
   --modal-overlay: rgba(0, 0, 0, 0.7);
 }
 
@@ -527,7 +542,7 @@ html {
 .search-input {
   width: 100%;
   padding: 10px;
-  padding-right: 60px; /* Sağ tarafta iki ikon için yer açın */
+  padding-right: 40px; /* Tek ikon için yeterli boşluk */
   border: 1px solid var(--input-border);
   border-radius: 5px;
   font-size: 16px;
@@ -535,15 +550,7 @@ html {
   color: var(--input-text);
 }
 
-.search-icon {
-  position: absolute;
-  right: 35px; /* Çarpı ikonuna yer açmak için sağa kaydırın */
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-color);
-  font-size: 18px;
-}
-
+.search-icon,
 .clear-search-icon {
   position: absolute;
   right: 10px;
@@ -555,7 +562,8 @@ html {
   transition: color 0.3s ease;
 }
 
-.clear-search-icon:hover {
+.clear-search-icon:hover,
+.search-icon:hover {
   color: var(--button-bg);
 }
 

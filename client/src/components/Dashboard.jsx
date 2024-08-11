@@ -303,9 +303,11 @@ function Dashboard({ setIsAuthenticated }) {
       setCurrentHourlyEarnings("");
       setSuccess("Card successfully added/updated!");
       setError("");
+      setSearchTerm("");
     } catch (error) {
       setError("Failed to add or update card. Please try again.");
       setSuccess("");
+      setSearchTerm("");
     }
   };
 
@@ -339,9 +341,11 @@ function Dashboard({ setIsAuthenticated }) {
       setIsEditModalOpen(false);
       setSuccess("Card successfully updated!");
       setError("");
+      setSearchTerm("");
     } catch (error) {
       setError("Failed to update card. Please try again.");
       setSuccess("");
+      setSearchTerm("");
     }
   };
 
@@ -378,9 +382,11 @@ function Dashboard({ setIsAuthenticated }) {
       );
       setSuccess("Card successfully deleted!");
       setError("");
+      setSearchTerm("");
     } catch (error) {
       setError("Failed to delete card. It may be a default card.");
       setSuccess("");
+      setSearchTerm("");
     } finally {
       closeDeleteModal();
     }
@@ -424,20 +430,41 @@ function Dashboard({ setIsAuthenticated }) {
     return pph !== 0 ? (cost / pph).toFixed(2) : "N/A";
   };
 
-  const sortedUserCards = userCards
-    .map((card) => {
+  const calculateRatioColor = (ratio, ratios) => {
+    const sortedRatios = [...ratios].sort((a, b) => a - b);
+    const lowerThreshold = sortedRatios[Math.floor(sortedRatios.length * 0.2)];
+    const upperThreshold = sortedRatios[Math.floor(sortedRatios.length * 0.7)];
+    
+    if (ratio <= lowerThreshold) {
+      return 'var(--ratio-green)';
+    } else if (ratio >= upperThreshold) {
+      return 'var(--ratio-red)';
+    } else {
+      return 'var(--ratio-orange)';
+    }
+  };
+
+  const sortedUserCards = useMemo(() => {
+    const cards = userCards.map((card) => {
       const cost = parseFloat(card.current_cost);
       const pph = parseFloat(card.current_hourly_earnings);
       return {
         ...card,
         ratio: calculateRatio(cost, pph),
       };
-    })
-    .sort((a, b) => {
+    });
+  
+    const ratios = cards.map(card => parseFloat(card.ratio)).filter(ratio => !isNaN(ratio));
+  
+    return cards.map(card => ({
+      ...card,
+      ratioColor: calculateRatioColor(parseFloat(card.ratio), ratios),
+    })).sort((a, b) => {
       const ratioA = parseFloat(a.ratio) || 0;
       const ratioB = parseFloat(b.ratio) || 0;
       return ratioA - ratioB;
     });
+  }, [userCards]);
 
   const filteredCards = sortedUserCards.filter(
     (card) =>
@@ -456,6 +483,12 @@ function Dashboard({ setIsAuthenticated }) {
   const allImagesLoaded = useMemo(() => {
     return filteredCards.every(card => imagesLoaded[card.id]);
   }, [filteredCards, imagesLoaded]);
+
+
+const clearSearch = () => {
+  setSearchTerm("");
+};
+
 
 
 
@@ -556,9 +589,10 @@ function Dashboard({ setIsAuthenticated }) {
     onChange={(e) => setSearchTerm(e.target.value)}
     className="search-input"
   />
-  <FaSearch className="search-icon" />
-  {searchTerm && (
+  {searchTerm ? (
     <FaTimes className="clear-search-icon" onClick={clearSearch} />
+  ) : (
+    <FaSearch className="search-icon" />
   )}
 </div>
 
@@ -591,13 +625,17 @@ function Dashboard({ setIsAuthenticated }) {
             )}
             
           </div>
+          <div className="card-second-header">
+
           <h3>{userCard.name}</h3>
-          <div className="card-body">
-            <p>Category: {userCard.card_category}</p>
+          <p>{userCard.card_category}</p>
+          </div>
+          
+          <div className="card-body">            
             <p>Level: {userCard.level}</p>
             <p>Cost: {formatNumber(cost)}</p>
             <p>PPH: {formatNumber(pph)}</p>
-            <p>Ratio: {userCard.ratio}</p>
+            <p>Ratio: <span style={{ color: userCard.ratioColor }}>{userCard.ratio}</span></p>
           </div>
           <div className="card-footer">
             <button
