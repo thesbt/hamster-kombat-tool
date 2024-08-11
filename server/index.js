@@ -290,9 +290,12 @@ app.post('/api/user-cards', authenticateToken, async (req, res) => {
 
 app.put('/api/user-cards/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { current_cost, current_hourly_earnings } = req.body;
+  const { level, current_cost, current_hourly_earnings } = req.body;
 
   // Doğrulama
+  if (typeof level !== 'number' || level <= 0 || level >= 1000) {
+    return res.status(400).json({ error: 'Invalid current_hourly_earnings' });
+  }
   if (typeof current_cost !== 'number' || current_cost <= 0 || current_cost >= 9999999999999) {
     return res.status(400).json({ error: 'Invalid current_cost' });
   }
