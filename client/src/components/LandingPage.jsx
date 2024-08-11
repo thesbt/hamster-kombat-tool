@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './assets/LandingPage.css';
 import hamsterImage from './assets/img/Hamster.webp';
-import logoImage from './assets/img/logo.png'; // logonuzun yolu
+import logoImage from './assets/img/Logo.png'; // logonuzun yolu
 
 function LandingPage() {
   const navigate = useNavigate();
