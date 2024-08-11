@@ -280,11 +280,11 @@ app.post('/api/user-cards', authenticateToken, async (req, res) => {
 
 app.put('/api/user-cards/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { current_cost, current_hourly_earnings } = req.body;
+  const { current_cost, current_hourly_earnings, level } = req.body;
   try {
     const result = await pool.query(
-      'UPDATE user_cards SET current_cost = $1, current_hourly_earnings = $2 WHERE card_id = $3 AND user_id = $4 RETURNING *',
-      [current_cost, current_hourly_earnings, id, req.user.id]
+      'UPDATE user_cards SET current_cost = $1, current_hourly_earnings = $2, level = $3 WHERE card_id = $4 AND user_id = $5 RETURNING *',
+      [current_cost, current_hourly_earnings, level, id, req.user.id]
     );
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Card not found or you do not have permission to update it' });
