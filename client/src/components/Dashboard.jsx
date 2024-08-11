@@ -301,11 +301,11 @@ function Dashboard({ setIsAuthenticated }) {
       setLevel("");
       setCurrentCost("");
       setCurrentHourlyEarnings("");
-      setSuccess("Card successfully added/updated!");
+      setSuccess("Card successfully added!");
       setError("");
       setSearchTerm("");
     } catch (error) {
-      setError("Failed to add or update card. Please try again.");
+      setError("Failed to add card. Please check values.");
       setSuccess("");
       setSearchTerm("");
     }

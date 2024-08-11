@@ -262,7 +262,6 @@ app.post('/api/user-cards', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const { card_id, level, current_cost, current_hourly_earnings } = req.body;
 
-  // Doğrulama
   if (!Number.isInteger(level) || level <= 0 || level >= 1000 ) {
     return res.status(400).json({ error: 'Invalid level' });
   }
@@ -292,6 +291,16 @@ app.post('/api/user-cards', authenticateToken, async (req, res) => {
 app.put('/api/user-cards/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { current_cost, current_hourly_earnings } = req.body;
+
+  if (!Number.isInteger(level) || level <= 0 || level >= 1000 ) {
+    return res.status(400).json({ error: 'Invalid level' });
+  }
+  if (current_cost <= 0 || level >= 9999999999999) {
+    return res.status(400).json({ error: 'Invalid current_cost' });
+  }
+  if (current_hourly_earnings <= 0 || level >= 9999999999) {
+    return res.status(400).json({ error: 'Invalid current_hourly_earnings' });
+  }
 
   try {
     const cardCheck = await pool.query('SELECT * FROM user_cards WHERE card_id = $1 AND user_id = $2', [id, req.user.id]);
