@@ -263,6 +263,16 @@ app.post('/api/user-cards', authenticateToken, async (req, res) => {
     const userId = req.user.id;
     const { card_id, level, current_cost, current_hourly_earnings } = req.body;
 
+    if (typeof level !== 'number' || level <= 0 || level >= 1000) {
+      return res.status(400).json({ error: 'Invalid Level' });
+    }
+    if (typeof current_cost !== 'number' || current_cost <= 0 || current_cost >= 9999999999999) {
+      return res.status(400).json({ error: 'Invalid Cost' });
+    }
+    if (typeof current_hourly_earnings !== 'number' || current_hourly_earnings <= 0 || current_hourly_earnings >= 9999999999) {
+      return res.status(400).json({ error: 'Invalid PPH' });
+    }
+
     const result = await pool.query(
       'INSERT INTO User_Cards (user_id, card_id, level, current_cost, current_hourly_earnings) ' +
       'VALUES ($1, $2, $3, $4, $5) ' +
@@ -281,6 +291,17 @@ app.post('/api/user-cards', authenticateToken, async (req, res) => {
 app.put('/api/user-cards/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { current_cost, current_hourly_earnings, level } = req.body;
+
+  if (typeof level !== 'number' || level <= 0 || level >= 1000) {
+    return res.status(400).json({ error: 'Invalid Level' });
+  }
+  if (typeof current_cost !== 'number' || current_cost <= 0 || current_cost >= 9999999999999) {
+    return res.status(400).json({ error: 'Invalid Cost' });
+  }
+  if (typeof current_hourly_earnings !== 'number' || current_hourly_earnings <= 0 || current_hourly_earnings >= 9999999999) {
+    return res.status(400).json({ error: 'Invalid PPH' });
+  }
+  
   try {
     const result = await pool.query(
       'UPDATE user_cards SET current_cost = $1, current_hourly_earnings = $2, level = $3 WHERE card_id = $4 AND user_id = $5 RETURNING *',
