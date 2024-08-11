@@ -20,7 +20,7 @@ function Login({ setIsAuthenticated }) {
     setError('');
 
     try {
-      const response = await axios.post('https://hamster-kombat-tool-server.vercel.app:3000/api/login', { username, password });
+      const response = await axios.post('https://hamster-kombat-tool-server.vercel.app/api/login', { username, password });
       localStorage.setItem('token', response.data.token);
       setIsAuthenticated(true);
       navigate('/dashboard');
