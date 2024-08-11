@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './assets/LandingPage.css';
-
+import hamsterImage from './assets/img/Hamster.webp';
+import logoImage from './assets/img/logo.png'; // logonuzun yolu
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -10,14 +10,26 @@ function LandingPage() {
 
   return (
     <div className="landing-page">
+      {/* Logo */}
+      <img src={logoImage} alt="Logo" className="logo" />
+
       <div className="content">
-        <img src="./hamster-kombat-tool/client/src/components/assets/img/Hamster.webp" alt="31" />
-        <h1 className="title">Hamster Kombat Tool</h1>
-        <p className="description">The ultimate tool for Hamster Kombat enthusiasts. Join now and start your journey!</p>
-        <div className="buttons">
-          <button onClick={() => navigate('/login')} className="button">Login</button>
-          <button onClick={() => navigate('/register')} className="button">Register</button>
+        {/* Resim */}
+        <div className="image-container">
+          <img src={hamsterImage} alt="Hamster" />
         </div>
+
+        {/* Başlık ve Açıklama */}
+        <div className="text-content">
+          <h1 className="title">Hamster Kombat Tool</h1>
+          <p className="description">The ultimate tool for Hamster Kombat enthusiasts. Join now and start your journey!</p>
+        </div>
+      </div>
+
+      {/* Login ve Register Butonları */}
+      <div className="header-links">
+        <button onClick={() => navigate('/login')} className="link-button">Login</button>
+        <button onClick={() => navigate('/register')} className="link-button">Register</button>
       </div>
     </div>
   );
