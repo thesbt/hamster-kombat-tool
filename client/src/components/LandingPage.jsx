@@ -18,7 +18,7 @@ function LandingPage() {
     content.style.transform = 'translateY(20px)';
     
     setTimeout(() => {
-      content.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      content.style.transition = 'opacity 1s ease, transform 2s ease';
       content.style.opacity = '1';
       content.style.transform = 'translateY(0)';
     }, 100);
