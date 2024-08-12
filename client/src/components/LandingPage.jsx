@@ -41,8 +41,9 @@ function LandingPage() {
           <img src={hamsterImage} alt="Hamster" className={styles['main-image']} />
         </div>
         <div className={styles['text-content']}>
+        <h1 className={styles.welcome}>Welcome to,</h1>
           <h1 className={styles.title}>Hamster Kombat Tool</h1>
-          <p className={styles.description}>Enter the world of strategic hamster battles. Train, compete, and become the ultimate Hamster Kombat master!</p>
+          <p className={styles.description}>Take your Hamster Kombat experience to the next level. Our tool helps you easily track your in-game cards and identify the best cards to upgrade for maximum impact. Stay ahead in the game with smarter choices and faster upgrades!</p>
         </div>
       </div>
     </div>

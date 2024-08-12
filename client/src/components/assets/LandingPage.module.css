@@ -4,7 +4,8 @@
   --secondary-color: #ff4500;  
   --background-top: #141414;
   --background-bottom: #242424;
-  --description-color: #242424; /* Yeni eklenen satır */
+  --description-color: #242424;
+
 }
 
 /* Dark mode için yeni değişkenler */
@@ -14,7 +15,8 @@
   --text-color: #f0f0f0;
   --background-top: #0a0a0a;
   --background-bottom: #1a1a1a;
-  --description-color: #c0c0c0; /* Yeni eklenen satır */
+  --description-color: #c0c0c0;
+
 }
 
 .landing-page body {
@@ -26,7 +28,6 @@
   overflow: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
   animation: fadeIn 0.5s ease;
-  
 }
 
 .theme-toggle {
@@ -38,20 +39,20 @@
   margin-right: 10px;
   transition: color 0.3s ease;
   color: var(--white);
-  display: flex; /* Yeni eklenen satır */
-  align-items: center; /* Yeni eklenen satır */
+  display: flex;
+  align-items: center;
 }
 
 .theme-toggle:hover {
   color: var(--primary-color);
 }
 
-
 .navbar {
-  position: absolute;
+  position: fixed; /* navbar'ı sayfanın üst kısmında sabitler */
   top: 0;
   left: 0;
   width: 100%;
+  height: 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -77,7 +78,7 @@
 .header-links {
   display: flex;
   gap: 10px;
-  align-items: center; /* Yeni eklenen satır */
+  align-items: center;
 }
 
 .link-button {
@@ -107,16 +108,21 @@
 }
 
 .content {
+  margin-top:20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   max-width: 1000px;
+  max-height: calc(100vh - 80px); /* Navbar yüksekliğini çıkararak ayarlayın */
   background-color: var(--card-bg-color);
   border-radius: 30px;
-  padding: 40px 0px;
+  padding: 40px 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 0.9em;
+  overflow-y: auto; /* İçerik sığmazsa kaydırma çubuğu ekler */
 }
+
 
 .image-container {
   width: 100%;
@@ -127,13 +133,13 @@
 .main-image {
   width: 100%;
   height: auto;
-  border-radius: 10px;
   transform: scaleX(-1);
-
 }
 
 .text-content {
   text-align: center;
+  padding: 0 20px;
+  
 }
 
 .title {
@@ -142,23 +148,21 @@
   color: var(--primary-color);
   margin-bottom: 10px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.1rem;
 }
 
 .description {
   font-size: 16px;
-  color: var(--description-color); /* Güncellenen satır */
-  line-height: 1.4;
-  margin-bottom: 20px;
+  color: var(--description-color);
+  line-height: 1.6;
+  margin: 20px 0px;
 }
 
 @media (min-width: 768px) {
-
-
-
-
   .content {
     flex-direction: row;
     align-items: flex-start;
+    padding: 60px 40px;
   }
 
   .image-container {
@@ -177,5 +181,6 @@
 
   .description {
     font-size: 18px;
+    text-align: left;
   }
 }
