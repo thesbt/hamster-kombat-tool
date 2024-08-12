@@ -12,9 +12,10 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   min-width: 300px;
-  background-color: var(--bg-color);
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(240,240,240,1) 100%);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
+  animation: fadeIn 0.5s ease;
   user-select: none;
 }
 
@@ -443,7 +444,7 @@ html {
 
 /* Karanlık Mod */
 :root {
-  --bg-color: #ffffff;
+  --bg-color: linear-gradient(180deg, rgba(17,17,17,1) 0%, rgba(31,31,31,1) 100%);
   --text-color: #000000;
   --card-bg-color: #f8f9fa;
   --card-border-color: #ddd;
@@ -489,6 +490,11 @@ html {
 .App.dark {
   background-color: var(--bg-color);
   color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  animation: fadeIn 0.5s ease;
+}
+
+.App {
   transition: background-color 0.3s ease, color 0.3s ease;
   animation: fadeIn 0.5s ease;
 }
