@@ -128,6 +128,7 @@
   width: 100%;
   max-width: 200px;
   margin-bottom: 20px;
+  flex-shrink: 0;
 }
 
 .main-image {
