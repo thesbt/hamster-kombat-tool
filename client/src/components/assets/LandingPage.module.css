@@ -1,7 +1,9 @@
 :root {
+  --white: #fff;
   --primary-color: #ff7f50;
-  --secondary-color: #ff4500;
-
+  --secondary-color: #ff4500;  
+  --background-top: #141414;
+  --background-bottom: #242424;
   --description-color: #242424; /* Yeni eklenen satır */
 }
 
@@ -18,24 +20,26 @@
 .landing-page body {
   margin: 0;
   padding: 0;
-  color: var(--text-color);
-  background: linear-gradient(0deg, hsla(0, 0%, 6%, 1) 0%, hsla(0, 5%, 79%, 1) 0%, hsla(0, 0%, 96%, 1) 58%, hsla(0, 0%, 100%, 1) 100%);
-  
+  color: var(--white);
+  background: linear-gradient(0deg, hsla(0, 0%, 6%, 1) 0%, hsla(0, 5%, 79%, 1) 0%, hsla(0, 0%, 96%, 1) 58%, hsla(0, 0%, 100%, 1) 100%);  
   min-height: 100vh;
   overflow: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
   animation: fadeIn 0.5s ease;
+  
 }
 
 .theme-toggle {
   background: none;
   border: none;
-  color: var(--text-color);
   font-size: 20px;
   cursor: pointer;
   padding: 5px;
   margin-right: 10px;
   transition: color 0.3s ease;
+  color: var(--white);
+  display: flex; /* Yeni eklenen satır */
+  align-items: center; /* Yeni eklenen satır */
 }
 
 .theme-toggle:hover {
@@ -52,9 +56,17 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 15px;
-  background: rgba(30, 30, 30, 0.8);
+  background: rgba(8, 8, 8, 0.9);
   backdrop-filter: blur(10px);
   z-index: 1000;
+}
+
+.dark .navbar {
+  background: rgba(20, 20, 20, 0.9);
+}
+
+.dark .content {
+  background: rgba(20, 20, 20, 0.9);
 }
 
 .logo {
@@ -65,12 +77,13 @@
 .header-links {
   display: flex;
   gap: 10px;
+  align-items: center; /* Yeni eklenen satır */
 }
 
 .link-button {
   background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
   border: none;
-  color: var(--text-color);
+  color: var(--white);
   padding: 8px 16px;
   border-radius: 20px;
   cursor: pointer;
@@ -99,8 +112,10 @@
   align-items: center;
   width: 100%;
   max-width: 1000px;
-  
-
+  background-color: var(--card-bg-color);
+  border-radius: 30px;
+  padding: 40px 0px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .image-container {
@@ -126,7 +141,7 @@
   font-weight: 700;
   color: var(--primary-color);
   margin-bottom: 10px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .description {
@@ -137,19 +152,9 @@
 }
 
 @media (min-width: 768px) {
-  .navbar {
-    padding: 15px 20px;
-  }
 
-  .logo {
-    width: 50px;
-    height: 50px;
-  }
 
-  .link-button {
-    font-size: 16px;
-    padding: 10px 20px;
-  }
+
 
   .content {
     flex-direction: row;
@@ -167,7 +172,7 @@
   }
 
   .title {
-    font-size: 36px;
+    font-size: 46px;
   }
 
   .description {
