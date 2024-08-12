@@ -1,22 +1,48 @@
 :root {
   --primary-color: #ff7f50;
   --secondary-color: #ff4500;
-  --text-color: #ffffff;
-  --background-top: #141414;
-  --background-bottom: #242424;
+
+  --description-color: #242424; /* Yeni eklenen satır */
 }
 
-body {
+/* Dark mode için yeni değişkenler */
+.dark {
+  --primary-color: #ff9f70;
+  --secondary-color: #ff6520;
+  --text-color: #f0f0f0;
+  --background-top: #0a0a0a;
+  --background-bottom: #1a1a1a;
+  --description-color: #c0c0c0; /* Yeni eklenen satır */
+}
+
+.landing-page body {
   margin: 0;
   padding: 0;
-  background: linear-gradient(to bottom, var(--background-top), var(--background-bottom));
   color: var(--text-color);
-  font-family: 'Arial', sans-serif;
+  background: linear-gradient(0deg, hsla(0, 0%, 6%, 1) 0%, hsla(0, 5%, 79%, 1) 0%, hsla(0, 0%, 96%, 1) 58%, hsla(0, 0%, 100%, 1) 100%);
+  
   min-height: 100vh;
   overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  animation: fadeIn 0.5s ease;
 }
 
-/* Navbar */
+.theme-toggle {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  margin-right: 10px;
+  transition: color 0.3s ease;
+}
+
+.theme-toggle:hover {
+  color: var(--primary-color);
+}
+
+
 .navbar {
   position: absolute;
   top: 0;
@@ -73,6 +99,8 @@ body {
   align-items: center;
   width: 100%;
   max-width: 1000px;
+  
+
 }
 
 .image-container {
@@ -85,6 +113,7 @@ body {
   width: 100%;
   height: auto;
   border-radius: 10px;
+  transform: scaleX(-1);
 
 }
 
@@ -102,7 +131,7 @@ body {
 
 .description {
   font-size: 16px;
-  color: var(--text-color);
+  color: var(--description-color); /* Güncellenen satır */
   line-height: 1.4;
   margin-bottom: 20px;
 }
