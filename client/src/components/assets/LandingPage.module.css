@@ -16,20 +16,8 @@
   --background-top: #0a0a0a;
   --background-bottom: #1a1a1a;
   --description-color: #c0c0c0;
-
 }
 
-.landing-page body {
-  margin: 0;
-  padding: 0;
-  color: var(--white);
-  /* background: linear-gradient(0deg, hsla(0, 0%, 6%, 1) 0%, hsla(0, 5%, 79%, 1) 0%, hsla(0, 0%, 96%, 1) 58%, hsla(0, 0%, 100%, 1) 100%);   */
-  
-  min-height: 100vh;
-  overflow: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  animation: fadeIn 0.5s ease;
-}
 
 .theme-toggle {
   background: none;

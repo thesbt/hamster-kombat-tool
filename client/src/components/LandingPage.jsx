@@ -33,7 +33,7 @@ function LandingPage() {
             {isDarkMode ? <FaSun /> : <FaMoon />}
           </button>
           <button onClick={() => navigate('/login')} className={styles['link-button']}>Login</button>
-          <button onClick={() => navigate('/register')} className={styles['link-button']}>Register</button>
+          
         </div>
       </div>
       <div className={styles.content}>

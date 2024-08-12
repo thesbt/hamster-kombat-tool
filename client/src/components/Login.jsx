@@ -1,22 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useTheme } from './ThemeContext';
 import styles from './assets/Login.module.css';
 import logoImage from './assets/img/Logo.webp';
-import { FaSun, FaMoon } from 'react-icons/fa';
+import { FaSun, FaMoon, FaUserPlus, FaEye, FaEyeSlash, FaSignInAlt } from 'react-icons/fa';
 
 function Login({ setIsAuthenticated }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorVisible, setErrorVisible] = useState(false);
   const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
 
   useEffect(() => {
     document.title = "Hamster Kombat Tool | Login";
+    
+    const content = document.querySelector(`.${styles.content}`);
+    content.style.opacity = '0';
+    content.style.transform = 'translateY(20px)';
+    
+    setTimeout(() => {
+      content.style.transition = 'opacity 1s ease, transform 2s ease';
+      content.style.opacity = '1';
+      content.style.transform = 'translateY(0)';
+    }, 100);
   }, []);
+
+  useEffect(() => {
+    if (error) {
+      setErrorVisible(true);
+      const timer = setTimeout(() => {
+        setErrorVisible(false);
+        setError('');
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -30,22 +53,33 @@ function Login({ setIsAuthenticated }) {
       navigate('/dashboard');
     } catch (error) {
       setError('Invalid username or password');
+      setErrorVisible(true);
+      setPassword('');
       console.error('Login error', error);
     } finally {
       setLoading(false);
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className={`${styles['login-page']} ${isDarkMode ? styles.dark : ''}`}>
       <div className={styles.navbar}>
-        <img src={logoImage} alt="Logo" className={styles.logo}/>
+        <Link to="/" className={styles['logo-container']}>
+          <img src={logoImage} alt="Logo" className={styles.logo}/>
+          <span className={styles['logo-text']}>Hamster Kombat Tool</span>
+        </Link>
         <div className={styles['header-links']}>
           <button onClick={toggleTheme} className={styles['theme-toggle']}>
             {isDarkMode ? <FaSun /> : <FaMoon />}
+          </button>          
+          <button onClick={() => navigate('/register')} className={styles['link-button']}>
+            <FaUserPlus className={styles['register-icon']} />
+            Register
           </button>
-          <button onClick={() => navigate('/')} className={styles['link-button']}>Home</button>
-          <button onClick={() => navigate('/register')} className={styles['link-button']}>Register</button>
         </div>
       </div>
       <div className={styles.content}>
@@ -59,17 +93,32 @@ function Login({ setIsAuthenticated }) {
               onChange={(e) => setUsername(e.target.value)}
               required
             />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <button type="submit" disabled={loading}>Login</button>
-            {error && <p className={styles['error-message']}>{error}</p>}
+            <div className={styles['password-input-container']}>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button 
+                type="button" 
+                onClick={togglePasswordVisibility} 
+                className={styles['toggle-password']}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+            <button type="submit" disabled={loading} className={styles['login-button']}>
+              {!loading && <FaSignInAlt className={styles['login-icon']} />}
+              {loading ? <div className={styles.spinner}></div> : 'Login'}
+            </button>
+            {error && (
+  <p className={`${styles['error-message']} ${errorVisible ? styles.visible : ''}`}>
+    {error}
+  </p>
+)}
           </form>
-          {loading && <div className={styles.spinner}></div>}
         </div>
       </div>
     </div>
