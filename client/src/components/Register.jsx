@@ -52,8 +52,24 @@ function Register() {
     setPasswordStrength(0);
   };
 
+  const validateInputs = () => {
+    if (username.length < 3 || username.length > 12) {
+      setError('Username must be between 3 and 12 characters');
+      return false;
+    }
+    if (email.length > 100) { // Örnek bir email uzunluk sınırı
+      setError('Email is too long');
+      return false;
+    }
+    return true;
+  };
+
+
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (!validateInputs()) {
+      return;
+    }
     setError('');
     setSuccess('');
     setLoading(true); // İşlem başladığında loading'i true yapıyoruz

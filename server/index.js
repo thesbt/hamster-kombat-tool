@@ -137,6 +137,16 @@ app.post('/api/register', async (req, res) => {
   const { username, password, email } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  if (!username || typeof username !== 'string' || username.length < 3 || username.length > 12) {
+    return res.status(400).json({ error: 'Username must be between 3 and 12 characters' });
+  }
+  if (!password || typeof password !== 'string' || password.length < 6 || password.length > 18) {
+    return res.status(400).json({ error: 'Password must be between 6 and 18 characters' });
+  }
+  if (!email || typeof email !== 'string' || email.length > 255) {
+    return res.status(400).json({ error: 'Email is too long' });
+  }
+
   try {
     const checkQuery = `
       SELECT
