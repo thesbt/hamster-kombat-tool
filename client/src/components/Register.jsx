@@ -14,6 +14,14 @@ import {
 import { useTheme } from "./ThemeContext";
 import logoImage from "./assets/img/Logo.webp";
 
+const validateEmail = (email) => {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
+
+const usernameRegex = /^[a-z0-9ğüşıöç]+$/;
+
 function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -61,10 +69,9 @@ function Register() {
 
   const validateInputs = () => {
     // Kullanıcı adı için regex: Sadece harf ve sayılara izin verir
-    const usernameRegex = /^[a-zA-Z0-9]+$/;
 
     if (!usernameRegex.test(username)) {
-      setError("Username can only contain letters and numbers");
+      setError("Username can only contain lowercase letters and numbers");
       return false;
     }
     if (username.length < 3 || username.length > 12) {
@@ -95,6 +102,12 @@ function Register() {
       setError("Password is too weak. Please choose a stronger password.");
       setLoading(false); // Hata durumunda loading'i false yapıyoruz
       setPassword("");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setError("Invalid Email");
+      setLoading(false);
       return;
     }
 
@@ -146,16 +159,11 @@ function Register() {
     }
   };
 
-  const handleUsernameKeyPress = (e) => {
-    const regex = /^[a-zA-Z0-9]+$/;
-    if (!regex.test(e.key)) {
-      e.preventDefault();
-    }
-  };
-
   const handleUsernameChange = (e) => {
-    const newValue = e.target.value.replace(/[^a-zA-Z0-9]/g, "");
-    setUsername(newValue);
+    const newValue = e.target.value;
+    if (usernameRegex.test(newValue) || newValue === "") {
+      setUsername(newValue);
+    }
   };
 
   return (
@@ -189,7 +197,6 @@ function Register() {
               maxLength="12"
               value={username}
               onChange={handleUsernameChange}
-              onKeyDown={handleUsernameKeyPress}
               required
             />
 
@@ -197,7 +204,17 @@ function Register() {
               type="email"
               placeholder="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) {
+                  setError("");
+                }
+              }}
+              onBlur={() => {
+                if (!validateEmail(email)) {
+                  setError("Invalid email format");
+                }
+              }}
               required
             />
             <div className={styles["password-input-container"]}>

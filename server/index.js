@@ -148,10 +148,11 @@ const validateEmail = (email) => {
   return re.test(String(email).toLowerCase());
 };
 
+const usernameRegex = /^[a-zA-Z0-9ğüşıöç]+$/;
+
 app.post("/api/register", async (req, res) => {
   const { username, password, email } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
-  const usernameRegex = /^[a-zA-Z0-9]+$/;
 
   if (
     !username ||
