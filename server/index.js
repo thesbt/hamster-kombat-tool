@@ -142,6 +142,12 @@ const addDefaultCardsToUser = async (userId) => {
   }
 };
 
+const validateEmail = (email) => {
+  const re =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
+
 app.post("/api/register", async (req, res) => {
   const { username, password, email } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -172,6 +178,10 @@ app.post("/api/register", async (req, res) => {
     return res.status(400).json({ error: "Email is too long" });
   }
 
+  if (!validateEmail(email)) {
+    return res.status(400).json({ error: "Invalid email format" });
+  }
+
   try {
     const checkQuery = `
       SELECT
@@ -187,7 +197,7 @@ app.post("/api/register", async (req, res) => {
     }
 
     const result = await pool.query(
-      "INSERT INTO Users (username, password_hash, email) VALUES ($1, $2, $3) RETURNING id, username, email",
+      "INSERT INTO Users (username, password_hash, email) VALUES ($1, $2, LOWER($3)) RETURNING id, username, email",
       [username, hashedPassword, email]
     );
 
