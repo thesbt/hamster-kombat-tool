@@ -194,7 +194,7 @@ app.post('/api/login', async (req, res) => {
     const token = jwt.sign(
       { id: user.id, username: user.username, is_admin: user.is_admin },
       SECRET_KEY,
-      { expiresIn: '1h' }
+      
     );
     res.json({ token, is_admin: user.is_admin });
   } catch (err) {
