@@ -89,6 +89,8 @@ function Login({ setIsAuthenticated }) {
             <input
               type="text"
               placeholder="Username"
+              minLength="3"
+              maxLength="12"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -96,6 +98,8 @@ function Login({ setIsAuthenticated }) {
             <div className={styles['password-input-container']}>
               <input
                 type={showPassword ? "text" : "password"}
+                minLength="6"
+                maxLength="18"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -113,6 +117,8 @@ function Login({ setIsAuthenticated }) {
               {!loading && <FaSignInAlt className={styles['login-icon']} />}
               {loading ? <div className={styles.spinner}></div> : 'Login'}
             </button>
+            <Link to="/register" className={styles['register-text']}>Don't have an account?
+            </Link>
             {error && (
   <p className={`${styles['error-message']} ${errorVisible ? styles.visible : ''}`}>
     {error}

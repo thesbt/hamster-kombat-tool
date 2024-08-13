@@ -90,12 +90,12 @@
 .toggle-password {
   position: absolute;
   right: 10px;
-  top: 20%;
+  top: 19%;
   transform: translateY(-50%);
   background: none !important; 
   border: none;
   cursor: pointer;
-  color: var(--input-color);
+  color: #333333 !important;
   padding: 5px;
   display: flex;
   align-items: center;
@@ -104,6 +104,14 @@
 
 .toggle-password:focus {
   outline: none;
+}
+
+.toggle-password svg:hover {
+  opacity: 0.8;
+}
+
+.dark svg {
+  color:white;
 }
 
 .login-button {
@@ -150,7 +158,13 @@
   align-items: center;
 }
 
+.theme-toggle:hover {
+  color: var(--primary-color);
+}
+
 .link-button {
+  display: flex;
+  align-items: center;
   background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
   border: none;
   color: var(--white);
@@ -177,6 +191,8 @@
   background: rgba(20, 20, 20, 0.9);
 }
 
+
+
 .login-container {
   background: var(--card-bg-color);
   padding: 40px;
@@ -188,7 +204,7 @@
 
 .login-container h2 {
   margin-bottom: 20px;
-  color: var(--primary-color);
+  color: var(--text-color);
   text-align: center;
 }
 
@@ -227,17 +243,29 @@
 }
 
 .error-message {
-  color: #ff4444;
+  color: #ce3c3c;
   margin-top: 20px;
   text-align: center;
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  font-size: 0.9em;
+  font-weight: 400;
 }
 
 .error-message.visible {
   animation: fadeInOut 5s ease-in-out;
 }
+
+.register-text {
+  margin-top: 10px;
+  text-align: left;
+  font-size: 0.8em;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
 
 
 .spinner {
