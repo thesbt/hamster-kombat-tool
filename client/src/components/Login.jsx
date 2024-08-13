@@ -13,6 +13,8 @@ import {
   FaSignInAlt,
 } from "react-icons/fa";
 
+const usernameRegex = /^[a-zA-Z0-9ğüşıöçĞÜŞİÖÇ]+$/;
+
 function Login({ setIsAuthenticated }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -48,15 +50,30 @@ function Login({ setIsAuthenticated }) {
     }
   }, [error]);
 
+  const handleUsernameChange = (e) => {
+    const newValue = e.target.value.toLowerCase();
+    if (usernameRegex.test(newValue) || newValue === "") {
+      setUsername(newValue);
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
+    if (!usernameRegex.test(username)) {
+      setError(
+        "Username can only contain letters, numbers, and Turkish characters"
+      );
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await axios.post(
         "https://hamster-kombat-tool-server.vercel.app/api/login",
-        { username, password }
+        { username: username.toLowerCase(), password }
       );
       localStorage.setItem("token", response.data.token);
       setIsAuthenticated(true);
@@ -104,10 +121,8 @@ function Login({ setIsAuthenticated }) {
               placeholder="Username"
               minLength="3"
               maxLength="12"
-              pattern="^[a-zA-Z0-9]+$"
-              title="Username can only contain letters and numbers"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={handleUsernameChange}
               required
             />
             <div className={styles["password-input-container"]}>
