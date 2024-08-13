@@ -58,33 +58,6 @@ const deleteCardAndUserCards = async (cardId) => {
   }
 };
 
-const addNewDefaultCardToAllUsers = async (cardId) => {
-  const client = await pool.connect();
-  try {
-    const users = await client.query('SELECT id FROM Users');
-    const cardDetails = await client.query('SELECT base_cost, base_hourly_earnings FROM cards WHERE id = $1', [cardId]);
-    
-    if (cardDetails.rows.length === 0) {
-      throw new Error('Card not found');
-    }
-
-    const { base_cost, base_hourly_earnings } = cardDetails.rows[0];
-
-    for (const user of users.rows) {
-      await client.query(
-        'INSERT INTO user_cards (user_id, card_id, level, current_cost, current_hourly_earnings) ' +
-        'VALUES ($1, $2, 1, $3, $4) ' +
-        'ON CONFLICT (user_id, card_id) DO NOTHING',
-        [user.id, cardId, base_cost, base_hourly_earnings]
-      );
-    }
-  } catch (error) {
-    throw error;
-  } finally {
-    client.release();
-  }
-};
-
 app.get('/api/user-info', authenticateToken, async (req, res) => {
   try {
     const result = await pool.query('SELECT username, email, is_admin FROM Users WHERE id = $1', [req.user.id]);
@@ -214,12 +187,15 @@ app.post('/api/admin/cards', authenticateToken, isAdmin, async (req, res) => {
     );
 
     if (is_default) {
-      await addNewDefaultCardToAllUsers(result.rows[0].id);
+      const users = await pool.query('SELECT id FROM Users');
+      for (const user of users.rows) {
+        await addDefaultCardsToUser(user.id);
+      }
     }
 
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error(err); // Log hata detayları
     res.status(500).json({ error: 'An error occurred while adding the card' });
   }
 });
