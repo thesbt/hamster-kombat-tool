@@ -143,7 +143,7 @@ app.post('/api/register', async (req, res) => {
   if (!password || typeof password !== 'string' || password.length < 6 || password.length > 18) {
     return res.status(400).json({ error: 'Password must be between 6 and 18 characters' });
   }
-  if (!email || typeof email !== 'string' || email.length > 255) {
+  if (!email || typeof email !== 'string' || email.length > 100) {
     return res.status(400).json({ error: 'Email is too long' });
   }
 
