@@ -91,6 +91,8 @@ function Login({ setIsAuthenticated }) {
               placeholder="Username"
               minLength="3"
               maxLength="12"
+              pattern="^[a-zA-Z0-9]+$"
+              title="Username can only contain letters and numbers"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required

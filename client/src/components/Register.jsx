@@ -53,11 +53,22 @@ function Register() {
   };
 
   const validateInputs = () => {
+    // Kullanıcı adı için regex: Sadece harf ve sayılara izin verir
+    const usernameRegex = /^[a-zA-Z0-9]+$/;
+  
+    if (!usernameRegex.test(username)) {
+      setError('Username can only contain letters and numbers');
+      return false;
+    }
     if (username.length < 3 || username.length > 12) {
       setError('Username must be between 3 and 12 characters');
       return false;
     }
-    if (email.length > 100) { // Örnek bir email uzunluk sınırı
+    if (password.length < 6 || password.length > 18) {
+      setError('Password must be between 6 and 18 characters');
+      return false;
+    }
+    if (email.length > 255) {
       setError('Email is too long');
       return false;
     }
@@ -146,6 +157,8 @@ function Register() {
               placeholder="Username"
               minLength="3"
               maxLength="12"
+              pattern="^[a-zA-Z0-9]+$"
+              title="Username can only contain letters and numbers"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
