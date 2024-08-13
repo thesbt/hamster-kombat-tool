@@ -169,6 +169,14 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
 
+  if (!username || typeof username !== 'string' || username.length < 3 || username.length > 12) {
+    return res.status(400).json({ error: 'Invalid username' });
+  }
+
+  if (!password || typeof password !== 'string' || password.length < 6 || password.length > 18) {
+    return res.status(400).json({ error: 'Invalid password' });
+  }
+
   try {
     const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
 
