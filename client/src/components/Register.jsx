@@ -20,7 +20,7 @@ const validateEmail = (email) => {
   return re.test(String(email).toLowerCase());
 };
 
-const usernameRegex = /^[a-z0-9ğüşıöç]+$/;
+const usernameRegex = /^[a-zA-Z0-9ğüşıöçĞÜŞİÖÇ]+$/;
 
 function Register() {
   const [username, setUsername] = useState("");
@@ -160,7 +160,7 @@ function Register() {
   };
 
   const handleUsernameChange = (e) => {
-    const newValue = e.target.value;
+    const newValue = e.target.value.toLowerCase(); // Büyük harfleri küçük harfe çevir
     if (usernameRegex.test(newValue) || newValue === "") {
       setUsername(newValue);
     }
@@ -210,7 +210,7 @@ function Register() {
                   setError("");
                 }
               }}
-              onBlur={() => {
+              onSubmit={() => {
                 if (!validateEmail(email)) {
                   setError("Invalid email format");
                 }
