@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import { useTheme } from "./ThemeContext";
 import "./assets/Dashboard.css";
+import hamsterImage from "./assets/img/Lord.webp";
 import {
   FaSun,
   FaMoon,
@@ -47,7 +48,7 @@ function Dashboard({ setIsAuthenticated }) {
   const [editingCard, setEditingCard] = useState(null);
   const [isAdminDeleteModalOpen, setIsAdminDeleteModalOpen] = useState(false);
   const [cardToAdminDelete, setCardToAdminDelete] = useState(null);
-  const [sortBy, setSortBy] = useState('ratio');
+  const [sortBy, setSortBy] = useState("ratio");
   const navigate = useNavigate();
 
   const [isAdmin, setIsAdmin] = useState(false);
@@ -66,9 +67,12 @@ function Dashboard({ setIsAuthenticated }) {
   const fetchUserInfo = useCallback(async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await axios.get("https://hamster-kombat-tool-server.vercel.app/api/user-info", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "https://hamster-kombat-tool-server.vercel.app/api/user-info",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setUsername(response.data.username);
       setIsAdmin(response.data.is_admin);
       if (response.data.is_admin) {
@@ -83,6 +87,7 @@ function Dashboard({ setIsAuthenticated }) {
     document.title = "Hamster Kombat Tool | Dashboard";
     const fetchData = async () => {
       try {
+        // await new Promise(resolve => setTimeout(resolve, 30000)); // loading için gecikme
         await Promise.all([fetchUserInfo(), fetchCards(), fetchUserCards()]);
       } catch (error) {
         setError("Failed to fetch data. Please try again.");
@@ -104,8 +109,6 @@ function Dashboard({ setIsAuthenticated }) {
       return () => clearTimeout(timer);
     }
   }, [success, error]);
-
-
 
   const fetchAllCards = async () => {
     const token = localStorage.getItem("token");
@@ -171,9 +174,13 @@ function Dashboard({ setIsAuthenticated }) {
     e.preventDefault();
     const token = localStorage.getItem("token");
     try {
-      await axios.post("https://hamster-kombat-tool-server.vercel.app/api/admin/cards", newCard, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.post(
+        "https://hamster-kombat-tool-server.vercel.app/api/admin/cards",
+        newCard,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       fetchAllCards();
       setIsAddCardModalOpen(false);
       setNewCard({
@@ -228,7 +235,9 @@ function Dashboard({ setIsAuthenticated }) {
 
   const fetchCards = async () => {
     try {
-      const response = await axios.get("https://hamster-kombat-tool-server.vercel.app/api/cards");
+      const response = await axios.get(
+        "https://hamster-kombat-tool-server.vercel.app/api/cards"
+      );
       const filteredCards = response.data
         .filter((card) => !card.is_default)
         .sort((a, b) => a.name.localeCompare(b.name));
@@ -243,13 +252,16 @@ function Dashboard({ setIsAuthenticated }) {
     const token = localStorage.getItem("token");
     setCardsLoading(true);
     try {
-      const response = await axios.get("https://hamster-kombat-tool-server.vercel.app/api/user-cards", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "https://hamster-kombat-tool-server.vercel.app/api/user-cards",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setUserCards(response.data);
-      
+
       // Resimleri önceden yükle
-      response.data.forEach(card => {
+      response.data.forEach((card) => {
         if (card.image_url) {
           const img = new Image();
           img.src = card.image_url;
@@ -435,13 +447,13 @@ function Dashboard({ setIsAuthenticated }) {
     const sortedRatios = [...ratios].sort((a, b) => a - b);
     const lowerThreshold = sortedRatios[Math.floor(sortedRatios.length * 0.2)];
     const upperThreshold = sortedRatios[Math.floor(sortedRatios.length * 0.7)];
-    
+
     if (ratio <= lowerThreshold) {
-      return 'var(--ratio-green)';
+      return "var(--ratio-green)";
     } else if (ratio >= upperThreshold) {
-      return 'var(--ratio-red)';
+      return "var(--ratio-red)";
     } else {
-      return 'var(--ratio-orange)';
+      return "var(--ratio-orange)";
     }
   };
 
@@ -454,29 +466,36 @@ function Dashboard({ setIsAuthenticated }) {
         ratio: calculateRatio(cost, pph),
       };
     });
-  
-    const ratios = cards.map(card => parseFloat(card.ratio)).filter(ratio => !isNaN(ratio));
-  
-    const sortedCards = cards.map(card => ({
-      ...card,
-      ratioColor: calculateRatioColor(parseFloat(card.ratio), ratios),
-    })).sort((a, b) => {
-      switch (sortBy) {
-        case 'ratio':
-          return (parseFloat(a.ratio) || 0) - (parseFloat(b.ratio) || 0);
-        case 'level':
-          return a.level - b.level;
-        case 'cost':
-          return parseFloat(a.current_cost) - parseFloat(b.current_cost);
-        case 'pph':
-          return parseFloat(a.current_hourly_earnings) - parseFloat(b.current_hourly_earnings);
-        case 'name':
-          return a.name.localeCompare(b.name);
-        default:
-          return 0;
-      }
-    });
-  
+
+    const ratios = cards
+      .map((card) => parseFloat(card.ratio))
+      .filter((ratio) => !isNaN(ratio));
+
+    const sortedCards = cards
+      .map((card) => ({
+        ...card,
+        ratioColor: calculateRatioColor(parseFloat(card.ratio), ratios),
+      }))
+      .sort((a, b) => {
+        switch (sortBy) {
+          case "ratio":
+            return (parseFloat(a.ratio) || 0) - (parseFloat(b.ratio) || 0);
+          case "level":
+            return a.level - b.level;
+          case "cost":
+            return parseFloat(a.current_cost) - parseFloat(b.current_cost);
+          case "pph":
+            return (
+              parseFloat(a.current_hourly_earnings) -
+              parseFloat(b.current_hourly_earnings)
+            );
+          case "name":
+            return a.name.localeCompare(b.name);
+          default:
+            return 0;
+        }
+      });
+
     return sortedCards;
   }, [userCards, sortBy]);
 
@@ -491,23 +510,25 @@ function Dashboard({ setIsAuthenticated }) {
   );
 
   const handleImageLoad = useCallback((cardId) => {
-    setImagesLoaded(prev => ({...prev, [cardId]: true}));
+    setImagesLoaded((prev) => ({ ...prev, [cardId]: true }));
   }, []);
 
   const allImagesLoaded = useMemo(() => {
-    return filteredCards.every(card => imagesLoaded[card.id]);
+    return filteredCards.every((card) => imagesLoaded[card.id]);
   }, [filteredCards, imagesLoaded]);
 
-
-const clearSearch = () => {
-  setSearchTerm("");
-};
-
-
-
+  const clearSearch = () => {
+    setSearchTerm("");
+  };
 
   if (loading) {
-    return <div className={`spinner ${isDarkMode ? "dark" : ""}`}>31...</div>;
+    return (
+      <div className={`loading-screen ${isDarkMode ? "dark" : ""}`}>
+        <img src={hamsterImage} alt="Loading" className="loading-image" />
+        <div className="loader"></div>
+        <h3 className="loader-text">Loading...</h3>
+      </div>
+    );
   }
 
   return (
@@ -596,97 +617,105 @@ const clearSearch = () => {
       )}
       <h3 className="your-cards">Your Cards</h3>
       <div className="search-and-sort-container">
-  <div className="search-container">
-    <input
-      type="text"
-      placeholder="Search cards..."
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-      className="search-input"
-    />
-    {searchTerm ? (
-      <FaTimes className="clear-search-icon" onClick={clearSearch} />
-    ) : (
-      <FaSearch className="search-icon" />
-    )}
-  </div>
-  <div className="sort-container">
-    <select
-      value={sortBy}
-      onChange={(e) => setSortBy(e.target.value)}
-      className="sort-select"
-    >
-      <option value="ratio">Sort by Ratio</option>
-      <option value="level">Sort by Level</option>
-      <option value="cost">Sort by Cost</option>
-      <option value="pph">Sort by PPH</option>
-      <option value="name">Sort by Name</option>
-    </select>
-  </div>
-</div>
-
-{cardsLoading || !allImagesLoaded ? (
-    <div className="loading-cards">
-    <div className="spinner"></div>
-    <div className="loading-text">Loading cards...</div>
-  </div>
-) : (
-  <div className="cards-container">
-    {filteredCards.map((userCard) => {
-      const cost = parseFloat(userCard.current_cost);
-      const pph = parseFloat(userCard.current_hourly_earnings);
-
-      return (
-        <div
-          className={`card ${isDarkMode ? "dark" : ""}`}
-          key={userCard.id}
-        >
-          <div className="card-header">
-            {userCard.has_timer && <FaClock className="timer-icon" title="This card has upgrade cooldown." />}
-            {userCard.image_url && (
-              <img
-                src={userCard.image_url}
-                alt={userCard.name}
-                className="card-image"
-                onLoad={() => handleImageLoad(userCard.id)}
-                onError={() => handleImageLoad(userCard.id)}
-              />
-            )}
-            
-          </div>
-          <div className="card-second-header">
-
-          <h3>{userCard.name}</h3>
-          <p>{userCard.card_category}</p>
-          </div>
-          
-          <div className="card-body">            
-            <p>Level: {userCard.level}</p>
-            <p>Cost: {formatNumber(cost)}</p>
-            <p>PPH: {formatNumber(pph)}</p>
-            <p>Ratio: <span style={{ color: userCard.ratioColor }}>{userCard.ratio}</span></p>
-          </div>
-          <div className="card-footer">
-            <button
-              className="edit-button"
-              onClick={() => openEditModal(userCard)}
-            >
-              <FaEdit />
-              Edit
-            </button>
-            <button
-              className="delete-button"
-              onClick={() => openDeleteModal(userCard.id)}
-            >
-              <FaTrash />
-              Delete
-            </button>
-          </div>
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search cards..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+          {searchTerm ? (
+            <FaTimes className="clear-search-icon" onClick={clearSearch} />
+          ) : (
+            <FaSearch className="search-icon" />
+          )}
         </div>
-      );
-    })}
-  </div>
-)}
+        <div className="sort-container">
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="sort-select"
+          >
+            <option value="ratio">Sort by Ratio</option>
+            <option value="level">Sort by Level</option>
+            <option value="cost">Sort by Cost</option>
+            <option value="pph">Sort by PPH</option>
+            <option value="name">Sort by Name</option>
+          </select>
+        </div>
+      </div>
+
+      {cardsLoading || !allImagesLoaded ? (
+        <div className="loading-cards">
+          <div className="spinner"></div>
+          <div className="loading-text">Loading cards...</div>
+        </div>
+      ) : (
+        <div className="cards-container">
+          {filteredCards.map((userCard) => {
+            const cost = parseFloat(userCard.current_cost);
+            const pph = parseFloat(userCard.current_hourly_earnings);
+
+            return (
+              <div
+                className={`card ${isDarkMode ? "dark" : ""}`}
+                key={userCard.id}
+              >
+                <div className="card-header">
+                  {userCard.has_timer && (
+                    <FaClock
+                      className="timer-icon"
+                      title="This card has upgrade cooldown."
+                    />
+                  )}
+                  {userCard.image_url && (
+                    <img
+                      src={userCard.image_url}
+                      alt={userCard.name}
+                      className="card-image"
+                      onLoad={() => handleImageLoad(userCard.id)}
+                      onError={() => handleImageLoad(userCard.id)}
+                    />
+                  )}
+                </div>
+                <div className="card-second-header">
+                  <h3>{userCard.name}</h3>
+                  <p>{userCard.card_category}</p>
+                </div>
+
+                <div className="card-body">
+                  <p>Level: {userCard.level}</p>
+                  <p>Cost: {formatNumber(cost)}</p>
+                  <p>PPH: {formatNumber(pph)}</p>
+                  <p>
+                    Ratio:{" "}
+                    <span style={{ color: userCard.ratioColor }}>
+                      {userCard.ratio}
+                    </span>
+                  </p>
+                </div>
+                <div className="card-footer">
+                  <button
+                    className="edit-button"
+                    onClick={() => openEditModal(userCard)}
+                  >
+                    <FaEdit />
+                    Edit
+                  </button>
+                  <button
+                    className="delete-button"
+                    onClick={() => openDeleteModal(userCard.id)}
+                  >
+                    <FaTrash />
+                    Delete
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
       <Modal
         isOpen={isEditModalOpen}
         onRequestClose={closeEditModal}
@@ -878,7 +907,6 @@ const clearSearch = () => {
                 value={newCard.base_cost}
                 onChange={handleAdminInputChange}
                 placeholder="Base Cost"
-                
               />
             </div>
             <div className="input-group">
@@ -1092,62 +1120,62 @@ const clearSearch = () => {
       </Modal>
 
       {isAdmin && (
-  <div className="admin-section">
-    <h3 className="your-cards">Admin Panel</h3>
-    <div className="admin-button-area">
-      <button
-        className="add-card-button"
-        type="submit"
-        onClick={() => setIsAddCardModalOpen(true)}
-      >
-        <FaPlus />
-        Add New Card
-      </button>
-    </div>
+        <div className="admin-section">
+          <h3 className="your-cards">Admin Panel</h3>
+          <div className="admin-button-area">
+            <button
+              className="add-card-button"
+              type="submit"
+              onClick={() => setIsAddCardModalOpen(true)}
+            >
+              <FaPlus />
+              Add New Card
+            </button>
+          </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Category</th>
-          <th>Base Cost</th>
-          <th>Base H.E</th>
-          <th>Has Timer</th>
-          <th>Is Default</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {allCards.map((card) => (
-          <tr key={card.id}>
-            <td>{card.name}</td>
-            <td>{card.card_category}</td>
-            <td>{card.base_cost}</td>
-            <td>{card.base_hourly_earnings}</td>
-            <td>{card.has_timer ? "Yes" : "No"}</td>
-            <td>{card.is_default ? "Yes" : "No"}</td>
-            <td>
-              <button
-                className="edit-button"
-                onClick={() => openEditCardModal(card)}
-              >
-                <FaEdit />
-                <span>Edit</span>
-              </button>
-              <button
-                className="delete-button"
-                onClick={() => handleAdminDeleteCard(card)}
-              >
-                <FaTrash />
-                <span>Delete</span>
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-)}
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Base Cost</th>
+                <th>Base H.E</th>
+                <th>Has Timer</th>
+                <th>Is Default</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allCards.map((card) => (
+                <tr key={card.id}>
+                  <td>{card.name}</td>
+                  <td>{card.card_category}</td>
+                  <td>{card.base_cost}</td>
+                  <td>{card.base_hourly_earnings}</td>
+                  <td>{card.has_timer ? "Yes" : "No"}</td>
+                  <td>{card.is_default ? "Yes" : "No"}</td>
+                  <td>
+                    <button
+                      className="edit-button"
+                      onClick={() => openEditCardModal(card)}
+                    >
+                      <FaEdit />
+                      <span>Edit</span>
+                    </button>
+                    <button
+                      className="delete-button"
+                      onClick={() => handleAdminDeleteCard(card)}
+                    >
+                      <FaTrash />
+                      <span>Delete</span>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
