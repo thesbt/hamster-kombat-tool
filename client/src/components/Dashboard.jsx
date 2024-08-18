@@ -47,6 +47,7 @@ function Dashboard({ setIsAuthenticated }) {
   const [editingCard, setEditingCard] = useState(null);
   const [isAdminDeleteModalOpen, setIsAdminDeleteModalOpen] = useState(false);
   const [cardToAdminDelete, setCardToAdminDelete] = useState(null);
+  const [sortBy, setSortBy] = useState('ratio');
   const navigate = useNavigate();
 
   const [isAdmin, setIsAdmin] = useState(false);
@@ -456,15 +457,28 @@ function Dashboard({ setIsAuthenticated }) {
   
     const ratios = cards.map(card => parseFloat(card.ratio)).filter(ratio => !isNaN(ratio));
   
-    return cards.map(card => ({
+    const sortedCards = cards.map(card => ({
       ...card,
       ratioColor: calculateRatioColor(parseFloat(card.ratio), ratios),
     })).sort((a, b) => {
-      const ratioA = parseFloat(a.ratio) || 0;
-      const ratioB = parseFloat(b.ratio) || 0;
-      return ratioA - ratioB;
+      switch (sortBy) {
+        case 'ratio':
+          return (parseFloat(a.ratio) || 0) - (parseFloat(b.ratio) || 0);
+        case 'level':
+          return a.level - b.level;
+        case 'cost':
+          return parseFloat(a.current_cost) - parseFloat(b.current_cost);
+        case 'pph':
+          return parseFloat(a.current_hourly_earnings) - parseFloat(b.current_hourly_earnings);
+        case 'name':
+          return a.name.localeCompare(b.name);
+        default:
+          return 0;
+      }
     });
-  }, [userCards]);
+  
+    return sortedCards;
+  }, [userCards, sortBy]);
 
   const filteredCards = sortedUserCards.filter(
     (card) =>
@@ -581,19 +595,34 @@ const clearSearch = () => {
         </p>
       )}
       <h3 className="your-cards">Your Cards</h3>
-      <div className="search-container">
-  <input
-    type="text"
-    placeholder="Search cards..."
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-    className="search-input"
-  />
-  {searchTerm ? (
-    <FaTimes className="clear-search-icon" onClick={clearSearch} />
-  ) : (
-    <FaSearch className="search-icon" />
-  )}
+      <div className="search-and-sort-container">
+  <div className="search-container">
+    <input
+      type="text"
+      placeholder="Search cards..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="search-input"
+    />
+    {searchTerm ? (
+      <FaTimes className="clear-search-icon" onClick={clearSearch} />
+    ) : (
+      <FaSearch className="search-icon" />
+    )}
+  </div>
+  <div className="sort-container">
+    <select
+      value={sortBy}
+      onChange={(e) => setSortBy(e.target.value)}
+      className="sort-select"
+    >
+      <option value="ratio">Sort by Ratio</option>
+      <option value="level">Sort by Level</option>
+      <option value="cost">Sort by Cost</option>
+      <option value="pph">Sort by PPH</option>
+      <option value="name">Sort by Name</option>
+    </select>
+  </div>
 </div>
 
 {cardsLoading || !allImagesLoaded ? (

@@ -11,7 +11,7 @@
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  
+
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
   animation: fadeIn 0.5s ease;
@@ -229,7 +229,6 @@ html {
   font-size: 1.2rem;
   font-weight: 600;
   text-align: center;
-  
 }
 
 .timer-icon {
@@ -265,10 +264,9 @@ html {
   height: 80px;
   object-fit: cover;
   border-radius: 40%;
-
 }
 
-.card-second-header p{
+.card-second-header p {
   font-weight: 300;
   font-size: 0.8em;
 }
@@ -443,7 +441,11 @@ html {
 
 /* Karanlık Mod */
 :root {
-  --bg-color: linear-gradient(180deg, rgba(240,240,240,1) 0%, rgba(255,255,255,1) 100%);
+  --bg-color: linear-gradient(
+    180deg,
+    rgba(240, 240, 240, 1) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
   --text-color: #000000;
   --card-bg-color: #f8f9fa;
   --card-border-color: #ddd;
@@ -465,7 +467,7 @@ html {
 }
 
 .dark {
-  --bg-color: #1a1a1a; 
+  --bg-color: #1a1a1a;
   --text-color: #ffffff;
   --card-bg-color: #2a2a2a;
   --card-border-color: #444;
@@ -515,7 +517,6 @@ html {
   color: #363636;
   transform: translateY(-2px);
   transition: all 0.3s ease;
-  
 }
 
 .right-buttons {
@@ -562,7 +563,7 @@ html {
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-color);
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
   transition: color 0.3s ease;
 }
@@ -653,6 +654,31 @@ html {
 .loading-text {
   margin-top: 10px;
   animation: pulse 1.5s infinite;
+}
+
+.sort-select {
+  padding: 12px 0px 12px 5px;
+  border-radius: 5px;
+  border: 1px solid var(--input-border);
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  font-size: 14px;
+}
+
+.search-and-sort-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.search-container {
+  flex: 1;
+  margin-right: 5px;
+}
+
+.sort-container {
+  margin-bottom: 20px;
 }
 
 @media (min-width: 768px) {
