@@ -751,9 +751,12 @@ html {
 
 @media not all and (min-resolution:.001dpcm) { 
   @supports (-webkit-appearance:none) {
+    .form-container select,    
     .sort-select {
       -webkit-appearance: none;
     }
+
+
   }
 }
 
