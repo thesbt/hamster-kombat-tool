@@ -556,6 +556,7 @@ html {
   font-size: 16px;
   background-color: var(--input-bg);
   color: var(--input-text);
+  height: 45px;
 }
 
 .search-icon,
@@ -665,6 +666,7 @@ html {
   background-color: var(--input-bg);
   color: var(--input-text);
   font-size: 14px;
+  height: 45px;
 }
 
 .search-and-sort-container {
@@ -745,6 +747,14 @@ html {
 
 .loader.dark .loader-dark {
   border-color: var(--text-color);
+}
+
+@media not all and (min-resolution:.001dpcm) { 
+  @supports (-webkit-appearance:none) {
+    .sort-select {
+      -webkit-appearance: none;
+    }
+  }
 }
 
 @media (min-width: 768px) {
