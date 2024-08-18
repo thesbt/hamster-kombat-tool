@@ -36,7 +36,7 @@ function Register() {
   const { isDarkMode, toggleTheme } = useTheme();
 
   useEffect(() => {
-    document.title = "Hamster Kombat Tool | Register";
+    document.title = "Register | Hamster Kombat Tool";
 
     const content = document.querySelector(`.${styles.content}`);
     content.style.opacity = "0";

@@ -84,7 +84,7 @@ function Dashboard({ setIsAuthenticated }) {
   }, []);
 
   useEffect(() => {
-    document.title = "Hamster Kombat Tool | Dashboard";
+    document.title = "Dashboard | Hamster Kombat Tool";
     const fetchData = async () => {
       try {
         // await new Promise(resolve => setTimeout(resolve, 30000)); // loading için gecikme

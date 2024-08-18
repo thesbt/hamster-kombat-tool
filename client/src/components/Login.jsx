@@ -26,7 +26,7 @@ function Login({ setIsAuthenticated }) {
   const { isDarkMode, toggleTheme } = useTheme();
 
   useEffect(() => {
-    document.title = "Hamster Kombat Tool | Login";
+    document.title = "Login | Hamster Kombat Tool";
 
     const content = document.querySelector(`.${styles.content}`);
     content.style.opacity = "0";
