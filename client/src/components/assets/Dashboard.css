@@ -855,6 +855,10 @@ html {
     scale: 0.8;
     left: -15px;
   }
+
+  .card-footer {
+    scale: 0.85;
+  }
 }
 
 @media (min-width: 1024px) {
