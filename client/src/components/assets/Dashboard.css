@@ -831,21 +831,29 @@ html {
 
 @media (max-width: 560px) {
   .card {
-    width: 45%;    
+    width: 45%;
+    padding: 10px;     
   }
 
-
-
   .card-image {
-    scale: 0.8;
+    scale: 0.7;
   }
 
   .card-second-header h3 {
     font-size: 16px;
   }
 
-  .card-body p {
+  .card-second-header p {
     font-size: 14px;
+  }
+
+  .card-body p {
+    font-size: 12px;
+  }
+
+  .timer-icon {
+    scale: 0.8;
+    left: -15px;
   }
 }
 
