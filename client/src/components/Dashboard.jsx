@@ -16,6 +16,7 @@ import {
   FaCheck,
   FaTimes,
   FaClock,
+  FaPencilAlt,
 } from "react-icons/fa";
 
 Modal.setAppElement("#root");
@@ -556,7 +557,7 @@ function Dashboard({ setIsAuthenticated }) {
           </button>
         </div>
       </div>
-      <h3 className="your-cards">Add Card</h3>
+      <h3 className="add-card">Add Card</h3>
       <div className="form-container">
         <form onSubmit={handleAddOrUpdateCard}>
           <select
@@ -700,20 +701,21 @@ function Dashboard({ setIsAuthenticated }) {
                   </p>
                 </div>
                 <div className="card-footer">
-                  <button
+                <button
                     className="edit-button"
                     onClick={() => openEditModal(userCard)}
                   >
-                    <FaEdit />
-                    Edit
+                    <FaPencilAlt />
                   </button>
-                  <button
-                    className="delete-button"
-                    onClick={() => openDeleteModal(userCard.id)}
-                  >
-                    <FaTrash />
-                    Delete
-                  </button>
+                  {!userCard.is_default && (
+                    <button
+                      className="delete-button"
+                      onClick={() => openDeleteModal(userCard.id)}
+                    >
+                      <FaTrash />
+                    </button>
+                  )}
+                  
                 </div>
               </div>
             );
@@ -819,7 +821,7 @@ function Dashboard({ setIsAuthenticated }) {
                   {userCards.find((card) => card.id === cardToDelete)?.name}
                 </h2>
                 <p className="card-category">
-                  Category:{" "}
+                  {" "}
                   {
                     userCards.find((card) => card.id === cardToDelete)
                       ?.card_category

@@ -1,11 +1,10 @@
 :root {
   --white: #fff;
   --primary-color: #ff7f50;
-  --secondary-color: #ff4500;  
+  --secondary-color: #ff4500;
   --background-top: #141414;
   --background-bottom: #242424;
   --description-color: #242424;
-
 }
 
 /* Dark mode için yeni değişkenler */
@@ -17,7 +16,6 @@
   --background-bottom: #1a1a1a;
   --description-color: #c0c0c0;
 }
-
 
 .theme-toggle {
   background: none;
@@ -52,15 +50,13 @@
 }
 
 .welcome {
-  opacity: 0.80;
+  opacity: 0.8;
   font-size: 2.2em;
 }
 
-
-
 .dark .navbar {
   background: rgba(20, 20, 20, 0.9);
-  box-shadow: 0px 12px 20px -3px rgba(255,127,80,0.1);
+  box-shadow: 0px 12px 20px -3px rgba(255, 127, 80, 0.1);
 }
 
 .dark .content {
@@ -79,7 +75,13 @@
 }
 
 .link-button {
-  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  display: flex;
+  align-items: center;
+  background: linear-gradient(
+    45deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
   border: none;
   color: var(--white);
   padding: 8px 16px;
@@ -87,6 +89,7 @@
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
+  gap: 5px;
 }
 
 .link-button:hover {
@@ -105,7 +108,7 @@
 }
 
 .content {
-  margin-top:20px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,7 +122,6 @@
   font-size: 0.9em;
   overflow-y: auto; /* İçerik sığmazsa kaydırma çubuğu ekler */
 }
-
 
 .image-container {
   width: 100%;
@@ -137,7 +139,6 @@
 .text-content {
   text-align: center;
   padding: 0 20px;
-  
 }
 
 .title {
