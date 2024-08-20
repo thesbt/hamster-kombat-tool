@@ -651,6 +651,10 @@ function Dashboard({ setIsAuthenticated }) {
           <div className="spinner"></div>
           <div className="loading-text">Loading cards...</div>
         </div>
+      ) : filteredCards.length === 0 ? (
+        <div className="no-results-message">
+          <p>No results found for "{searchTerm}".</p>
+        </div>
       ) : (
         <div className="cards-container">
           {filteredCards.map((userCard) => {
