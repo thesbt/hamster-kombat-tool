@@ -906,6 +906,7 @@ button:disabled .button-spinner {
     .form-container select,
     .sort-select {
       -webkit-appearance: none;
+      appearance: none;
     }
   }
 }
