@@ -17,6 +17,7 @@ import {
   FaTimes,
   FaClock,
   FaPencilAlt,
+  FaSpinner,
 } from "react-icons/fa";
 
 Modal.setAppElement("#root");
@@ -49,7 +50,11 @@ function Dashboard({ setIsAuthenticated }) {
   const [editingCard, setEditingCard] = useState(null);
   const [isAdminDeleteModalOpen, setIsAdminDeleteModalOpen] = useState(false);
   const [cardToAdminDelete, setCardToAdminDelete] = useState(null);
+  const [addingCard, setAddingCard] = useState(false);
+  const [deletingCard, setDeletingCard] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const [sortBy, setSortBy] = useState("ratio");
+  
   const navigate = useNavigate();
 
   const [isAdmin, setIsAdmin] = useState(false);
@@ -106,7 +111,7 @@ function Dashboard({ setIsAuthenticated }) {
         setShowMessage(false);
         setSuccess("");
         setError("");
-      }, 5000);
+      }, 3500);
       return () => clearTimeout(timer);
     }
   }, [success, error]);
@@ -298,6 +303,7 @@ function Dashboard({ setIsAuthenticated }) {
     if (!validateInput()) {
       return;
     }
+    setAddingCard(true);
     const token = localStorage.getItem("token");
     try {
       await axios.post(
@@ -322,6 +328,8 @@ function Dashboard({ setIsAuthenticated }) {
       setError("Failed to add card. Please check values.");
       setSuccess("");
       setSearchTerm("");
+    } finally {
+      setAddingCard(false);
     }
   };
 
@@ -335,7 +343,7 @@ function Dashboard({ setIsAuthenticated }) {
       setError("Level, Cost, and PPH must be valid numbers.");
       return;
     }
-
+    setEditingCard(true);
     const token = localStorage.getItem("token");
     try {
       await axios.put(
@@ -360,6 +368,8 @@ function Dashboard({ setIsAuthenticated }) {
       setError("Failed to update card. Please try again.");
       setSuccess("");
       setSearchTerm("");
+    } finally {
+      setEditingCard(false);
     }
   };
 
@@ -382,7 +392,7 @@ function Dashboard({ setIsAuthenticated }) {
 
   const handleDeleteCard = async () => {
     if (cardToDelete === null) return;
-
+    setDeletingCard(true);
     const token = localStorage.getItem("token");
     try {
       await axios.delete(
@@ -403,6 +413,7 @@ function Dashboard({ setIsAuthenticated }) {
       setSearchTerm("");
     } finally {
       closeDeleteModal();
+      setDeletingCard(false);
     }
   };
 
@@ -431,6 +442,7 @@ function Dashboard({ setIsAuthenticated }) {
   };
 
   const handleLogout = () => {
+    setLoggingOut(true);
     localStorage.removeItem("token");
     setIsAuthenticated(false);
     navigate("/");
@@ -602,9 +614,9 @@ function Dashboard({ setIsAuthenticated }) {
             value={currentHourlyEarnings}
             onChange={(e) => handleInputChange(e, setCurrentHourlyEarnings)}
           />
-          <button className="add-card-button" type="submit">
-            <FaPlus />
-            Add Card
+          <button className="add-card-button" type="submit" disabled={addingCard}>
+            {addingCard ? <FaSpinner className="button-spinner" /> : <FaPlus />}
+            {addingCard ? 'Adding...' : 'Add Card'}
           </button>
         </form>
       </div>
@@ -797,10 +809,10 @@ function Dashboard({ setIsAuthenticated }) {
               />
             </div>
             <div className="modal-buttons">
-              <button className="confirm-button" type="submit">
-                <FaCheck />
-                Save
-              </button>
+            <button className="confirm-button" type="submit" disabled={editingCard}>
+              {editingCard ? <FaSpinner className="button-spinner" /> : <FaCheck />}
+              {editingCard ? 'Saving...' : 'Save'}
+            </button>
               <button className="cancel-button" onClick={closeEditModal}>
                 <FaTimes />
                 Cancel
@@ -845,10 +857,10 @@ function Dashboard({ setIsAuthenticated }) {
             Are you sure you want to delete this card?
           </p>
           <div className="modal-buttons">
-            <button className="confirm-button" onClick={handleDeleteCard}>
-              <FaCheck />
-              Delete
-            </button>
+          <button className="confirm-button" onClick={handleDeleteCard} disabled={deletingCard}>
+            {deletingCard ? <FaSpinner className="button-spinner" /> : <FaCheck />}
+            {deletingCard ? 'Deleting...' : 'Delete'}
+          </button>
             <button className="cancel-button" onClick={closeDeleteModal}>
               <FaTimes />
               Cancel
@@ -869,10 +881,10 @@ function Dashboard({ setIsAuthenticated }) {
           </div>
           <p className="logout-message">Are you sure you want to log out?</p>
           <div className="modal-buttons">
-            <button className="confirm-button" onClick={handleLogout}>
-              <FaCheck />
-              Logout
-            </button>
+          <button className="confirm-button" onClick={handleLogout} disabled={loggingOut}>
+            {loggingOut ? <FaSpinner className="button-spinner" /> : <FaCheck />}
+            {loggingOut ? 'Logging out...' : 'Logout'}
+          </button>
             <button className="cancel-button" onClick={closeLogoutModal}>
               <FaTimes />
               Cancel

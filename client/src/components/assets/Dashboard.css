@@ -69,10 +69,10 @@ html {
   --input-text: #333333;
   --input-border: #bdbdbd;
   --form-bg: #f5f5f5;
-  --success-bg: #e8f5e9;
-  --success-text: #1b5e20;
-  --error-bg: #ffebee;
-  --error-text: #b71c1c;
+  --success-bg: #37663a;
+  --success-text: #f5f5f5;
+  --error-bg: #b71c1c;
+  --error-text: #f5f5f5;
   --modal-bg: #ffffff;
   --ratio-green: #4caf50;
   --ratio-orange: #ff9800;
@@ -91,10 +91,10 @@ html {
   --input-text: #dbdbdb;
   --input-border: #424242;
   --form-bg: #1e1e1e;
-  --success-bg: #1b5e20;
-  --success-text: #81c784;
+  --success-bg: #37663a;
+  --success-text: #f5f5f5;
   --error-bg: #b71c1c;
-  --error-text: #ef9a9a;
+  --error-text: #f5f5f5;
   --modal-bg: #1e1e1e;
   --ratio-green: #4caf50;
   --ratio-orange: #ff9800;
@@ -247,13 +247,22 @@ html {
   transition: all 0.3s ease;
 }
 
-/* Messages */
 .error-message,
 .success-message {
   padding: 12px;
   border-radius: 8px;
-  margin-bottom: 15px;
+  margin: 15px 0px;
   font-weight: 500;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  animation: slideDown 0.5s ease-out, stayVisible 2.5s linear 0.5s,
+    slideUp 0.5s ease-in 3s forwards;
+  width: 80%;
+  max-width: 400px;
+  text-align: center;
 }
 
 .error-message {
@@ -264,6 +273,36 @@ html {
 .success-message {
   background-color: var(--success-bg);
   color: var(--success-text);
+}
+
+@keyframes slideDown {
+  from {
+    top: -100px;
+    opacity: 0;
+  }
+  to {
+    top: 20px;
+    opacity: 1;
+  }
+}
+
+@keyframes stayVisible {
+  from,
+  to {
+    top: 20px;
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    top: 20px;
+    opacity: 1;
+  }
+  to {
+    top: -100px;
+    opacity: 0;
+  }
 }
 
 /* Cards */
@@ -421,18 +460,16 @@ html {
 
 .modal-card .card-image,
 .modal-card .logout-icon {
-  width: 90px;
-  height: 90px;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
-  border-radius: 50%;
-  margin-bottom: 15px;
+  border-radius: 20%;
 }
 
 .modal-card h2 {
   color: #ff7f50;
   font-size: 1.4rem;
   font-weight: 600;
-  margin-bottom: 10px;
 }
 
 .delete-message,
@@ -560,21 +597,12 @@ html {
   color: var(--text-color);
   display: flex;
   align-items: center;
+  transition: transform 0.3s ease;
 }
 
 .theme-toggle:hover {
   color: var(--primary-color);
   transform: translateY(-2px);
-  transition: all 0.3s ease;
-}
-
-.right-buttons {
-  display: flex;
-  vertical-align: center;
-}
-
-.dashboard-header span {
-  font-weight: 400;
 }
 
 .dark .theme-toggle {
@@ -584,6 +612,23 @@ html {
 .dark .theme-toggle:hover {
   color: #ff9f70;
   transform: translateY(-2px);
+}
+
+@media (hover: none) {
+  .theme-toggle:hover,
+  .dark .theme-toggle:hover {
+    color: inherit;
+    transform: none;
+  }
+}
+
+.right-buttons {
+  display: flex;
+  vertical-align: center;
+}
+
+.dashboard-header span {
+  font-weight: 400;
 }
 
 .search-container {
@@ -794,6 +839,28 @@ html {
   font-size: 1rem;
   font-weight: 500;
   color: var(--text-color);
+}
+
+.button-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+button:disabled .button-spinner {
+  margin-right: 5px;
 }
 
 /* Animations */

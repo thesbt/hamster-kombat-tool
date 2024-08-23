@@ -9,10 +9,14 @@ require("dotenv").config();
 const app = express();
 const port = 3000;
 const SECRET_KEY = process.env.SECRET_KEY;
+
+
+// ENABLE THIS LATER
+/*
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
-});
+}); */
 
 app.use(limiter);
 app.use(express.json());
