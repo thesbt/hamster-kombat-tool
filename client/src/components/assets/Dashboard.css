@@ -731,6 +731,7 @@ html {
   background-color: var(--input-bg);
   color: var(--input-text);
   transition: all 0.3s ease;
+  height: 45px;
 }
 
 .checkbox-group {
