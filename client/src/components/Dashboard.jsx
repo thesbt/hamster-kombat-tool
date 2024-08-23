@@ -577,10 +577,14 @@ function Dashboard({ setIsAuthenticated }) {
             type="number"
             min="1"
             max="1000"
-            maxLength="4"
             placeholder="Current Card Level"
             value={level}
-            onChange={(e) => setLevel(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value.length <= 4) {
+                setLevel(value);
+              }
+            }}
           />
           <input
             required
@@ -686,8 +690,11 @@ function Dashboard({ setIsAuthenticated }) {
                 </div>
                 <div className="card-second-header">
                   <h3>{userCard.name}</h3>
-                  <p>{userCard.card_category}</p>
+                  <p>{userCard.card_category}</p>                  
                 </div>
+                <div className="card-line">
+                    <hr />
+                  </div>
 
                 <div className="card-body">
                   <p>Level: {userCard.level}</p>
@@ -755,10 +762,14 @@ function Dashboard({ setIsAuthenticated }) {
                 type="number"
                 min="1"
                 max="1000"
-                maxLength="4"
                 placeholder="Current Card Level"
                 value={editLevel}
-                onChange={(e) => handleInputChange(e, setEditLevel)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value.length <= 4) {
+                    setEditLevel(value);
+                  }
+                }}
               />
             </div>
             <div className="input-group">
