@@ -119,7 +119,7 @@ html {
   min-height: 100vh;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 20px 0px 20px;
   animation: fadeIn 0.5s ease;
   background-color: var(--bg-color);
   color: var(--text-color);
@@ -856,6 +856,16 @@ html {
 
 .button-spinner {
   animation: spin 1s linear infinite;
+}
+
+.footer {
+  font-size: 12px;
+  padding-top: 20px;
+  margin: 20px 0px;
+  text-align: center; 
+  color: var(--text-color);
+  width: 100%;
+  bottom: 0;
 }
 
 @keyframes spin {

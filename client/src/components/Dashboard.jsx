@@ -127,6 +127,7 @@ function Dashboard({ setIsAuthenticated }) {
       setError("Failed to fetch user cards. Please try again.");
     } finally {
       setCardsLoading(false);
+      window.scrollTo(0, 0);
     }
   }, [handleImageLoad]);
 
@@ -140,6 +141,7 @@ function Dashboard({ setIsAuthenticated }) {
         setError("Failed to fetch data. Please try again.");
       } finally {
         setLoading(false);
+        window.scrollTo(0, 0);
       }
     };
     fetchData();
@@ -277,6 +279,7 @@ function Dashboard({ setIsAuthenticated }) {
     } finally {
       setIsAdminDeleteModalOpen(false);
       setCardToAdminDelete(null);
+      window.scrollTo(0, 0);
     }
   };
 
@@ -327,6 +330,7 @@ function Dashboard({ setIsAuthenticated }) {
       setSearchTerm("");
     } finally {
       setAddingCard(false);
+      window.scrollTo(0, 0);
     }
   };
 
@@ -379,6 +383,7 @@ function Dashboard({ setIsAuthenticated }) {
       setSearchTerm("");
     } finally {
       setEditingCard(false);
+      window.scrollTo(0, 0);
     }
   };
 
@@ -423,6 +428,7 @@ function Dashboard({ setIsAuthenticated }) {
     } finally {
       closeDeleteModal();
       setDeletingCard(false);
+      window.scrollTo(0, 0);
     }
   };
 
@@ -818,6 +824,9 @@ function Dashboard({ setIsAuthenticated }) {
           isDarkMode={isDarkMode}
         />
       )}
+      <footer className="footer">
+        <p>&copy; 2024 Hamster Kombat Tool</p>
+      </footer>
     </div>
   );
 }
