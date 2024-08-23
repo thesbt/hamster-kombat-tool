@@ -18,9 +18,6 @@ const LogoutModal = ({
       overlayClassName={`modal-overlay ${isDarkMode ? "dark" : ""}`}
     >
       <div className="modal-card">
-        <div className="card-header">
-          <h2>Logout Confirmation</h2>
-        </div>
         <p className="logout-message">Are you sure you want to log out?</p>
         <div className="modal-buttons">
           <button
