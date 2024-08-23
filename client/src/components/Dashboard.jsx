@@ -5,7 +5,7 @@ import Modal from "react-modal";
 import { useTheme } from "./ThemeContext";
 import "./assets/Dashboard.css";
 import hamsterImage from "./assets/img/Lord.webp";
-import { validateInput, validateEditInput } from "../utils/validation";
+import { validateInput, validateEditInput } from "../utils/validation"; // Yeni import
 import {
   FaSun,
   FaMoon,
@@ -56,9 +56,7 @@ function Dashboard({ setIsAuthenticated }) {
   const [loggingOut, setLoggingOut] = useState(false);
   const [sortBy, setSortBy] = useState("ratio");
   const [editError, setEditError] = useState("");
-
   const navigate = useNavigate();
-
   const [isAdmin, setIsAdmin] = useState(false);
   const [allCards, setAllCards] = useState([]);
   const [newCard, setNewCard] = useState({
@@ -292,9 +290,11 @@ function Dashboard({ setIsAuthenticated }) {
     }
   };
 
+
+
   const handleAddCardToUser = async (e) => {
     e.preventDefault();
-    if (!validateInput()) {
+    if (!validateInput(currentCost, currentHourlyEarnings, level, setError)) {
       return;
     }
     setAddingCard(true);
@@ -331,7 +331,7 @@ function Dashboard({ setIsAuthenticated }) {
 
   const handleEditCard = async (e) => {
     e.preventDefault();
-    if (!validateEditInput()) {
+    if (!validateEditInput(editCost, editPph, editLevel, setEditError)) {
       return;
     }
     const originalCard = userCards.find((card) => card.id === cardToEdit);
