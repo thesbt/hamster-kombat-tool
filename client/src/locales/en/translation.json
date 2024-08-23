@@ -1,5 +1,6 @@
 {
-  "welcome": "Welcome to the Dashboard",
+  "welcome_to": "Welcome to,",
+  "login": "Login",
   "logout": "Logout",
   "loading": "Loading...",
   "add_card": "Add Card",
@@ -45,5 +46,23 @@
   "sort_by_name": "Sort by Name",
   "current_cost_validate_error": "Current Cost must be a valid number and 13 characters or less.",
   "current_pph_validate_error": "Current Hourly Earnings must be a valid number and 10 characters or less.",
-  "current_level_validate_error": "Level must be a valid number, no more than 1000."
+  "current_level_validate_error": "Level must be a valid number, no more than 1000.",
+  "description": "Take your Hamster Kombat experience to the next level. Our tool helps you easily track your in-game cards and identify the best cards to upgrade for maximum impact. Stay ahead in the game with smarter choices and faster upgrades!",
+  "title": "Hamster Kombat Tool",
+  "username": "Username",
+  "password": "Password",
+  "register": "Register",
+  "no_account": "Don't have an account?",
+  "email": "E-Mail",
+  "already_have_account": "Already have an account?",
+  "login_error": "Invalid username or password",
+  "username_error": "Invalid username or password",
+  "register_username_error": "Username can only contain lowercase letters and numbers",
+  "register_username_length_error": "Username must be between 3 and 12 characters",
+  "register_password_length_error": "Password must be between 6 and 18 characters",
+  "register_email_length_error": "Email is too long",
+  "register_password_weak_error": "Password is too weak. Please choose a stronger password.",
+  "register_invalid_email_error": "Invalid Email",
+  "registration_success": "Registration successful! Redirecting to login page...",
+  "registration_error": "User already exists"
 }

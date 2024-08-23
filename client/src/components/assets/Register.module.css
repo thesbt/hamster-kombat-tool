@@ -1,7 +1,7 @@
 :root {
   --white: #fff;
   --primary-color: #ff7f50;
-  --secondary-color: #ff4500;  
+  --secondary-color: #ff4500;
   --background-top: #141414;
   --background-bottom: #242424;
   --description-color: #242424;
@@ -23,7 +23,7 @@
 .login-page {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;  
+  min-height: 100vh;
   color: var(--text-color);
   overflow: hidden;
 }
@@ -51,7 +51,7 @@
 
 .dark .navbar {
   background: rgba(20, 20, 20, 0.9);
-  box-shadow: 0px 12px 20px -3px rgba(255,127,80,0.1);
+  box-shadow: 0px 12px 20px -3px rgba(255, 127, 80, 0.1);
 }
 
 .logo-container {
@@ -80,12 +80,10 @@
   position: relative;
   display: flex;
   align-items: center;
-  
 }
 
 .password-input-container input {
   padding-right: 40px;
-  
 }
 
 .toggle-password {
@@ -93,7 +91,7 @@
   right: 10px;
   top: 19%;
   transform: translateY(-50%);
-  background: none !important; 
+  background: none !important;
   border: none;
   cursor: pointer;
   color: #333333 !important;
@@ -112,7 +110,7 @@
 }
 
 .dark svg {
-  color:white;
+  color: white;
 }
 
 .register-button {
@@ -122,7 +120,11 @@
   padding: 10px;
   border: none;
   border-radius: 5px;
-  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(
+    45deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
   color: var(--white);
   cursor: pointer;
   margin-top: 10px;
@@ -152,32 +154,56 @@
   cursor: pointer;
   padding: 5px;
   margin-right: 10px;
-  transition: color 0.3s ease;
   color: var(--white);
   display: flex;
   align-items: center;
+  transition: transform 0.3s ease;
 }
 
 .theme-toggle:hover {
   color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.dark .theme-toggle {
+  color: var(--button-text);
+}
+
+.dark .theme-toggle:hover {
+  color: #ff9f70;
+  transform: translateY(-2px);
+}
+
+@media (hover: none) {
+  .theme-toggle:hover,
+  .dark .theme-toggle:hover {
+    color: inherit;
+    transform: none;
+  }
 }
 
 .link-button {
   display: flex;
   align-items: center;
-  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  justify-content: center;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
   border: none;
-  color: var(--white);
+  color: var(--button-text);
   padding: 8px 16px;
   border-radius: 20px;
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
-  gap:5px;
+  gap: 5px;
 }
 
 .link-button:hover {
-  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 127, 80, 0.2);
 }
 
 .content {
@@ -191,8 +217,6 @@
 .dark .login-container {
   background: rgba(20, 20, 20, 0.9);
 }
-
-
 
 .login-container {
   background: var(--card-bg-color);
@@ -232,7 +256,11 @@
   padding: 10px;
   border: none;
   border-radius: 5px;
-  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(
+    45deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
   color: var(--white);
   cursor: pointer;
   margin-top: 20px;
@@ -255,7 +283,7 @@
 }
 
 .success-message {
-  color: #4CAF50;
+  color: #4caf50;
   margin-top: 20px;
   text-align: center;
   opacity: 0;
@@ -315,24 +343,27 @@
   text-align: left;
 }
 
-
-
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes fadeInOut {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0;
     transform: translateY(-10px);
   }
-  10%, 90% {
+  10%,
+  90% {
     opacity: 1;
     transform: translateY(0);
   }
 }
-
 
 @media (max-width: 540px) {
   .logo-text {
@@ -342,7 +373,7 @@
   .password-input-container input {
     padding-right: 35px;
   }
-  
+
   .toggle-password {
     right: 5px;
   }

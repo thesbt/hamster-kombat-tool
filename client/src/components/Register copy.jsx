@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react"; // useCallback eklendi
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./assets/Register.module.css";
 import { useNavigate, Link } from "react-router-dom";
@@ -12,16 +12,7 @@ import {
   FaSignInAlt,
 } from "react-icons/fa";
 import { useTheme } from "./ThemeContext";
-import LanguageSelector from "./LanguageSelector"; // LanguageSelector import edildi
 import logoImage from "./assets/img/Logo.webp";
-
-import enTranslations from "../locales/en/translation.json";
-import trTranslations from "../locales/tr/translation.json";
-
-const translations = {
-  en: enTranslations,
-  tr: trTranslations,
-};
 
 const validateEmail = (email) => {
   const re =
@@ -41,26 +32,8 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [errorVisible, setErrorVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [language, setLanguage] = useState("en"); // Dil durumu eklendi
   const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
-
-  const t = useCallback(
-    (key) => translations[language][key] || key,
-    [language]
-  );
-
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem("language");
-    if (savedLanguage) {
-      setLanguage(savedLanguage);
-    }
-  }, []);
-
-  const handleLanguageChange = (newLanguage) => {
-    setLanguage(newLanguage);
-    localStorage.setItem("language", newLanguage);
-  };
 
   useEffect(() => {
     document.title = "Register | Hamster Kombat Tool";
@@ -95,20 +68,22 @@ function Register() {
   };
 
   const validateInputs = () => {
+    // Kullanıcı adı için regex: Sadece harf ve sayılara izin verir
+
     if (!usernameRegex.test(username)) {
-      setError(t("reigster_username_error"));
+      setError("Username can only contain lowercase letters and numbers");
       return false;
     }
     if (username.length < 3 || username.length > 12) {
-      setError(t("register_username_length_error"));
+      setError("Username must be between 3 and 12 characters");
       return false;
     }
     if (password.length < 6 || password.length > 18) {
-      setError(t("register_password_length_error"));
+      setError("Password must be between 6 and 18 characters");
       return false;
     }
     if (email.length > 100) {
-      setError(t("register_email_length_error"));
+      setError("Email is too long");
       return false;
     }
     return true;
@@ -121,17 +96,17 @@ function Register() {
     }
     setError("");
     setSuccess("");
-    setLoading(true);
+    setLoading(true); // İşlem başladığında loading'i true yapıyoruz
 
     if (passwordStrength < 2) {
-      setError(t("register_password_weak_error"));
-      setLoading(false);
+      setError("Password is too weak. Please choose a stronger password.");
+      setLoading(false); // Hata durumunda loading'i false yapıyoruz
       setPassword("");
       return;
     }
 
     if (!validateEmail(email)) {
-      setError(t("register_invalid_email_error"));
+      setError("Invalid Email");
       setLoading(false);
       return;
     }
@@ -141,13 +116,13 @@ function Register() {
         "https://hamster-kombat-tool-server.vercel.app/api/register",
         { username, password, email }
       );
-      setSuccess(t("registration_success"));
+      setSuccess("Registration successful! Redirecting to login page...");
       setTimeout(() => {
         navigate("/login");
       }, 2000);
     } catch (error) {
       setError(
-        error.response?.data?.message || t("registration_error")
+        error.response?.data?.message || "An error occurred during registration"
       );
       clearInputs();
       console.error("Registration error", error);
@@ -185,7 +160,7 @@ function Register() {
   };
 
   const handleUsernameChange = (e) => {
-    const newValue = e.target.value.toLowerCase();
+    const newValue = e.target.value.toLowerCase(); // Büyük harfleri küçük harfe çevir
     if (usernameRegex.test(newValue) || newValue === "") {
       setUsername(newValue);
     }
@@ -199,10 +174,6 @@ function Register() {
           <span className={styles["logo-text"]}>Hamster Kombat Tool</span>
         </Link>
         <div className={styles["header-links"]}>
-          <LanguageSelector
-            currentLanguage={language}
-            onChangeLanguage={handleLanguageChange}
-          />
           <button onClick={toggleTheme} className={styles["theme-toggle"]}>
             {isDarkMode ? <FaSun /> : <FaMoon />}
           </button>
@@ -211,17 +182,17 @@ function Register() {
             className={styles["link-button"]}
           >
             <FaSignInAlt className={styles["login-icon"]} />
-            {t("login")}
+            Login
           </button>
         </div>
       </div>
       <div className={styles.content}>
         <div className={styles["login-container"]}>
-          <h2>{t("register")}</h2>
+          <h2>Register</h2>
           <form onSubmit={handleRegister}>
             <input
               type="text"
-              placeholder={t("username")}
+              placeholder="Username"
               minLength="3"
               maxLength="12"
               value={username}
@@ -231,7 +202,7 @@ function Register() {
 
             <input
               type="email"
-              placeholder={t("email")}
+              placeholder="Email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -241,7 +212,7 @@ function Register() {
               }}
               onSubmit={() => {
                 if (!validateEmail(email)) {
-                  setError(t("invalid_email_format"));
+                  setError("Invalid email format");
                 }
               }}
               required
@@ -251,7 +222,7 @@ function Register() {
                 type={showPassword ? "text" : "password"}
                 minLength="6"
                 maxLength="18"
-                placeholder={t("password")}
+                placeholder="Password"
                 value={password}
                 onChange={handlePasswordChange}
                 required
@@ -279,10 +250,10 @@ function Register() {
               className={styles["register-button"]}
             >
               {!loading && <FaUserPlus className={styles["register-icon"]} />}
-              {loading ? <div className={styles.spinner}></div> : t("register")}
+              {loading ? <div className={styles.spinner}></div> : "Register"}
             </button>
             <Link to="/login" className={styles["register-text"]}>
-              {t("already_have_account")}
+              Already have an account?
             </Link>
             {error && (
               <p

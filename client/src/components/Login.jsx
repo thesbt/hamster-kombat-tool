@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useTheme } from "./ThemeContext";
+import LanguageSelector from "./LanguageSelector"; // LanguageSelector import edildi
 import styles from "./assets/Login.module.css";
 import logoImage from "./assets/img/Logo.webp";
 import {
@@ -13,6 +14,14 @@ import {
   FaSignInAlt,
 } from "react-icons/fa";
 
+import enTranslations from "../locales/en/translation.json";
+import trTranslations from "../locales/tr/translation.json";
+
+const translations = {
+  en: enTranslations,
+  tr: trTranslations,
+};
+
 const usernameRegex = /^[a-zA-Z0-9ğüşıöçĞÜŞİÖÇ]+$/;
 
 function Login({ setIsAuthenticated }) {
@@ -22,8 +31,26 @@ function Login({ setIsAuthenticated }) {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errorVisible, setErrorVisible] = useState(false);
+  const [language, setLanguage] = useState("en");
   const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
+
+  const t = useCallback(
+    (key) => translations[language][key] || key,
+    [language]
+  );
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
+
+  const handleLanguageChange = (newLanguage) => {
+    setLanguage(newLanguage);
+    localStorage.setItem("language", newLanguage);
+  };
 
   useEffect(() => {
     document.title = "Login | Hamster Kombat Tool";
@@ -63,9 +90,7 @@ function Login({ setIsAuthenticated }) {
     setError("");
 
     if (!usernameRegex.test(username)) {
-      setError(
-        "Username can only contain letters, numbers, and Turkish characters"
-      );
+      setError(t("username_error"));
       setLoading(false);
       return;
     }
@@ -79,7 +104,7 @@ function Login({ setIsAuthenticated }) {
       setIsAuthenticated(true);
       navigate("/dashboard");
     } catch (error) {
-      setError("Invalid username or password");
+      setError(t("login_error"));
       setErrorVisible(true);
       setPassword("");
       console.error("Login error", error);
@@ -100,6 +125,10 @@ function Login({ setIsAuthenticated }) {
           <span className={styles["logo-text"]}>Hamster Kombat Tool</span>
         </Link>
         <div className={styles["header-links"]}>
+        <LanguageSelector
+            currentLanguage={language}
+            onChangeLanguage={handleLanguageChange}
+          />
           <button onClick={toggleTheme} className={styles["theme-toggle"]}>
             {isDarkMode ? <FaSun /> : <FaMoon />}
           </button>
@@ -108,17 +137,18 @@ function Login({ setIsAuthenticated }) {
             className={styles["link-button"]}
           >
             <FaUserPlus className={styles["register-icon"]} />
-            Register
+            {t("register")}
           </button>
+
         </div>
       </div>
       <div className={styles.content}>
         <div className={styles["login-container"]}>
-          <h2>Login</h2>
+          <h2>{t("login")}</h2>
           <form onSubmit={handleLogin}>
             <input
               type="text"
-              placeholder="Username"
+              placeholder={t("username")}
               minLength="3"
               maxLength="12"
               value={username}
@@ -130,7 +160,7 @@ function Login({ setIsAuthenticated }) {
                 type={showPassword ? "text" : "password"}
                 minLength="6"
                 maxLength="18"
-                placeholder="Password"
+                placeholder={t("password")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -149,10 +179,10 @@ function Login({ setIsAuthenticated }) {
               className={styles["login-button"]}
             >
               {!loading && <FaSignInAlt className={styles["login-icon"]} />}
-              {loading ? <div className={styles.spinner}></div> : "Login"}
+              {loading ? <div className={styles.spinner}></div> : t("login")}
             </button>
             <Link to="/register" className={styles["register-text"]}>
-              Don't have an account?
+              {t("no_account")}
             </Link>
             {error && (
               <p

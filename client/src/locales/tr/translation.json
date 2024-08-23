@@ -1,5 +1,6 @@
 {
-  "welcome": "Gösterge Tablosuna Hoşgeldiniz",
+  "welcome_to": "Hoşgeldiniz",
+  "login": "Giriş Yap",
   "logout": "Çıkış",
   "loading": "Yükleniyor...",
   "add_card": "Kart Ekle",
@@ -45,5 +46,23 @@
   "sort_by_name": "İsme Göre",
   "current_cost_validate_error": "Maliyet 13 karakterden az geçerli bir sayı olmalıdır.",
   "current_pph_validate_error": "Saatlik Kazanç 10 karakterden az geçerli bir sayı olmalıdır.",
-  "current_level_validate_error": "Seviyeniz 1000'den az geçerli bir sayı olmalıdır."
+  "current_level_validate_error": "Seviyeniz 1000'den az geçerli bir sayı olmalıdır.",
+  "description": "Hamster Kombat deneyiminizi bir üst seviyeye taşıyın. Hamster Kombat Tool ile birlikte, oyun içi kartlarınızı kolayca takip edin, yükseltebileceğiniz en mantıklı kartları görün. Daha akıllı seçimler yaparak oyunda önde kalın ve hızlıca gelişin ve sıralamada yükselin!",
+  "title": "Hamster Kombat Tool'a",
+  "username": "Kullanıcı Adı",
+  "password": "Şifre",
+  "register": "Kayıt Ol",
+  "no_account": "Hesabınız yok mu?",
+  "email": "E-Posta",
+  "already_have_account": "Zaten bir hesabım var",
+  "login_error": "Kullanıcı adı veya şifre hatalı",
+  "username_error": "Kullanıcı adı veya şifre hatalı",
+  "register_username_error": "Kullanıcı adı yalnızca küçük harf ve sayılardan oluşmalıdır",
+  "register_username_length_error": "Kullanıcı adı 3-12 karakter arasında olmalıdır",
+  "register_password_length_error": "Şifre 6-18 karakter arasında olmalıdır",
+  "register_email_length_error": "E-posta çok uzun",
+  "register_password_weak_error": "Şifre çok zayıf. Lütfen daha güçlü bir şifre seçin.",
+  "register_invalid_email_error": "Hatalı E-Posta",
+  "registration_success": "Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...",
+  "registration_error": "Bu kullanıcı zaten mevcut"
 }

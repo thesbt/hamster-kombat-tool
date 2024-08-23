@@ -1,5 +1,5 @@
 :root {
-  --white: #fff;
+  --white: #f0f0f0;
   --primary-color: #ff7f50;
   --secondary-color: #ff4500;
   --background-top: #141414;
@@ -24,14 +24,32 @@
   cursor: pointer;
   padding: 5px;
   margin-right: 10px;
-  transition: color 0.3s ease;
   color: var(--white);
   display: flex;
   align-items: center;
+  transition: transform 0.3s ease;
 }
 
 .theme-toggle:hover {
   color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.dark .theme-toggle {
+  color: var(--button-text);
+}
+
+.dark .theme-toggle:hover {
+  color: #ff9f70;
+  transform: translateY(-2px);
+}
+
+@media (hover: none) {
+  .theme-toggle:hover,
+  .dark .theme-toggle:hover {
+    color: inherit;
+    transform: none;
+  }
 }
 
 .navbar {
@@ -77,13 +95,14 @@
 .link-button {
   display: flex;
   align-items: center;
+  justify-content: center;
   background: linear-gradient(
-    45deg,
+    90deg,
     var(--primary-color),
     var(--secondary-color)
   );
   border: none;
-  color: var(--white);
+  color: var(--button-text);
   padding: 8px 16px;
   border-radius: 20px;
   cursor: pointer;
@@ -93,7 +112,8 @@
 }
 
 .link-button:hover {
-  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 127, 80, 0.2);
 }
 
 /* Landing Page içerik alanı */
