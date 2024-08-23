@@ -11,8 +11,8 @@ const port = 3000;
 const SECRET_KEY = process.env.SECRET_KEY;
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 99999999, //MAKE THIS 100 LATER
+  windowMs: 1, // Change 15 * 60 * 1000 LATER
+  max: Infinity, //MAKE THIS 100 LATER
 });
 
 app.use(limiter);
