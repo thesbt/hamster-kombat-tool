@@ -19,6 +19,7 @@ const UserEditCardModal = ({
   setEditPph,
   handleInputChange,
   editingCard,
+  t,
 }) => {
   return (
     <Modal
@@ -43,10 +44,10 @@ const UserEditCardModal = ({
           </p>
         </div>
         <form onSubmit={handleEditCard}>
-          {noChangesError && <p className="error-message">{noChangesError}</p>}
-          {editError && <p className="error-message">{editError}</p>}
+          {noChangesError && <p className="error-message">{t(noChangesError)}</p>}
+          {editError && <p className="error-message">{t(editError)}</p>}
           <div className="input-group">
-            <label htmlFor="editLevel">Current Card Level:</label>
+            <label htmlFor="editLevel">{t("current_card_level")}:</label>
             <input
               id="editLevel"
               required
@@ -54,7 +55,7 @@ const UserEditCardModal = ({
               inputMode="numeric"
               min="1"
               max="1000"
-              placeholder="Current Card Level"
+              placeholder={t("current_card_level")}
               value={editLevel}
               onChange={(e) => {
                 const value = e.target.value;
@@ -65,27 +66,27 @@ const UserEditCardModal = ({
             />
           </div>
           <div className="input-group">
-            <label htmlFor="editCost">Cost to Next Level:</label>
+            <label htmlFor="editCost">{t("cost_to_next_level")}:</label>
             <input
               id="editCost"
               required
               type="text"
               inputMode="numeric"
               maxLength="13"
-              placeholder="Cost to Next Level"
+              placeholder={t("cost_to_next_level")}
               value={editCost}
               onChange={(e) => handleInputChange(e, setEditCost)}
             />
           </div>
           <div className="input-group">
-            <label htmlFor="editPph">PPH on Next Level:</label>
+            <label htmlFor="editPph">{t("pph_on_next_level")}:</label>
             <input
               id="editPph"
               required
               type="text"
               inputMode="numeric"
               maxLength="10"
-              placeholder="PPH on Next Level"
+              placeholder={t("pph_on_next_level")}
               value={editPph}
               onChange={(e) => handleInputChange(e, setEditPph)}
             />
@@ -101,11 +102,11 @@ const UserEditCardModal = ({
               ) : (
                 <FaCheck />
               )}
-              {editingCard ? "Saving..." : "Save"}
+              {editingCard ? t("saving") : t("save")}
             </button>
             <button className="cancel-button" onClick={closeEditModal}>
               <FaTimes />
-              Cancel
+              {t("cancel")}
             </button>
           </div>
         </form>

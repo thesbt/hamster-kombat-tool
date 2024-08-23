@@ -13,6 +13,9 @@ import LogoutModal from "./LogoutModal";
 import UserEditCardModal from "./UserEditCardModal";
 import AdminEditCardModal from "./AdminEditCardModal";
 import UserDeleteModal from "./UserDeleteModal";
+import LanguageSelector from "./LanguageSelector";
+import enTranslations from "../locales/en/translation.json";
+import trTranslations from "../locales/tr/translation.json";
 import {
   FaSun,
   FaMoon,
@@ -26,9 +29,19 @@ import {
   FaSpinner,
 } from "react-icons/fa";
 
+const translations = {
+  en: enTranslations,
+  tr: trTranslations,
+};
+
 Modal.setAppElement("#root");
 
 function Dashboard({ setIsAuthenticated }) {
+  const [language, setLanguage] = useState("en");
+  const t = useCallback(
+    (key) => translations[language][key] || key,
+    [language]
+  );
   const [cardsLoading, setCardsLoading] = useState(true);
   const [imagesLoaded, setImagesLoaded] = useState({});
   const { isDarkMode, toggleTheme } = useTheme();
@@ -74,6 +87,18 @@ function Dashboard({ setIsAuthenticated }) {
     has_timer: false,
     is_default: false,
   });
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
+
+  const handleLanguageChange = (newLanguage) => {
+    setLanguage(newLanguage);
+    localStorage.setItem("language", newLanguage);
+  };
 
   const fetchUserInfo = useCallback(async () => {
     const token = localStorage.getItem("token");
@@ -124,12 +149,12 @@ function Dashboard({ setIsAuthenticated }) {
       });
     } catch (error) {
       console.error("Error fetching user cards:", error);
-      setError("Failed to fetch user cards. Please try again.");
+      setError(t("fetch_user_cards_error"));
     } finally {
       setCardsLoading(false);
       window.scrollTo(0, 0);
     }
-  }, [handleImageLoad]);
+  }, [handleImageLoad, t]);
 
   useEffect(() => {
     document.title = "Dashboard | Hamster Kombat Tool";
@@ -138,14 +163,14 @@ function Dashboard({ setIsAuthenticated }) {
         // await new Promise(resolve => setTimeout(resolve, 30000)); // loading için gecikme
         await Promise.all([fetchUserInfo(), fetchCards(), fetchUserCards()]);
       } catch (error) {
-        setError("Failed to fetch data. Please try again.");
+        setError(t("fetch_error"));
       } finally {
         setLoading(false);
         window.scrollTo(0, 0);
       }
     };
     fetchData();
-  }, [fetchUserInfo, fetchUserCards]);
+  }, [fetchUserInfo, fetchUserCards, t]);
 
   useEffect(() => {
     if (success || error) {
@@ -300,7 +325,15 @@ function Dashboard({ setIsAuthenticated }) {
 
   const handleAddCardToUser = async (e) => {
     e.preventDefault();
-    if (!validateInput(currentCost, currentHourlyEarnings, level, setError)) {
+    if (
+      !validateInput(
+        currentCost,
+        currentHourlyEarnings,
+        level,
+        setError,
+        language
+      )
+    ) {
       return;
     }
     setAddingCard(true);
@@ -321,11 +354,11 @@ function Dashboard({ setIsAuthenticated }) {
       setLevel("");
       setCurrentCost("");
       setCurrentHourlyEarnings("");
-      setSuccess("Card successfully added!");
+      setSuccess(t("add_card_success_message"));
       setError("");
       setSearchTerm("");
     } catch (error) {
-      setError("Failed to add card. Please check values.");
+      setError(t("add_card_error_message"));
       setSuccess("");
       setSearchTerm("");
     } finally {
@@ -338,7 +371,9 @@ function Dashboard({ setIsAuthenticated }) {
 
   const handleEditCard = async (e) => {
     e.preventDefault();
-    if (!validateEditInput(editCost, editPph, editLevel, setEditError)) {
+    if (
+      !validateEditInput(editCost, editPph, editLevel, setEditError, language)
+    ) {
       return;
     }
     const originalCard = userCards.find((card) => card.id === cardToEdit);
@@ -347,9 +382,7 @@ function Dashboard({ setIsAuthenticated }) {
       originalCard.current_cost === editCost &&
       originalCard.current_hourly_earnings === editPph
     ) {
-      setNoChangesError(
-        "No changes detected. Please modify the card details before saving."
-      );
+      setNoChangesError(t("no_changes_error"));
       setTimeout(() => {
         setNoChangesError("");
       }, 3500);
@@ -374,11 +407,11 @@ function Dashboard({ setIsAuthenticated }) {
       setEditPph("");
       setCardToEdit(null);
       setIsEditModalOpen(false);
-      setSuccess("Card successfully updated!");
+      setSuccess(t("card_edit_success"));
       setError("");
       setSearchTerm("");
     } catch (error) {
-      setEditError("Failed to update card. Please try again.");
+      setEditError(t("card_edit_error"));
       setSuccess("");
       setSearchTerm("");
     } finally {
@@ -418,11 +451,11 @@ function Dashboard({ setIsAuthenticated }) {
       setUserCards((prevCards) =>
         prevCards.filter((card) => card.id !== cardToDelete)
       );
-      setSuccess("Card successfully deleted!");
+      setSuccess(t("card_delete_success"));
       setError("");
       setSearchTerm("");
     } catch (error) {
-      setError("Default cards cannot be deleted.");
+      setError(t("card_delete_error"));
       setSuccess("");
       setSearchTerm("");
     } finally {
@@ -533,6 +566,11 @@ function Dashboard({ setIsAuthenticated }) {
       card.card_category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const noResultsMessage =
+    language === "en"
+      ? `No results found for "${searchTerm}".`
+      : `"${searchTerm}" için sonuç bulunamadı.`;
+
   const availableCards = cards.filter(
     (card) => !userCards.some((userCard) => userCard.id === card.id)
   );
@@ -550,7 +588,7 @@ function Dashboard({ setIsAuthenticated }) {
       <div className={`loading-screen ${isDarkMode ? "dark" : ""}`}>
         <img src={hamsterImage} alt="Loading" className="loading-image" />
         <div className="loader"></div>
-        <h3 className="loader-text">Loading...</h3>
+        <h3 className="loader-text">{t("loading")}</h3>
       </div>
     );
   }
@@ -571,16 +609,24 @@ function Dashboard({ setIsAuthenticated }) {
           Hi, <span>{username}</span>
         </h2>
         <div className="right-buttons">
-          <button onClick={toggleTheme} className="theme-toggle">
+          <LanguageSelector
+            currentLanguage={language}
+            onChangeLanguage={handleLanguageChange}
+          />
+          <button
+            onClick={toggleTheme}
+            className="theme-toggle"
+            title={t("theme_selector")}
+          >
             {isDarkMode ? <FaSun /> : <FaMoon />}
           </button>
           <button className="logout-button" onClick={openLogoutModal}>
             <FaSignOutAlt />
-            Logout
+            {t("logout")}
           </button>
         </div>
       </div>
-      <h3 className="add-card">Add Card</h3>
+      <h3 className="add-card">{t("add_card")}</h3>
       <div className="form-container">
         <form onSubmit={handleAddCardToUser}>
           <select
@@ -588,7 +634,7 @@ function Dashboard({ setIsAuthenticated }) {
             value={selectedCard}
             onChange={(e) => setSelectedCard(e.target.value)}
           >
-            <option value="">Select Card</option>
+            <option value="">{t("select_card")}</option>
             {availableCards.map((card) => (
               <option key={card.id} value={card.id}>
                 {card.name}
@@ -601,7 +647,7 @@ function Dashboard({ setIsAuthenticated }) {
             min="1"
             max="1000"
             inputMode="numeric"
-            placeholder="Current Card Level"
+            placeholder={t("current_card_level")}
             value={level}
             onChange={(e) => {
               const value = e.target.value;
@@ -614,7 +660,7 @@ function Dashboard({ setIsAuthenticated }) {
             required
             type="text"
             maxLength="13"
-            placeholder="Cost to Next Level"
+            placeholder={t("cost_to_next_level")}
             inputMode="numeric"
             value={currentCost}
             onChange={(e) => handleInputChange(e, setCurrentCost)}
@@ -623,7 +669,7 @@ function Dashboard({ setIsAuthenticated }) {
             required
             type="text"
             maxLength="10"
-            placeholder="PPH on Next Level"
+            placeholder={t("pph_on_next_level")}
             inputMode="numeric"
             value={currentHourlyEarnings}
             onChange={(e) => handleInputChange(e, setCurrentHourlyEarnings)}
@@ -634,7 +680,8 @@ function Dashboard({ setIsAuthenticated }) {
             disabled={addingCard}
           >
             {addingCard ? <FaSpinner className="button-spinner" /> : <FaPlus />}
-            {addingCard ? "Adding..." : "Add Card"}
+
+            {addingCard ? t("adding_card") : t("add_card")}
           </button>
         </form>
       </div>
@@ -650,12 +697,12 @@ function Dashboard({ setIsAuthenticated }) {
           {success}
         </p>
       )}
-      <h3 className="your-cards">Your Cards</h3>
+      <h3 className="your-cards">{t("your_cards")}</h3>
       <div className="search-and-sort-container">
         <div className="search-container">
           <input
             type="text"
-            placeholder="Search cards..."
+            placeholder={t("search_cards")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -672,11 +719,14 @@ function Dashboard({ setIsAuthenticated }) {
             onChange={(e) => setSortBy(e.target.value)}
             className="sort-select"
           >
-            <option value="ratio">Sort by Ratio</option>
-            <option value="level">Sort by Level</option>
-            <option value="cost">Sort by Cost</option>
-            <option value="pph">Sort by PPH</option>
-            <option value="name">Sort by Name</option>
+            <option value="" disabled hidden>
+              {t("sort_placeholder")}
+            </option>
+            <option value="ratio">{t("sort_by_ratio")}</option>
+            <option value="level">{t("sort_by_level")}</option>
+            <option value="cost">{t("sort_by_cost")}</option>
+            <option value="pph">{t("sort_by_pph")}</option>
+            <option value="name">{t("sort_by_name")}</option>
           </select>
         </div>
       </div>
@@ -684,11 +734,11 @@ function Dashboard({ setIsAuthenticated }) {
       {cardsLoading || !allImagesLoaded ? (
         <div className="loading-cards">
           <div className="spinner"></div>
-          <div className="loading-text">Loading cards...</div>
+          <div className="loading-text">{t("loading_cards")}</div>
         </div>
       ) : filteredCards.length === 0 ? (
         <div className="no-results-message">
-          <p>No results found for "{searchTerm}".</p>
+          <p>{noResultsMessage}</p>
         </div>
       ) : (
         <div className="cards-container">
@@ -705,7 +755,7 @@ function Dashboard({ setIsAuthenticated }) {
                   {userCard.has_timer && (
                     <FaClock
                       className="timer-icon"
-                      title="This card has upgrade cooldown."
+                      title={t("cooldown_text")}
                     />
                   )}
                   {userCard.image_url && (
@@ -727,11 +777,17 @@ function Dashboard({ setIsAuthenticated }) {
                 </div>
 
                 <div className="card-body">
-                  <p>Level: {userCard.level}</p>
-                  <p>Cost: {formatNumber(cost)}</p>
-                  <p>PPH: {formatNumber(pph)}</p>
                   <p>
-                    Ratio:{" "}
+                    {t("level")}: {userCard.level}
+                  </p>
+                  <p>
+                    {t("cost")}: {formatNumber(cost)}
+                  </p>
+                  <p>
+                    {t("pph")}: {formatNumber(pph)}
+                  </p>
+                  <p>
+                    {t("ratio")}:{" "}
                     <span style={{ color: userCard.ratioColor }}>
                       {userCard.ratio}
                     </span>
@@ -740,6 +796,7 @@ function Dashboard({ setIsAuthenticated }) {
                 <div className="card-footer">
                   <button
                     className="edit-button"
+                    title={t("edit_card")}
                     onClick={() => openEditModal(userCard)}
                   >
                     <FaPencilAlt />
@@ -747,6 +804,7 @@ function Dashboard({ setIsAuthenticated }) {
                   {!userCard.is_default && (
                     <button
                       className="delete-button"
+                      title={t("delete_card")}
                       onClick={() => openDeleteModal(userCard.id)}
                     >
                       <FaTrash />
@@ -775,6 +833,7 @@ function Dashboard({ setIsAuthenticated }) {
         setEditPph={setEditPph}
         handleInputChange={handleInputChange}
         editingCard={editingCard}
+        t={t}
       />
       <UserDeleteModal
         isDeleteModalOpen={isDeleteModalOpen}
@@ -784,6 +843,7 @@ function Dashboard({ setIsAuthenticated }) {
         userCards={userCards}
         handleDeleteCard={handleDeleteCard}
         deletingCard={deletingCard}
+        t={t}
       />
 
       <LogoutModal
@@ -792,6 +852,7 @@ function Dashboard({ setIsAuthenticated }) {
         handleLogout={handleLogout}
         loggingOut={loggingOut}
         isDarkMode={isDarkMode}
+        t={t}
       />
       <AddCardModal
         isOpen={isAddCardModalOpen}

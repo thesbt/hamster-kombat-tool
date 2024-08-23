@@ -1,36 +1,65 @@
-export const validateInput = (currentCost, currentHourlyEarnings, level, setError) => {
+import enTranslations from "../locales/en/translation.json";
+import trTranslations from "../locales/tr/translation.json";
+
+const translations = {
+  en: enTranslations,
+  tr: trTranslations,
+};
+
+const getErrorMessage = (key, language) => translations[language][key] || key;
+
+export const validateInput = (
+  currentCost,
+  currentHourlyEarnings,
+  level,
+  setError,
+  language
+) => {
   if (!/^\d+$/.test(currentCost) || currentCost.length > 13) {
-    setError("Current Cost must be a valid number and 13 characters or less.");
+    setError(getErrorMessage("current_cost_validate_error", language));
     return false;
   }
-  if (!/^\d+$/.test(currentHourlyEarnings) || currentHourlyEarnings.length > 10) {
-    setError("Current Hourly Earnings must be a valid number and 10 characters or less.");
+  if (
+    !/^\d+$/.test(currentHourlyEarnings) ||
+    currentHourlyEarnings.length > 10
+  ) {
+    setError(getErrorMessage("current_pph_validate_error", language));
     return false;
   }
   if (!/^\d+$/.test(level) || level.length > 4 || parseInt(level) > 1000) {
-    setError("Level must be a valid number, no more than 1000.");
+    setError(getErrorMessage("current_level_validate_error", language));
     return false;
   }
   return true;
 };
 
-export const validateEditInput = (editCost, editPph, editLevel, setEditError) => {
+export const validateEditInput = (
+  editCost,
+  editPph,
+  editLevel,
+  setEditError,
+  language
+) => {
   if (!/^\d+$/.test(editCost) || editCost.length > 13) {
-    setEditError("Cost must be a valid number and 13 characters or less.");
+    setEditError(getErrorMessage("current_cost_validate_error", language));
     setTimeout(() => {
       setEditError("");
     }, 3500);
     return false;
   }
   if (!/^\d+$/.test(editPph) || editPph.length > 10) {
-    setEditError("PPH must be a valid number and 10 characters or less.");
+    setEditError(getErrorMessage("current_pph_validate_error", language));
     setTimeout(() => {
       setEditError("");
     }, 3500);
     return false;
   }
-  if (!/^\d+$/.test(editLevel) || editLevel.length > 4 || parseInt(editLevel) > 1000) {
-    setEditError("Level must be a valid number, no more than 1000.");
+  if (
+    !/^\d+$/.test(editLevel) ||
+    editLevel.length > 4 ||
+    parseInt(editLevel) > 1000
+  ) {
+    setEditError(getErrorMessage("current_level_validate_error", language));
     setTimeout(() => {
       setEditError("");
     }, 3500);

@@ -10,6 +10,7 @@ function UserDeleteModal({
   userCards,
   handleDeleteCard,
   deletingCard,
+  t,
 }) {
   return (
     <Modal
@@ -41,7 +42,7 @@ function UserDeleteModal({
           )}
         </div>
         <p className="delete-message">
-          Are you sure you want to delete this card?
+          {t("delete_confirmation_message")}
         </p>
         <div className="modal-buttons">
           <button
@@ -54,11 +55,11 @@ function UserDeleteModal({
             ) : (
               <FaCheck />
             )}
-            {deletingCard ? "Deleting..." : "Delete"}
+            {deletingCard ? t("deleting") : t("delete")}
           </button>
           <button className="cancel-button" onClick={closeDeleteModal}>
             <FaTimes />
-            Cancel
+            {t("cancel")}
           </button>
         </div>
       </div>

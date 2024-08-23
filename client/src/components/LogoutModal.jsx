@@ -8,6 +8,7 @@ const LogoutModal = ({
   handleLogout,
   loggingOut,
   isDarkMode,
+  t,
 }) => {
   return (
     <Modal
@@ -18,7 +19,7 @@ const LogoutModal = ({
       overlayClassName={`modal-overlay ${isDarkMode ? "dark" : ""}`}
     >
       <div className="modal-card">
-        <p className="logout-message">Are you sure you want to log out?</p>
+        <p className="logout-message">{t("logout_confirmation_message")}</p>
         <div className="modal-buttons">
           <button
             className="confirm-button"
@@ -30,11 +31,11 @@ const LogoutModal = ({
             ) : (
               <FaCheck />
             )}
-            {loggingOut ? "Logging out..." : "Logout"}
+            {loggingOut ? t("logging_out") : t("logout")}
           </button>
           <button className="cancel-button" onClick={onRequestClose}>
             <FaTimes />
-            Cancel
+            {t("cancel")}
           </button>
         </div>
       </div>
