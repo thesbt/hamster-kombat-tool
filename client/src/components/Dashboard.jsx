@@ -600,6 +600,7 @@ function Dashboard({ setIsAuthenticated }) {
             type="number"
             min="1"
             max="1000"
+            inputMode="numeric"
             placeholder="Current Card Level"
             value={level}
             onChange={(e) => {
@@ -614,6 +615,7 @@ function Dashboard({ setIsAuthenticated }) {
             type="text"
             maxLength="13"
             placeholder="Cost to Next Level"
+            inputMode="numeric"
             value={currentCost}
             onChange={(e) => handleInputChange(e, setCurrentCost)}
           />
@@ -622,6 +624,7 @@ function Dashboard({ setIsAuthenticated }) {
             type="text"
             maxLength="10"
             placeholder="PPH on Next Level"
+            inputMode="numeric"
             value={currentHourlyEarnings}
             onChange={(e) => handleInputChange(e, setCurrentHourlyEarnings)}
           />
