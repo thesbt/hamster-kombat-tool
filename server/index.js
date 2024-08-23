@@ -15,7 +15,7 @@ const limiter = rateLimit({
 });
 
 app.use(cors({
-  origin: 'https://hamster.thesbt.site/',
+  origin: 'https://hamster.thesbt.site',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
