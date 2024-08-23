@@ -56,7 +56,7 @@ html {
 :root {
   --white: #ffffff;
   --bg-color: linear-gradient(
-    180deg,
+    90deg,
     rgba(245, 245, 245, 1) 0%,
     rgba(255, 255, 255, 1) 100%
   );
@@ -158,7 +158,7 @@ html {
   align-items: center;
   justify-content: center;
   background: linear-gradient(
-    45deg,
+    90deg,
     var(--primary-color),
     var(--secondary-color)
   );
@@ -183,7 +183,7 @@ html {
   align-items: center;
   justify-content: center;
   background: linear-gradient(
-    45deg,
+    90deg,
     var(--primary-color),
     var(--secondary-color)
   );
@@ -345,7 +345,7 @@ html {
 
 .card h3 {
   color: #ff7f50;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 600;
   text-align: center;
 }
@@ -355,7 +355,7 @@ html {
   top: 5px;
   left: -30px;
   color: #ff7f50;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   z-index: 1;
 }
 
@@ -394,7 +394,7 @@ html {
 
 .card-body p {
   margin: 3px 0;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .card-body span {
@@ -482,41 +482,54 @@ html {
 
 .modal-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   margin-top: 25px;
 }
 
 .modal-buttons button {
-  flex: 1;
-  margin: 0 8px;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.15s ease-in-out;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-weight: 500;
+  margin-right: 10px;
+
+  border: none;
+  color: var(--button-text);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  gap: 5px;
 }
 
 .modal-buttons .confirm-button {
-  background-color: #ff7f50;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
   color: var(--button-text);
 }
 
 .modal-buttons .confirm-button:hover {
   background-color: #ff9f70;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 127, 80, 0.2);
 }
 
 .modal-buttons .cancel-button {
-  background-color: #757575;
+  background: var(--input-text);
   color: var(--button-text);
 }
 
+.dark .modal-buttons .cancel-button {
+  background: var(--button-color);
+  color: var(--text-color);
+  border: 1px solid var(--text-color);
+}
+
 .modal-buttons .cancel-button:hover {
-  background-color: #616161;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 127, 80, 0.2);
 }
 
 /* Spinner */
@@ -984,7 +997,7 @@ button:disabled .button-spinner {
   gap: 5px;
   font-size: 14px;
   background: linear-gradient(
-    45deg,
+    90deg,
     var(--primary-color),
     var(--secondary-color)
   );
