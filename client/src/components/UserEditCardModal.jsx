@@ -51,6 +51,7 @@ const UserEditCardModal = ({
               id="editLevel"
               required
               type="number"
+              inputMode="numeric"
               min="1"
               max="1000"
               placeholder="Current Card Level"
@@ -69,6 +70,7 @@ const UserEditCardModal = ({
               id="editCost"
               required
               type="text"
+              inputMode="numeric"
               maxLength="13"
               placeholder="Cost to Next Level"
               value={editCost}
@@ -81,6 +83,7 @@ const UserEditCardModal = ({
               id="editPph"
               required
               type="text"
+              inputMode="numeric"
               maxLength="10"
               placeholder="PPH on Next Level"
               value={editPph}
