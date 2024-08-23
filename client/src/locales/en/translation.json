@@ -64,5 +64,6 @@
   "register_password_weak_error": "Password is too weak. Please choose a stronger password.",
   "register_invalid_email_error": "Invalid Email",
   "registration_success": "Registration successful! Redirecting to login page...",
-  "registration_error": "User already exists"
+  "registration_error": "Registration error",
+  "user_already_exists": "User already exists"
 }

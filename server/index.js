@@ -215,7 +215,7 @@ app.post("/api/register", async (req, res) => {
     const { username_exists, email_exists } = rows[0];
 
     if (parseInt(username_exists) > 0 || parseInt(email_exists) > 0) {
-      return res.status(400).json({ message: "registration_error" });
+      return res.status(400).json({ error: "user_already_exists" });
     }
 
     const result = await pool.query(
@@ -229,7 +229,7 @@ app.post("/api/register", async (req, res) => {
 
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    res.status(500).json({ error: "An error occurred during registration" });
+    res.status(500).json({ error: "registration_error" });
   }
 });
 

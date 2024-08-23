@@ -64,5 +64,6 @@
   "register_password_weak_error": "Şifre çok zayıf. Lütfen daha güçlü bir şifre seçin.",
   "register_invalid_email_error": "Hatalı E-Posta",
   "registration_success": "Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...",
-  "registration_error": "Bu kullanıcı zaten mevcut"
+  "registration_error": "Kayıt sırasında bir hata oluştu",
+  "user_already_exists": "Bu kullanıcı zaten mevcut"
 }
