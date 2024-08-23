@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import { useTheme } from "./ThemeContext";
 import "./assets/Dashboard.css";
 import hamsterImage from "./assets/img/Lord.webp";
+import { validateInput, validateEditInput } from "../utils/validation";
 import {
   FaSun,
   FaMoon,
@@ -54,7 +55,8 @@ function Dashboard({ setIsAuthenticated }) {
   const [deletingCard, setDeletingCard] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [sortBy, setSortBy] = useState("ratio");
-  
+  const [editError, setEditError] = useState("");
+
   const navigate = useNavigate();
 
   const [isAdmin, setIsAdmin] = useState(false);
@@ -89,6 +91,42 @@ function Dashboard({ setIsAuthenticated }) {
     }
   }, []);
 
+  const handleImageLoad = useCallback((cardId) => {
+    setImagesLoaded((prev) => ({ ...prev, [cardId]: true }));
+  }, []);
+
+  const fetchUserCards = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    setCardsLoading(true);
+    try {
+      const response = await axios.get(
+        "https://hamster-kombat-tool-server.vercel.app/api/user-cards",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setUserCards(response.data);
+
+      // Resimleri önceden yükle
+      response.data.forEach((card) => {
+        if (card.image_url) {
+          const img = new Image();
+          img.src = card.image_url;
+          img.onload = () => handleImageLoad(card.id);
+          img.onerror = () => handleImageLoad(card.id);
+        } else {
+          // Eğer resim yoksa, bu kartı yüklenmiş olarak işaretle
+          handleImageLoad(card.id);
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching user cards:", error);
+      setError("Failed to fetch user cards. Please try again.");
+    } finally {
+      setCardsLoading(false);
+    }
+  }, [handleImageLoad]);
+
   useEffect(() => {
     document.title = "Dashboard | Hamster Kombat Tool";
     const fetchData = async () => {
@@ -102,7 +140,7 @@ function Dashboard({ setIsAuthenticated }) {
       }
     };
     fetchData();
-  }, [fetchUserInfo]);
+  }, [fetchUserInfo, fetchUserCards]);
 
   useEffect(() => {
     if (success || error) {
@@ -176,7 +214,7 @@ function Dashboard({ setIsAuthenticated }) {
     }));
   };
 
-  const handleAddCard = async (e) => {
+  const handleAdminAddCard = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     try {
@@ -254,51 +292,7 @@ function Dashboard({ setIsAuthenticated }) {
     }
   };
 
-  const fetchUserCards = async () => {
-    const token = localStorage.getItem("token");
-    setCardsLoading(true);
-    try {
-      const response = await axios.get(
-        "https://hamster-kombat-tool-server.vercel.app/api/user-cards",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setUserCards(response.data);
-
-      // Resimleri önceden yükle
-      response.data.forEach((card) => {
-        if (card.image_url) {
-          const img = new Image();
-          img.src = card.image_url;
-          img.onload = () => handleImageLoad(card.id);
-          img.onerror = () => handleImageLoad(card.id);
-        } else {
-          // Eğer resim yoksa, bu kartı yüklenmiş olarak işaretle
-          handleImageLoad(card.id);
-        }
-      });
-    } catch (error) {
-      console.error("Error fetching user cards:", error);
-      setError("Failed to fetch user cards. Please try again.");
-    } finally {
-      setCardsLoading(false);
-    }
-  };
-
-  const validateInput = () => {
-    if (!/^\d+$/.test(currentCost)) {
-      setError("Current Cost must be a valid number.");
-      return false;
-    }
-    if (!/^\d+$/.test(currentHourlyEarnings)) {
-      setError("Current Hourly Earnings must be a valid number.");
-      return false;
-    }
-    return true;
-  };
-
-  const handleAddOrUpdateCard = async (e) => {
+  const handleAddCardToUser = async (e) => {
     e.preventDefault();
     if (!validateInput()) {
       return;
@@ -333,16 +327,28 @@ function Dashboard({ setIsAuthenticated }) {
     }
   };
 
+  const [noChangesError, setNoChangesError] = useState("");
+
   const handleEditCard = async (e) => {
     e.preventDefault();
-    if (
-      !/^\d+$/.test(editCost) ||
-      !/^\d+$/.test(editPph) ||
-      !/^\d+$/.test(editLevel)
-    ) {
-      setError("Level, Cost, and PPH must be valid numbers.");
+    if (!validateEditInput()) {
       return;
     }
+    const originalCard = userCards.find((card) => card.id === cardToEdit);
+    if (
+      originalCard.level === parseInt(editLevel) &&
+      originalCard.current_cost === editCost &&
+      originalCard.current_hourly_earnings === editPph
+    ) {
+      setNoChangesError(
+        "No changes detected. Please modify the card details before saving."
+      );
+      setTimeout(() => {
+        setNoChangesError("");
+      }, 3500);
+      return;
+    }
+
     setEditingCard(true);
     const token = localStorage.getItem("token");
     try {
@@ -365,7 +371,7 @@ function Dashboard({ setIsAuthenticated }) {
       setError("");
       setSearchTerm("");
     } catch (error) {
-      setError("Failed to update card. Please try again.");
+      setEditError("Failed to update card. Please try again.");
       setSuccess("");
       setSearchTerm("");
     } finally {
@@ -522,10 +528,6 @@ function Dashboard({ setIsAuthenticated }) {
     (card) => !userCards.some((userCard) => userCard.id === card.id)
   );
 
-  const handleImageLoad = useCallback((cardId) => {
-    setImagesLoaded((prev) => ({ ...prev, [cardId]: true }));
-  }, []);
-
   const allImagesLoaded = useMemo(() => {
     return filteredCards.every((card) => imagesLoaded[card.id]);
   }, [filteredCards, imagesLoaded]);
@@ -571,7 +573,7 @@ function Dashboard({ setIsAuthenticated }) {
       </div>
       <h3 className="add-card">Add Card</h3>
       <div className="form-container">
-        <form onSubmit={handleAddOrUpdateCard}>
+        <form onSubmit={handleAddCardToUser}>
           <select
             required
             value={selectedCard}
@@ -614,9 +616,13 @@ function Dashboard({ setIsAuthenticated }) {
             value={currentHourlyEarnings}
             onChange={(e) => handleInputChange(e, setCurrentHourlyEarnings)}
           />
-          <button className="add-card-button" type="submit" disabled={addingCard}>
+          <button
+            className="add-card-button"
+            type="submit"
+            disabled={addingCard}
+          >
             {addingCard ? <FaSpinner className="button-spinner" /> : <FaPlus />}
-            {addingCard ? 'Adding...' : 'Add Card'}
+            {addingCard ? "Adding..." : "Add Card"}
           </button>
         </form>
       </div>
@@ -702,11 +708,11 @@ function Dashboard({ setIsAuthenticated }) {
                 </div>
                 <div className="card-second-header">
                   <h3>{userCard.name}</h3>
-                  <p>{userCard.card_category}</p>                  
+                  <p>{userCard.card_category}</p>
                 </div>
                 <div className="card-line">
-                    <hr />
-                  </div>
+                  <hr />
+                </div>
 
                 <div className="card-body">
                   <p>Level: {userCard.level}</p>
@@ -720,7 +726,7 @@ function Dashboard({ setIsAuthenticated }) {
                   </p>
                 </div>
                 <div className="card-footer">
-                <button
+                  <button
                     className="edit-button"
                     onClick={() => openEditModal(userCard)}
                   >
@@ -734,7 +740,6 @@ function Dashboard({ setIsAuthenticated }) {
                       <FaTrash />
                     </button>
                   )}
-                  
                 </div>
               </div>
             );
@@ -761,11 +766,14 @@ function Dashboard({ setIsAuthenticated }) {
             )}
             <h2>{userCards.find((card) => card.id === cardToEdit)?.name}</h2>
             <p className="card-category">
-              {" "}
               {userCards.find((card) => card.id === cardToEdit)?.card_category}
             </p>
           </div>
           <form onSubmit={handleEditCard}>
+            {noChangesError && (
+              <p className="error-message">{noChangesError}</p>
+            )}
+            {editError && <p className="error-message">{editError}</p>}
             <div className="input-group">
               <label htmlFor="editLevel">Current Card Level:</label>
               <input
@@ -809,10 +817,18 @@ function Dashboard({ setIsAuthenticated }) {
               />
             </div>
             <div className="modal-buttons">
-            <button className="confirm-button" type="submit" disabled={editingCard}>
-              {editingCard ? <FaSpinner className="button-spinner" /> : <FaCheck />}
-              {editingCard ? 'Saving...' : 'Save'}
-            </button>
+              <button
+                className="confirm-button"
+                type="submit"
+                disabled={editingCard}
+              >
+                {editingCard ? (
+                  <FaSpinner className="button-spinner" />
+                ) : (
+                  <FaCheck />
+                )}
+                {editingCard ? "Saving..." : "Save"}
+              </button>
               <button className="cancel-button" onClick={closeEditModal}>
                 <FaTimes />
                 Cancel
@@ -857,10 +873,18 @@ function Dashboard({ setIsAuthenticated }) {
             Are you sure you want to delete this card?
           </p>
           <div className="modal-buttons">
-          <button className="confirm-button" onClick={handleDeleteCard} disabled={deletingCard}>
-            {deletingCard ? <FaSpinner className="button-spinner" /> : <FaCheck />}
-            {deletingCard ? 'Deleting...' : 'Delete'}
-          </button>
+            <button
+              className="confirm-button"
+              onClick={handleDeleteCard}
+              disabled={deletingCard}
+            >
+              {deletingCard ? (
+                <FaSpinner className="button-spinner" />
+              ) : (
+                <FaCheck />
+              )}
+              {deletingCard ? "Deleting..." : "Delete"}
+            </button>
             <button className="cancel-button" onClick={closeDeleteModal}>
               <FaTimes />
               Cancel
@@ -881,10 +905,18 @@ function Dashboard({ setIsAuthenticated }) {
           </div>
           <p className="logout-message">Are you sure you want to log out?</p>
           <div className="modal-buttons">
-          <button className="confirm-button" onClick={handleLogout} disabled={loggingOut}>
-            {loggingOut ? <FaSpinner className="button-spinner" /> : <FaCheck />}
-            {loggingOut ? 'Logging out...' : 'Logout'}
-          </button>
+            <button
+              className="confirm-button"
+              onClick={handleLogout}
+              disabled={loggingOut}
+            >
+              {loggingOut ? (
+                <FaSpinner className="button-spinner" />
+              ) : (
+                <FaCheck />
+              )}
+              {loggingOut ? "Logging out..." : "Logout"}
+            </button>
             <button className="cancel-button" onClick={closeLogoutModal}>
               <FaTimes />
               Cancel
@@ -903,7 +935,7 @@ function Dashboard({ setIsAuthenticated }) {
           <div className="card-header">
             <h2>Add New Card</h2>
           </div>
-          <form onSubmit={handleAddCard}>
+          <form onSubmit={handleAdminAddCard}>
             <div className="input-group">
               <label htmlFor="addName">Card Name:</label>
               <input
@@ -1135,7 +1167,7 @@ function Dashboard({ setIsAuthenticated }) {
           <div className="modal-buttons">
             <button className="confirm-button" onClick={confirmAdminDeleteCard}>
               <FaCheck />
-              Yes, Delete
+              Delete
             </button>
             <button
               className="cancel-button"
