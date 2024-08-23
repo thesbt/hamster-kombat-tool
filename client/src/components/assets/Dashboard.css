@@ -453,6 +453,10 @@ html {
   padding: 25px;
 }
 
+.modal-card input {
+  margin-bottom: 10px;
+}
+
 .modal-card .card-header {
   text-align: center;
   margin-bottom: 25px;
