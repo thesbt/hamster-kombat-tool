@@ -2,24 +2,21 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const pool = require("./db");
-//const cors = require("cors");
-//const rateLimit = require("express-rate-limit");
+const cors = require("cors");
+const rateLimit = require("express-rate-limit");
 require("dotenv").config();
 
-//const app = express();
+const app = express();
 const port = 3000;
 const SECRET_KEY = process.env.SECRET_KEY;
 
-
-// ENABLE THIS LATER
-/*
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
-}); */
+  max: 99999999, //MAKE THIS 100 LATER
+});
 
-//app.use(limiter);
-//app.use(express.json());
+app.use(limiter);
+app.use(express.json());
 
 //DISABLE THIS LATER
 app.use(cors());
