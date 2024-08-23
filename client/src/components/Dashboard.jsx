@@ -5,7 +5,7 @@ import Modal from "react-modal";
 import { useTheme } from "./ThemeContext";
 import "./assets/Dashboard.css";
 import hamsterImage from "./assets/img/Lord.webp";
-import { validateInput, validateEditInput } from "../utils/validation"; // Yeni import
+import { validateInput, validateEditInput } from "../utils/validation";
 import {
   FaSun,
   FaMoon,
@@ -289,8 +289,6 @@ function Dashboard({ setIsAuthenticated }) {
       throw error;
     }
   };
-
-
 
   const handleAddCardToUser = async (e) => {
     e.preventDefault();
