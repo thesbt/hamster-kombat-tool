@@ -16,11 +16,18 @@ const limiter = rateLimit({
 
 app.use(limiter);
 app.use(express.json());
+
+//DISABLE THIS LATER
+app.use(cors());
+
+// ENABLE THIS LATER
+/*
 app.use(cors({
   origin: 'https://hamster.thesbt.site',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
+*/
 
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
