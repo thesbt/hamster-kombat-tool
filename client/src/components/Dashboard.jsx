@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import axios from "axios";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import { useTheme } from "./ThemeContext";
 import "./assets/Dashboard.css";
@@ -28,6 +28,7 @@ import {
   FaSpinner,
   FaCog,
   FaGamepad,
+  FaArrowUp,
 } from "react-icons/fa";
 
 const translations = {
@@ -528,11 +529,11 @@ function Dashboard({ setIsAuthenticated }) {
     const upperThreshold = sortedRatios[Math.floor(sortedRatios.length * 0.7)];
 
     if (ratio <= lowerThreshold) {
-      return "var(--ratio-green)";
+      return { color: "var(--ratio-green)", showArrow: true };
     } else if (ratio >= upperThreshold) {
-      return "var(--ratio-red)";
+      return { color: "var(--ratio-red)", showArrow: false };
     } else {
-      return "var(--ratio-orange)";
+      return { color: "var(--ratio-orange)", showArrow: false };
     }
   };
 
@@ -812,6 +813,15 @@ function Dashboard({ setIsAuthenticated }) {
           {filteredCards.map((userCard) => {
             const cost = parseFloat(userCard.current_cost);
             const pph = parseFloat(userCard.current_hourly_earnings);
+            const ratio = cost / pph;
+            const ratioColor = calculateRatioColor(
+              ratio,
+              filteredCards.map(
+                (card) =>
+                  parseFloat(card.current_cost) /
+                  parseFloat(card.current_hourly_earnings)
+              )
+            );
 
             return (
               <div
@@ -819,6 +829,9 @@ function Dashboard({ setIsAuthenticated }) {
                 key={userCard.id}
               >
                 <div className="card-header">
+                  {userCard.ratioColor.showArrow && (
+                    <FaArrowUp className="upgrade-arrow" />
+                  )}
                   {userCard.has_timer && (
                     <FaClock
                       className="timer-icon"
@@ -855,8 +868,8 @@ function Dashboard({ setIsAuthenticated }) {
                   </p>
                   <p>
                     {t("ratio")}:{" "}
-                    <span style={{ color: userCard.ratioColor }}>
-                      {userCard.ratio}
+                    <span style={{ color: ratioColor.color, fontWeight: 'bold' }}>
+                      {ratio.toFixed(2)}
                     </span>
                   </p>
                 </div>

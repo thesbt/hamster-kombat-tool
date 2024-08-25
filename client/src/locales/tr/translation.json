@@ -70,5 +70,6 @@
   "game_data": "Hamster Kombat Günlük Görevler",
   "daily_cards": "Günlük Kombo Kartlar",
   "morse_code": "Günlük Mors Kodu",
-  "last_update": "Son Güncelleme"
+  "last_update": "Son Güncelleme",
+  "loading_game_data": "Veriler yükleniyor..."
 }

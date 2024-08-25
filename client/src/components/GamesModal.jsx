@@ -68,7 +68,10 @@ function GamesModal({ isOpen, onRequestClose, gameData, isDarkMode, t }) {
         </div>
         
       ) : (
-        <p>{t("loading_game_data")}</p>
+        <div className="loading-container">
+          <div className="loader"></div>
+          <p>{t("loading_game_data")}</p>
+        </div>
       )}
       </div>
     </Modal>

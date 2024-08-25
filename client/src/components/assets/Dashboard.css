@@ -133,7 +133,7 @@ html {
   justify-content: space-between; /* Eklendi */
   padding: 15px 5px;
   margin-bottom: 15px;
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: var(--form-bg);
 }
 
@@ -346,6 +346,25 @@ html {
   margin-bottom: 10px;
   position: relative;
   font-weight: 400;
+}
+
+.upgrade-arrow {
+  position: absolute;
+  top: 5px;
+  left: 100px;
+  color: var(--ratio-green);
+  font-size: 1.2rem;
+  animation: bounce 1.5s infinite;
+  z-index: 1;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 .card:hover {
@@ -908,7 +927,7 @@ input:checked + .slider:before {
   flex-direction: column;
   padding: 15px;
   background-color: var(--form-bg);
-  border-radius: 5px;
+  border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -923,7 +942,7 @@ input:checked + .slider:before {
   width: 100%;
   padding: 10px;
   border: 1px solid var(--input-border);
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: var(--input-bg);
   color: var(--input-text);
   transition: all 0.3s ease;
@@ -1011,7 +1030,7 @@ input:checked + .slider:before {
   position: relative;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
-  margin-bottom: 10px;
+  margin: 10px 0px;
 }
 .loader::after {
   content: "";
@@ -1164,6 +1183,11 @@ button:disabled .button-spinner {
     left: -15px;
   }
 
+  .upgrade-arrow {
+    scale: 0.8;
+    left: 90px;
+  }
+
   .card-footer {
     scale: 0.85;
   }
@@ -1207,7 +1231,7 @@ button:disabled .button-spinner {
 .admin-section {
   margin-top: 30px;
   background-color: var(--card-bg-color);
-  border-radius: 5px;
+  border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -1215,7 +1239,7 @@ button:disabled .button-spinner {
 .add-card-button {
   flex: 1;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 10px 0px;
@@ -1404,15 +1428,16 @@ button:disabled .button-spinner {
 
 .games-card-container {
   text-align: center;
+  position: relative;  /* Bu satırı ekleyin */
 }
 
 .close-button {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: -22px;
+  right: -22px;
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   cursor: pointer;
   color: var(--text-color);
 }
@@ -1425,9 +1450,10 @@ button:disabled .button-spinner {
 
 .game-data-title {
   background-color: var(--card-bg-color);
-  border-radius: 5px;
+  border-radius: 8px;
   padding: 10px;
   color: var(--text-color);
+  margin-top: 10px;
 }
 
 .game-data ul {
@@ -1436,7 +1462,7 @@ button:disabled .button-spinner {
 }
 
 .game-data li {
-  margin-bottom: 5px;
+  font-size: 0.9em;
 }
 
 

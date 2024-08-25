@@ -70,5 +70,6 @@
   "game_data": "Hamster Kombat Daily Tasks",
   "daily_cards": "Daily Combo Cards",
   "morse_code": "Daily Morse Code",
-  "last_update": "Last Update"
+  "last_update": "Last Update",
+  "loading_game_data": "Getting data..."
 }
