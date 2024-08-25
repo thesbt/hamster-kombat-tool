@@ -1406,6 +1406,7 @@ button:disabled .button-spinner {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   max-height: 90vh;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   justify-content: center;
