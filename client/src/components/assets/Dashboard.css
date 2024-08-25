@@ -1434,7 +1434,7 @@ button:disabled .button-spinner {
 .close-button {
   position: absolute;
   top: -22px;
-  right: -22px;
+  right: -26px;
   background: none;
   border: none;
   font-size: 1.2rem;
