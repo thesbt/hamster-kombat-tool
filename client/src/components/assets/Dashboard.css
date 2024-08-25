@@ -132,7 +132,7 @@ html {
   align-items: center;
   justify-content: space-between; /* Eklendi */
   padding: 15px 5px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   border-radius: 5px;
   background-color: var(--form-bg);
 }
@@ -322,7 +322,7 @@ html {
 
 /* Cards */
 .cards-container {
-  margin-top: 30px;
+  margin-top: 15px;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
@@ -755,7 +755,7 @@ input:checked + .slider {
     90deg,
     var(--primary-color),
     var(--secondary-color)
-  );;
+  );
 }
 
 input:checked + .slider:before {
@@ -892,7 +892,6 @@ input:checked + .slider:before {
 .form-container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
   padding: 15px;
   background-color: var(--form-bg);
   border-radius: 5px;
@@ -957,7 +956,7 @@ input:checked + .slider:before {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+
 }
 
 .search-container {

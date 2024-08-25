@@ -136,7 +136,6 @@ function Dashboard({ setIsAuthenticated }) {
       );
       setUserCards(response.data);
 
-      // Resimleri önceden yükle
       response.data.forEach((card) => {
         if (card.image_url) {
           const img = new Image();
@@ -144,34 +143,32 @@ function Dashboard({ setIsAuthenticated }) {
           img.onload = () => handleImageLoad(card.id);
           img.onerror = () => handleImageLoad(card.id);
         } else {
-          // Eğer resim yoksa, bu kartı yüklenmiş olarak işaretle
           handleImageLoad(card.id);
         }
       });
     } catch (error) {
       console.error("Error fetching user cards:", error);
-      setError(t("fetch_user_cards_error"));
+      setError("fetch_user_cards_error");
     } finally {
       setCardsLoading(false);
       window.scrollTo(0, 0);
     }
-  }, [handleImageLoad, t]);
+  }, [handleImageLoad]);
 
   useEffect(() => {
     document.title = "Dashboard | Hamster Kombat Tool";
     const fetchData = async () => {
       try {
-        // await new Promise(resolve => setTimeout(resolve, 30000)); // loading için gecikme
         await Promise.all([fetchUserInfo(), fetchCards(), fetchUserCards()]);
       } catch (error) {
-        setError(t("fetch_error"));
+        setError("fetch_error");
       } finally {
         setLoading(false);
         window.scrollTo(0, 0);
       }
     };
     fetchData();
-  }, [fetchUserInfo, fetchUserCards, t]);
+  }, [fetchUserInfo, fetchUserCards]);
 
   useEffect(() => {
     if (success || error) {
@@ -586,14 +583,14 @@ function Dashboard({ setIsAuthenticated }) {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (isDropdownOpen && !event.target.closest('.right-buttons')) {
+      if (isDropdownOpen && !event.target.closest(".right-buttons")) {
         setIsDropdownOpen(false);
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDropdownOpen]);
 

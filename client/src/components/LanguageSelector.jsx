@@ -14,7 +14,7 @@ const LanguageSelector = ({ currentLanguage, onChangeLanguage }) => {
           <ReactCountryFlag 
             countryCode="GB" 
             svg 
-            style={{width: '24px', height: '24px' }} // otomatik gelen stiller kaldırıldı ve inline stil eklendi
+            style={{width: '19px', height: '19px' }} // otomatik gelen stiller kaldırıldı ve inline stil eklendi
           />
         </button>
       )}
@@ -27,7 +27,7 @@ const LanguageSelector = ({ currentLanguage, onChangeLanguage }) => {
           <ReactCountryFlag 
             countryCode="TR" 
             svg 
-            style={{width: '24px', height: '24px' }} // otomatik gelen stiller kaldırıldı ve inline stil eklendi
+            style={{width: '21px', height: '21px' }} // otomatik gelen stiller kaldırıldı ve inline stil eklendi
           />
         </button>
       )}
