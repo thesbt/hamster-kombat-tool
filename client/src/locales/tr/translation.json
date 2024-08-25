@@ -66,5 +66,9 @@
   "registration_success": "Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...",
   "registration_error": "Bu kullanıcı zaten mevcut",
   "user_already_exists": "Bu kullanıcı zaten mevcut",
-  "welcome_message": "Merhaba"
+  "welcome_message": "Merhaba",
+  "game_data": "Hamster Kombat Günlük Görevler",
+  "daily_cards": "Günlük Kombo Kartlar",
+  "morse_code": "Günlük Mors Kodu",
+  "last_update": "Son Güncelleme"
 }

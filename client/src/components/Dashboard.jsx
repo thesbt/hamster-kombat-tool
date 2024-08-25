@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import Modal from "react-modal";
 import { useTheme } from "./ThemeContext";
 import "./assets/Dashboard.css";
@@ -14,6 +14,7 @@ import LogoutModal from "./LogoutModal";
 import UserEditCardModal from "./UserEditCardModal";
 import AdminEditCardModal from "./AdminEditCardModal";
 import UserDeleteModal from "./UserDeleteModal";
+import GamesModal from "./GamesModal";
 import enTranslations from "../locales/en/translation.json";
 import trTranslations from "../locales/tr/translation.json";
 import {
@@ -26,6 +27,7 @@ import {
   FaPencilAlt,
   FaSpinner,
   FaCog,
+  FaGamepad,
 } from "react-icons/fa";
 
 const translations = {
@@ -77,6 +79,8 @@ function Dashboard({ setIsAuthenticated }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [allCards, setAllCards] = useState([]);
   const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
+  const [isGamesModalOpen, setIsGamesModalOpen] = useState(false);
+  const [gameData, setGameData] = useState(null);
   const [newCard, setNewCard] = useState({
     name: "",
     image_url: "",
@@ -181,6 +185,22 @@ function Dashboard({ setIsAuthenticated }) {
       return () => clearTimeout(timer);
     }
   }, [success, error]);
+
+  const fetchGameData = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        "https://nabikaz.github.io/HamsterKombat-API/config.json"
+      );
+      setGameData(response.data);
+    } catch (error) {
+      console.error("Oyun verileri yüklenirken hata oluştu:", error);
+    }
+  }, []);
+
+  const openGamesModal = () => {
+    fetchGameData();
+    setIsGamesModalOpen(true);
+  };
 
   const fetchAllCards = async () => {
     const token = localStorage.getItem("token");
@@ -610,7 +630,8 @@ function Dashboard({ setIsAuthenticated }) {
         isDeleteModalOpen ||
         isLogoutModalOpen ||
         isEditModalOpen ||
-        isAddCardModalOpen
+        isAddCardModalOpen ||
+        isGamesModalOpen
           ? "blur"
           : ""
       }`}
@@ -621,6 +642,13 @@ function Dashboard({ setIsAuthenticated }) {
           <h2 className="dashboard-title">Hamster Kombat Tool</h2>
         </div>
         <div className="right-buttons">
+          <button
+            onClick={openGamesModal}
+            className="games-button"
+            title={t("games")}
+          >
+            <FaGamepad />
+          </button>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="settings-button"
@@ -916,6 +944,14 @@ function Dashboard({ setIsAuthenticated }) {
         cardToAdminDelete={cardToAdminDelete}
         confirmAdminDeleteCard={confirmAdminDeleteCard}
         isDarkMode={isDarkMode}
+      />
+
+      <GamesModal
+        isOpen={isGamesModalOpen}
+        onRequestClose={() => setIsGamesModalOpen(false)}
+        gameData={gameData}
+        isDarkMode={isDarkMode}
+        t={t}
       />
 
       {isAdmin && (

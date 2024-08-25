@@ -66,5 +66,9 @@
   "registration_success": "Registration successful! Redirecting to login page...",
   "registration_error": "User already exists",
   "user_already_exists": "User already exists",
-  "welcome_message": "Hi"
+  "welcome_message": "Hi",
+  "game_data": "Hamster Kombat Daily Tasks",
+  "daily_cards": "Daily Combo Cards",
+  "morse_code": "Daily Morse Code",
+  "last_update": "Last Update"
 }
