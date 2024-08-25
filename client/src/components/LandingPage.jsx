@@ -7,6 +7,7 @@ import logoImage from "./assets/img/Logo.webp";
 import { FaSun, FaMoon, FaSignInAlt } from "react-icons/fa";
 import LanguageSelector from "./LanguageSelector";
 
+
 import enTranslations from "../locales/en/translation.json";
 import trTranslations from "../locales/tr/translation.json";
 

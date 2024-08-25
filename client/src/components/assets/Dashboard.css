@@ -131,12 +131,16 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-between; /* Eklendi */
-  margin-bottom: 20px;  
+  padding: 15px 5px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background-color: var(--form-bg);
 }
 
 .dashboard-header-left {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .dashboard-logo {
@@ -664,7 +668,7 @@ html {
     color: var(--text-color);
     transform: none;
   }
-  
+
   .settings-button.active {
     color: var(--primary-color);
   }
@@ -704,7 +708,6 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(26px);
 }
-
 
 .switch {
   position: relative;
@@ -748,7 +751,11 @@ input:checked + .slider:before {
 }
 
 input:checked + .slider {
-  background-color: var(--primary-color);
+  background: linear-gradient(
+    90deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );;
 }
 
 input:checked + .slider:before {
@@ -756,6 +763,18 @@ input:checked + .slider:before {
 }
 
 /* SWİTCHLER SONU*/
+
+/* Dropdown Animations */
+@keyframes dropdownOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 .dropdown-menu {
   position: absolute;
@@ -772,6 +791,7 @@ input:checked + .slider:before {
   gap: 10px;
   width: 300px;
   filter: none;
+  animation: dropdownOpen 0.5s ease forwards;
 }
 
 .dropdown-menu p {
@@ -800,11 +820,6 @@ input:checked + .slider:before {
 
 .username span {
   font-weight: 600 !important;
-}
-
-.dropdown-menu .logout-button:hover {
-  color: var(--primary-color);
-  transform: translateY(-2px);
 }
 
 .dashboard-header span {

@@ -1,3 +1,17 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
 :root {
   --white: #f0f0f0;
   --primary-color: #ff7f50;
@@ -46,7 +60,8 @@
 
 @media (hover: none) {
   .theme-toggle:hover,
-  .dark .theme-toggle:hover {
+  .dark .theme-toggle:hover,
+  .languageButton:hover {
     color: inherit;
     transform: none;
   }
@@ -175,6 +190,33 @@
   color: var(--description-color);
   line-height: 1.6;
   margin: 20px 0px;
+}
+
+.languageSelector {
+  display: flex;
+  gap: 10px;
+}
+
+.languageSelector img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.languageButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.languageButton:hover {
+  transform: translateY(-2px);
+  transition: transform 0.3s ease;
 }
 
 @media (min-width: 768px) {
