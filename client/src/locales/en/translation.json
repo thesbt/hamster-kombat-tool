@@ -36,8 +36,8 @@
   "card_edit_error": "Failed to update card. Please check values.",
   "card_delete_success": "Card successfully deleted!",
   "card_delete_error": "Failed to delete card. Please try again later.",
-  "theme_selector": "Theme Selector",
-  "language_selector": "Language Selector",
+  "theme_selector": "Theme",
+  "language_selector": "Language",
   "sort_placeholder": "Sort",
   "sort_by_ratio": "Sort by Ratio",
   "sort_by_level": "Sort by Level",
@@ -65,5 +65,6 @@
   "register_invalid_email_error": "Invalid Email",
   "registration_success": "Registration successful! Redirecting to login page...",
   "registration_error": "User already exists",
-  "user_already_exists": "User already exists"
+  "user_already_exists": "User already exists",
+  "welcome_message": "Hi"
 }

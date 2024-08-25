@@ -36,8 +36,8 @@
   "card_edit_error": "Kart güncellenirken bir hata oluştu, değerleri kontrol ediniz.",
   "card_delete_success": "Kart başarıyla silindi!",
   "card_delete_error": "Kart silinirken bir hata oluştu, lütfen daha sonra tekrar deneyiniz.",
-  "theme_selector": "Tema Seçici",
-  "language_selector": "Dil Seçici",
+  "theme_selector": "Tema",
+  "language_selector": "Dil",
   "sort_placeholder": "Sıralama",
   "sort_by_ratio": "Orana Göre",
   "sort_by_level": "Seviyeye Göre",
@@ -65,5 +65,6 @@
   "register_invalid_email_error": "Hatalı E-Posta",
   "registration_success": "Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...",
   "registration_error": "Bu kullanıcı zaten mevcut",
-  "user_already_exists": "Bu kullanıcı zaten mevcut"
+  "user_already_exists": "Bu kullanıcı zaten mevcut",
+  "welcome_message": "Merhaba"
 }

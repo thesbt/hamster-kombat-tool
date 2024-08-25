@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import { useTheme } from "./ThemeContext";
 import "./assets/Dashboard.css";
 import hamsterImage from "./assets/img/Lord.webp";
+import hamsterLogo from "./assets/img/Logo.webp";
 import { validateInput, validateEditInput } from "../utils/validation";
 import AdminPanel from "./AdminPanel";
 import AdminDeleteModal from "./AdminDeleteModal";
@@ -13,12 +14,9 @@ import LogoutModal from "./LogoutModal";
 import UserEditCardModal from "./UserEditCardModal";
 import AdminEditCardModal from "./AdminEditCardModal";
 import UserDeleteModal from "./UserDeleteModal";
-import LanguageSelector from "./LanguageSelector";
 import enTranslations from "../locales/en/translation.json";
 import trTranslations from "../locales/tr/translation.json";
 import {
-  FaSun,
-  FaMoon,
   FaSearch,
   FaPlus,
   FaTrash,
@@ -27,6 +25,7 @@ import {
   FaClock,
   FaPencilAlt,
   FaSpinner,
+  FaCog,
 } from "react-icons/fa";
 
 const translations = {
@@ -87,6 +86,8 @@ function Dashboard({ setIsAuthenticated }) {
     has_timer: false,
     is_default: false,
   });
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
@@ -583,6 +584,19 @@ function Dashboard({ setIsAuthenticated }) {
     setSearchTerm("");
   };
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (isDropdownOpen && !event.target.closest('.right-buttons')) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
   if (loading) {
     return (
       <div className={`loading-screen ${isDarkMode ? "dark" : ""}`}>
@@ -605,25 +619,54 @@ function Dashboard({ setIsAuthenticated }) {
       }`}
     >
       <div className="dashboard-header">
-        <h2>
-          Hi, <span>{username}</span>
-        </h2>
+        <div className="dashboard-header-left">
+          <img src={hamsterLogo} alt="Logo" className="dashboard-logo" />
+          <h2 className="dashboard-title">Hamster Kombat Tool</h2>
+        </div>
         <div className="right-buttons">
-          <LanguageSelector
-            currentLanguage={language}
-            onChangeLanguage={handleLanguageChange}
-          />
           <button
-            onClick={toggleTheme}
-            className="theme-toggle"
-            title={t("theme_selector")}
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="settings-button"
+            title={t("settings")}
           >
-            {isDarkMode ? <FaSun /> : <FaMoon />}
+            <FaCog />
           </button>
-          <button className="logout-button" onClick={openLogoutModal}>
-            <FaSignOutAlt />
-            {t("logout")}
-          </button>
+          {isDropdownOpen && (
+            <div className="dropdown-menu">
+              <p>
+                {t("welcome_message")},{" "}
+                <span className="username">{username}</span>
+              </p>
+              <div className="dropdown-item language-switch">
+                <span>{t("language_selector")}</span>
+                <label className="switch language-switch">
+                  <input
+                    type="checkbox"
+                    checked={language === "tr"}
+                    onChange={() =>
+                      handleLanguageChange(language === "en" ? "tr" : "en")
+                    }
+                  />
+                  <span className="slider round"></span>
+                </label>
+              </div>
+              <div className="dropdown-item theme-switch">
+                <span>{t("theme_selector")}</span>
+                <label className="switch theme-switch">
+                  <input
+                    type="checkbox"
+                    checked={isDarkMode}
+                    onChange={toggleTheme}
+                  />
+                  <span className="slider round"></span>
+                </label>
+              </div>
+              <button className="logout-button" onClick={openLogoutModal}>
+                <FaSignOutAlt />
+                {t("logout")}
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <h3 className="add-card">{t("add_card")}</h3>
@@ -680,7 +723,6 @@ function Dashboard({ setIsAuthenticated }) {
             disabled={addingCard}
           >
             {addingCard ? <FaSpinner className="button-spinner" /> : <FaPlus />}
-
             {addingCard ? t("adding_card") : t("add_card")}
           </button>
         </form>
