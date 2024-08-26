@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const pool = require("./db");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 require("dotenv").config();
 
 const app = express();
@@ -37,6 +39,16 @@ app.use(cors({
   credentials: true
 }));
 */
+
+// E-posta gönderici yapılandırması
+const transporter = nodemailer.createTransport({
+  service: process.env.EMAIL_SERVICE,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
 
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
