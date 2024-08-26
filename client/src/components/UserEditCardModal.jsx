@@ -44,7 +44,9 @@ const UserEditCardModal = ({
           </p>
         </div>
         <form onSubmit={handleEditCard}>
-          {noChangesError && <p className="error-message">{t(noChangesError)}</p>}
+          {noChangesError && (
+            <p className="error-message">{t(noChangesError)}</p>
+          )}
           {editError && <p className="error-message">{t(editError)}</p>}
           <div className="input-group">
             <label htmlFor="editLevel">{t("current_card_level")}:</label>

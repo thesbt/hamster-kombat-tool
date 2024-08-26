@@ -868,7 +868,9 @@ function Dashboard({ setIsAuthenticated }) {
                   </p>
                   <p>
                     {t("ratio")}:{" "}
-                    <span style={{ color: ratioColor.color, fontWeight: 'bold' }}>
+                    <span
+                      style={{ color: ratioColor.color, fontWeight: "bold" }}
+                    >
                       {ratio.toFixed(2)}
                     </span>
                   </p>

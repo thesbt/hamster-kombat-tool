@@ -125,7 +125,7 @@ function Login({ setIsAuthenticated }) {
           <span className={styles["logo-text"]}>Hamster Kombat Tool</span>
         </Link>
         <div className={styles["header-links"]}>
-        <LanguageSelector
+          <LanguageSelector
             currentLanguage={language}
             onChangeLanguage={handleLanguageChange}
           />
@@ -139,7 +139,6 @@ function Login({ setIsAuthenticated }) {
             <FaUserPlus className={styles["register-icon"]} />
             {t("register")}
           </button>
-
         </div>
       </div>
       <div className={styles.content}>

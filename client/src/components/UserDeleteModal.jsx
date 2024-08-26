@@ -35,15 +35,15 @@ function UserDeleteModal({
                 {userCards.find((card) => card.id === cardToDelete)?.name}
               </h2>
               <p className="card-category">
-                {userCards.find((card) => card.id === cardToDelete)
-                  ?.card_category}
+                {
+                  userCards.find((card) => card.id === cardToDelete)
+                    ?.card_category
+                }
               </p>
             </>
           )}
         </div>
-        <p className="delete-message">
-          {t("delete_confirmation_message")}
-        </p>
+        <p className="delete-message">{t("delete_confirmation_message")}</p>
         <div className="modal-buttons">
           <button
             className="confirm-button"

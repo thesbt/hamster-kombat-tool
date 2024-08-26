@@ -359,7 +359,8 @@ html {
 }
 
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -401,8 +402,6 @@ html {
   position: relative;
   overflow: hidden;
 }
-
-
 
 .card-body {
   text-align: center;
@@ -471,7 +470,7 @@ html {
   background-color: var(--card-bg-color);
   border: none;
   border-radius: 12px;
-  padding: 25px;  
+  padding: 25px;
   margin: auto;
   width: 100%;
 }
@@ -971,7 +970,6 @@ input:checked + .slider:before {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
 }
 
 .search-container {
@@ -1375,7 +1373,6 @@ button:disabled .button-spinner {
   }
 }
 
-
 /* Games Modal */
 
 .games-modal {
@@ -1394,8 +1391,6 @@ button:disabled .button-spinner {
   justify-content: center;
 }
 
-
-
 .games-modal-overlay {
   position: fixed;
   top: 0;
@@ -1411,7 +1406,7 @@ button:disabled .button-spinner {
 
 .games-card-container {
   text-align: center;
-  position: relative;  /* Bu satırı ekleyin */
+  position: relative; /* Bu satırı ekleyin */
 }
 
 .close-button {
@@ -1448,11 +1443,9 @@ button:disabled .button-spinner {
   font-size: 0.9em;
 }
 
-
-
 .morse-code-conversion {
   display: flex;
-  flex-direction: column;  
+  flex-direction: column;
 }
 
 .morse-code-item {
@@ -1480,6 +1473,3 @@ button:disabled .button-spinner {
   font-size: 0.7em;
   font-weight: 400;
 }
-
-
-

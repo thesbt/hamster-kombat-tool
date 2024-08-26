@@ -11,10 +11,10 @@ const LanguageSelector = ({ currentLanguage, onChangeLanguage }) => {
           title="Dil Seçici"
           onClick={() => onChangeLanguage("en")}
         >
-          <ReactCountryFlag 
-            countryCode="GB" 
-            svg 
-            style={{width: '19px', height: '19px' }} // otomatik gelen stiller kaldırıldı ve inline stil eklendi
+          <ReactCountryFlag
+            countryCode="GB"
+            svg
+            style={{ width: "19px", height: "19px" }} // otomatik gelen stiller kaldırıldı ve inline stil eklendi
           />
         </button>
       )}
@@ -24,10 +24,10 @@ const LanguageSelector = ({ currentLanguage, onChangeLanguage }) => {
           title="Language Selector"
           onClick={() => onChangeLanguage("tr")}
         >
-          <ReactCountryFlag 
-            countryCode="TR" 
-            svg 
-            style={{width: '21px', height: '21px' }} // otomatik gelen stiller kaldırıldı ve inline stil eklendi
+          <ReactCountryFlag
+            countryCode="TR"
+            svg
+            style={{ width: "21px", height: "21px" }} // otomatik gelen stiller kaldırıldı ve inline stil eklendi
           />
         </button>
       )}

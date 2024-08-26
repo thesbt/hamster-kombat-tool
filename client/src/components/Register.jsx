@@ -146,9 +146,7 @@ function Register() {
         navigate("/login");
       }, 2000);
     } catch (error) {
-      setError(
-        error.response?.data?.message || t("registration_error")
-      );
+      setError(error.response?.data?.message || t("registration_error"));
       clearInputs();
       console.error("Registration error", error);
     } finally {

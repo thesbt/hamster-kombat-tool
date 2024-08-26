@@ -7,7 +7,6 @@ import logoImage from "./assets/img/Logo.webp";
 import { FaSun, FaMoon, FaSignInAlt } from "react-icons/fa";
 import LanguageSelector from "./LanguageSelector";
 
-
 import enTranslations from "../locales/en/translation.json";
 import trTranslations from "../locales/tr/translation.json";
 
@@ -92,9 +91,13 @@ function LandingPage() {
         </div>
 
         <div className={styles["text-content"]}>
-          {language === "en" && <h1 className={styles.welcome}>{t("welcome_to")}</h1>}
+          {language === "en" && (
+            <h1 className={styles.welcome}>{t("welcome_to")}</h1>
+          )}
           <h1 className={styles.title}>{t("title")}</h1>
-          {language === "tr" && <h1 className={styles.welcome}>{t("welcome_to")}</h1>}
+          {language === "tr" && (
+            <h1 className={styles.welcome}>{t("welcome_to")}</h1>
+          )}
           <p className={styles.description}>{t("description")}</p>
         </div>
       </div>
