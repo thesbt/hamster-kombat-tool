@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import styles from "./assets/ResetPassword.module.css";
 
-function ResetPassword({ setIsAuthenticated }) {
+function ResetPassword() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -39,7 +39,7 @@ function ResetPassword({ setIsAuthenticated }) {
         }
       );
       setSuccess("Şifreniz başarıyla değiştirildi. Yönlendiriliyorsunuz...");
-      setIsAuthenticated(false); // Kullanıcıyı çıkış yapmış olarak işaretle
+
       localStorage.removeItem("userToken");
       setTimeout(() => navigate("/login"), 3000);
     } catch (error) {
