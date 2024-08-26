@@ -5,6 +5,7 @@ import { useTheme } from "./ThemeContext";
 import LanguageSelector from "./LanguageSelector"; // LanguageSelector import edildi
 import styles from "./assets/Login.module.css";
 import logoImage from "./assets/img/Logo.webp";
+
 import {
   FaSun,
   FaMoon,
@@ -32,8 +33,31 @@ function Login({ setIsAuthenticated }) {
   const [showPassword, setShowPassword] = useState(false);
   const [errorVisible, setErrorVisible] = useState(false);
   const [language, setLanguage] = useState("en");
+  const [email, setEmail] = useState("");
+  const [isResetMode, setIsResetMode] = useState(false); // Yeni eklenen state
+  const [resetSuccess, setResetSuccess] = useState(""); // Yeni eklenen state
   const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setResetSuccess("");
+
+    try {
+      await axios.post(
+        "https://hamster-kombat-tool-server.vercel.app/api/forgot-password",
+        { email }
+      );
+      setResetSuccess(t("reset_email_sent"));
+      setIsResetMode(false);
+    } catch (error) {
+      setError(t("reset_email_error"));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const t = useCallback(
     (key) => translations[language][key] || key,
@@ -143,56 +167,96 @@ function Login({ setIsAuthenticated }) {
       </div>
       <div className={styles.content}>
         <div className={styles["login-container"]}>
-          <h2>{t("login")}</h2>
-          <form onSubmit={handleLogin}>
-            <input
-              type="text"
-              placeholder={t("username")}
-              minLength="3"
-              maxLength="12"
-              value={username}
-              onChange={handleUsernameChange}
-              required
-            />
-            <div className={styles["password-input-container"]}>
+          <h2>{isResetMode ? t("reset_password") : t("login")}</h2>
+          {!isResetMode ? (
+            <form onSubmit={handleLogin}>
               <input
-                type={showPassword ? "text" : "password"}
-                minLength="6"
-                maxLength="18"
-                placeholder={t("password")}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                type="text"
+                placeholder={t("username")}
+                minLength="3"
+                maxLength="12"
+                value={username}
+                onChange={handleUsernameChange}
+                required
+              />
+              <div className={styles["password-input-container"]}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  minLength="6"
+                  maxLength="18"
+                  placeholder={t("password")}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className={styles["toggle-password"]}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className={styles["login-button"]}
+              >
+                {!loading && <FaSignInAlt className={styles["login-icon"]} />}
+                {loading ? <div className={styles.spinner}></div> : t("login")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsResetMode(true)}
+                className={styles["forgot-password"]}
+              >
+                {t("forgot_password")}
+              </button>
+              <Link to="/register" className={styles["register-text"]}>
+                {t("no_account")}
+              </Link>
+            </form>
+          ) : (
+            <form onSubmit={handleForgotPassword}>
+              <input
+                type="email"
+                placeholder={t("email")}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
               <button
-                type="button"
-                onClick={togglePasswordVisibility}
-                className={styles["toggle-password"]}
+                type="submit"
+                disabled={loading}
+                className={styles["login-button"]}
               >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                {loading ? (
+                  <div className={styles.spinner}></div>
+                ) : (
+                  t("send_reset_email")
+                )}
               </button>
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className={styles["login-button"]}
-            >
-              {!loading && <FaSignInAlt className={styles["login-icon"]} />}
-              {loading ? <div className={styles.spinner}></div> : t("login")}
-            </button>
-            <Link to="/register" className={styles["register-text"]}>
-              {t("no_account")}
-            </Link>
-            {error && (
-              <p
-                className={`${styles["error-message"]} ${
-                  errorVisible ? styles.visible : ""
-                }`}
+              <button
+                type="button"
+                onClick={() => setIsResetMode(false)}
+                className={styles["back-to-login"]}
               >
-                {error}
-              </p>
-            )}
-          </form>
+                {t("back_to_login")}
+              </button>
+            </form>
+          )}
+          {error && (
+            <p
+              className={`${styles["error-message"]} ${
+                errorVisible ? styles.visible : ""
+              }`}
+            >
+              {error}
+            </p>
+          )}
+          {resetSuccess && (
+            <p className={styles["success-message"]}>{resetSuccess}</p>
+          )}
         </div>
       </div>
     </div>
