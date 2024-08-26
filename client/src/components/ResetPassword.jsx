@@ -39,6 +39,7 @@ function ResetPassword() {
         }
       );
       setSuccess("Şifreniz başarıyla değiştirildi. Yönlendiriliyorsunuz...");
+      localStorage.removeItem("userToken");
       setTimeout(() => navigate("/login"), 3000);
     } catch (error) {
       setError("Şifre sıfırlama başarısız oldu. Lütfen tekrar deneyin.");
