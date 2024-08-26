@@ -95,6 +95,14 @@ function Dashboard({ setIsAuthenticated }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setIsAuthenticated(false);
+      navigate('/login');
+    }
+  }, [navigate, setIsAuthenticated]);
+
+  useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
     if (savedLanguage) {
       setLanguage(savedLanguage);

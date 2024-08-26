@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import styles from "./assets/ResetPassword.module.css";
 
-function ResetPassword() {
+function ResetPassword({ setIsAuthenticated }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -18,8 +18,9 @@ function ResetPassword() {
       setError("Geçersiz veya eksik token");
     } else {
       localStorage.removeItem("token");
+      setIsAuthenticated(false);
     }
-  }, [location]);
+  }, [location, setIsAuthenticated]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,7 +42,10 @@ function ResetPassword() {
         }
       );
       setSuccess("Şifreniz başarıyla değiştirildi. Yönlendiriliyorsunuz...");
-      setTimeout(() => navigate("/login"), 3000);
+      setTimeout(() => {
+        setIsAuthenticated(false);
+        navigate("/login");
+      }, 3000);
     } catch (error) {
       setError("Şifre sıfırlama başarısız oldu. Lütfen tekrar deneyin.");
     } finally {

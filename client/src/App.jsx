@@ -67,7 +67,10 @@ function AppContent() {
               isAuthenticated ? <Navigate to="/dashboard" /> : <LandingPage />
             }
           />
-          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route
+            path="/reset-password"
+            element={<ResetPassword setIsAuthenticated={setIsAuthenticated} />}
+          />
         </Routes>
       </div>
     </Router>
