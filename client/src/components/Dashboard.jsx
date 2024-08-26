@@ -852,9 +852,7 @@ function Dashboard({ setIsAuthenticated }) {
                   <h3>{userCard.name}</h3>
                   <p>{userCard.card_category}</p>
                 </div>
-                <div className="card-line">
-                  <hr />
-                </div>
+                <div className="card-line"></div>
 
                 <div className="card-body">
                   <p>
