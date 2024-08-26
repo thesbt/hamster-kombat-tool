@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useTheme } from "./ThemeContext";
-import LanguageSelector from "./LanguageSelector";
+import LanguageSelector from "./LanguageSelector"; // LanguageSelector import edildi
 import styles from "./assets/Login.module.css";
 import logoImage from "./assets/img/Logo.webp";
+
 import {
   FaSun,
   FaMoon,
@@ -27,20 +28,36 @@ const usernameRegex = /^[a-zA-Z0-9ğüşıöçĞÜŞİÖÇ]+$/;
 function Login({ setIsAuthenticated }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errorVisible, setErrorVisible] = useState(false);
   const [language, setLanguage] = useState("en");
-  const [isResetMode, setIsResetMode] = useState(false);
-  const [resetSuccess, setResetSuccess] = useState("");
-  const [isNewPasswordMode, setIsNewPasswordMode] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isResetMode, setIsResetMode] = useState(false); // Yeni eklenen state
+  const [resetSuccess, setResetSuccess] = useState(""); // Yeni eklenen state
   const navigate = useNavigate();
-  const location = useLocation();
   const { isDarkMode, toggleTheme } = useTheme();
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setResetSuccess("");
+
+    try {
+      await axios.post(
+        "https://hamster-kombat-tool-server.vercel.app/api/forgot-password",
+        { email }
+      );
+      setResetSuccess(t("reset_email_sent"));
+      setIsResetMode(false);
+    } catch (error) {
+      setError(t("reset_email_error"));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const t = useCallback(
     (key) => translations[language][key] || key,
@@ -48,18 +65,16 @@ function Login({ setIsAuthenticated }) {
   );
 
   useEffect(() => {
-    const token = new URLSearchParams(location.search).get('token');
-    if (token) {
-      setIsNewPasswordMode(true);
-    }
-  }, [location]);
-
-  useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
     if (savedLanguage) {
       setLanguage(savedLanguage);
     }
   }, []);
+
+  const handleLanguageChange = (newLanguage) => {
+    setLanguage(newLanguage);
+    localStorage.setItem("language", newLanguage);
+  };
 
   useEffect(() => {
     document.title = "Login | Hamster Kombat Tool";
@@ -85,11 +100,6 @@ function Login({ setIsAuthenticated }) {
       return () => clearTimeout(timer);
     }
   }, [error]);
-
-  const handleLanguageChange = (newLanguage) => {
-    setLanguage(newLanguage);
-    localStorage.setItem("language", newLanguage);
-  };
 
   const handleUsernameChange = (e) => {
     const newValue = e.target.value.toLowerCase();
@@ -127,51 +137,6 @@ function Login({ setIsAuthenticated }) {
     }
   };
 
-  const handleForgotPassword = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    setResetSuccess("");
-
-    try {
-      await axios.post(
-        "https://hamster-kombat-tool-server.vercel.app/api/forgot-password",
-        { email }
-      );
-      setResetSuccess(t("reset_email_sent"));
-      setIsResetMode(false);
-    } catch (error) {
-      setError(t("reset_email_error"));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResetPassword = async (e) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      setError(t("passwords_not_match"));
-      return;
-    }
-    setLoading(true);
-    setError("");
-
-    const token = new URLSearchParams(location.search).get('token');
-
-    try {
-      await axios.post(
-        "https://hamster-kombat-tool-server.vercel.app/api/reset-password",
-        { token, newPassword }
-      );
-      setResetSuccess(t("password_reset_success"));
-      setIsNewPasswordMode(false);
-    } catch (error) {
-      setError(t("password_reset_error"));
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -202,62 +167,8 @@ function Login({ setIsAuthenticated }) {
       </div>
       <div className={styles.content}>
         <div className={styles["login-container"]}>
-          <h2>
-            {isNewPasswordMode
-              ? t("new_password")
-              : isResetMode
-              ? t("reset_password")
-              : t("login")}
-          </h2>
-          {isNewPasswordMode ? (
-            <form onSubmit={handleResetPassword}>
-              <input
-                type="password"
-                placeholder={t("new_password")}
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
-              />
-              <input
-                type="password"
-                placeholder={t("confirm_password")}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className={styles["login-button"]}
-              >
-                {loading ? <div className={styles.spinner}></div> : t("reset_password")}
-              </button>
-            </form>
-          ) : isResetMode ? (
-            <form onSubmit={handleForgotPassword}>
-              <input
-                type="email"
-                placeholder={t("email")}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className={styles["login-button"]}
-              >
-                {loading ? <div className={styles.spinner}></div> : t("send_reset_email")}
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsResetMode(false)}
-                className={styles["back-to-login"]}
-              >
-                {t("back_to_login")}
-              </button>
-            </form>
-          ) : (
+          <h2>{isResetMode ? t("reset_password") : t("login")}</h2>
+          {!isResetMode ? (
             <form onSubmit={handleLogin}>
               <input
                 type="text"
@@ -304,6 +215,34 @@ function Login({ setIsAuthenticated }) {
               <Link to="/register" className={styles["register-text"]}>
                 {t("no_account")}
               </Link>
+            </form>
+          ) : (
+            <form onSubmit={handleForgotPassword}>
+              <input
+                type="email"
+                placeholder={t("email")}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className={styles["login-button"]}
+              >
+                {loading ? (
+                  <div className={styles.spinner}></div>
+                ) : (
+                  t("send_reset_email")
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsResetMode(false)}
+                className={styles["back-to-login"]}
+              >
+                {t("back_to_login")}
+              </button>
             </form>
           )}
           {error && (

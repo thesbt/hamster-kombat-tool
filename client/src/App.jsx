@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
 import LandingPage from "./components/LandingPage";
+import ResetPassword from "./components/ResetPassword";
 import { ThemeProvider, useTheme } from "./components/ThemeContext";
 import "./App.css";
 
@@ -66,6 +67,7 @@ function AppContent() {
               isAuthenticated ? <Navigate to="/dashboard" /> : <LandingPage />
             }
           />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </div>
     </Router>

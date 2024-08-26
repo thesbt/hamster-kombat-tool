@@ -42,14 +42,14 @@ app.use(cors({
 
 // E-posta gönderici yapılandırması
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  host: 'smtp.gmail.com',
+  service: "gmail",
+  host: "smtp.gmail.com",
   port: 587,
   secure: false, // TLS için true, 587 portu için false
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
 // Şifre sıfırlama talebi
