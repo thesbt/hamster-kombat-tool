@@ -4,8 +4,8 @@ const jwt = require("jsonwebtoken");
 const pool = require("./db");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
-const nodemailer = require('nodemailer');
-const crypto = require('crypto');
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 require("dotenv").config();
 
 const app = express();
@@ -45,10 +45,80 @@ const transporter = nodemailer.createTransport({
   service: process.env.EMAIL_SERVICE,
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
+// Şifre sıfırlama talebi
+app.post("/api/forgot-password", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await pool.query("SELECT * FROM Users WHERE email = $1", [
+      email,
+    ]);
+
+    if (user.rows.length === 0) {
+      return res.status(404).json({ error: "Kullanıcı bulunamadı" });
+    }
+
+    const token = crypto.randomBytes(20).toString("hex");
+    const expires = new Date(Date.now() + 3600000); // 1 saat geçerli
+
+    await pool.query(
+      "UPDATE Users SET reset_password_token = $1, reset_password_expires = $2 WHERE email = $3",
+      [token, expires, email]
+    );
+
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+
+    const mailOptions = {
+      from: process.env.EMAIL_FROM,
+      to: email,
+      subject: "Şifre Sıfırlama",
+      text: `Şifrenizi sıfırlamak için aşağıdaki bağlantıya tıklayın:\n\n${resetUrl}`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({ error: "E-posta gönderilemedi" });
+      }
+      res.json({ message: "Şifre sıfırlama e-postası gönderildi" });
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Bir hata oluştu" });
   }
 });
 
+// Şifre sıfırlama
+app.post("/api/reset-password", async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    const user = await pool.query(
+      "SELECT * FROM Users WHERE reset_password_token = $1 AND reset_password_expires > $2",
+      [token, new Date()]
+    );
+
+    if (user.rows.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "Geçersiz veya süresi dolmuş token" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await pool.query(
+      "UPDATE Users SET password_hash = $1, reset_password_token = NULL, reset_password_expires = NULL WHERE id = $2",
+      [hashedPassword, user.rows[0].id]
+    );
+
+    res.json({ message: "Şifre başarıyla sıfırlandı" });
+  } catch (err) {
+    res.status(500).json({ error: "Bir hata oluştu" });
+  }
+});
 
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
