@@ -16,6 +16,8 @@ function ResetPassword() {
     const token = new URLSearchParams(location.search).get("token");
     if (!token) {
       setError("Geçersiz veya eksik token");
+    } else {
+      localStorage.removeItem("userToken");
     }
   }, [location]);
 
@@ -39,8 +41,8 @@ function ResetPassword() {
         }
       );
       setSuccess("Şifreniz başarıyla değiştirildi. Yönlendiriliyorsunuz...");
-
-      localStorage.removeItem("userToken");
+      // Token zaten sıfırlandığı için bu satırı kaldırıyoruz
+      // localStorage.removeItem("userToken");
       setTimeout(() => navigate("/login"), 3000);
     } catch (error) {
       setError("Şifre sıfırlama başarısız oldu. Lütfen tekrar deneyin.");
