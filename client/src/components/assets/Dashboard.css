@@ -184,7 +184,7 @@ html {
   font-size: 14px;
   transition: all 0.3s ease;
   gap: 5px;
-  width: 50%;
+  width: 60%;
 }
 
 .logout-button:hover {
