@@ -79,12 +79,11 @@ app.post("/api/forgot-password", async (req, res) => {
       from: process.env.EMAIL_FROM,
       to: email,
       subject: "Hamster Kombat Tool Password Reset",
-      text: `To reset your password, please click the following link:\n\n${resetUrl}`,
+      text: `To reset your password, please click the following link:\n Link is valid for 1 hour\n\n${resetUrl}`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.log(error);
         return res.status(500).json({ error: "E-posta gönderilemedi" });
       }
       res.json({ message: "Şifre sıfırlama e-postası gönderildi" });
@@ -139,7 +138,6 @@ app.post("/api/verify-reset-token", async (req, res) => {
 
     res.json({ valid: true });
   } catch (err) {
-    console.error('Token doğrulama hatası:', err);
     res.status(500).json({ error: "Token doğrulanamadı" });
   }
 });
@@ -382,7 +380,6 @@ app.post("/api/login", async (req, res) => {
     );
     res.json({ token, is_admin: user.is_admin });
   } catch (err) {
-    console.error(err); // Log hata detayları
     res.status(500).json({ error: "An error occurred during login" });
   }
 });
@@ -392,7 +389,6 @@ app.get("/api/admin/cards", authenticateToken, isAdmin, async (req, res) => {
     const result = await pool.query("SELECT * FROM Cards");
     res.json(result.rows);
   } catch (err) {
-    console.error(err); // Log hata detayları
     res.status(500).json({ error: "An error occurred while fetching cards" });
   }
 });
@@ -427,7 +423,6 @@ app.post("/api/admin/cards", authenticateToken, isAdmin, async (req, res) => {
 
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: "An error occurred while adding the card" });
   }
 });
@@ -466,7 +461,6 @@ app.put(
       }
       res.json(result.rows[0]);
     } catch (err) {
-      console.error(err);
       res
         .status(500)
         .json({ error: "An error occurred while updating the card" });
@@ -484,7 +478,6 @@ app.delete(
       await deleteCardAndUserCards(id);
       res.json({ message: "Card deleted successfully" });
     } catch (err) {
-      console.error(err);
       res
         .status(500)
         .json({ error: "An error occurred while deleting the card" });
@@ -497,7 +490,6 @@ app.get("/api/cards", async (req, res) => {
     const result = await pool.query("SELECT * FROM Cards");
     res.json(result.rows);
   } catch (err) {
-    console.error(err); // Log hata detayları
     res.status(500).json({ error: "An error occurred while fetching cards" });
   }
 });
