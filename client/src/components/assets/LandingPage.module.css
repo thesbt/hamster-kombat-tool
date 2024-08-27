@@ -82,7 +82,6 @@ svg {
   z-index: 1000;
 }
 
-
 .dark .navbar {
   background: rgba(20, 20, 20, 0.9);
   box-shadow: 0px 12px 20px -3px rgba(255, 127, 80, 0.1);
@@ -139,7 +138,6 @@ svg {
 }
 
 .content {
-  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -156,7 +154,7 @@ svg {
 
 .image-container {
   width: 100%;
-  max-width: 200px;  
+  max-width: 200px;
   flex-shrink: 0;
 }
 
@@ -191,7 +189,6 @@ svg {
   color: var(--description-color);
   line-height: 1.6;
   margin-top: 20px;
-
 }
 
 .languageSelector {
