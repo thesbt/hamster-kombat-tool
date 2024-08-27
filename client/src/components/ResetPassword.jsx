@@ -47,16 +47,42 @@ function ResetPassword({ setIsAuthenticated }) {
     localStorage.setItem("language", newLanguage);
   };
 
+  const handleInvalidToken = useCallback(() => {
+    setError(t("invalid_or_missing_token"));
+    setErrorVisible(true);
+    setTimeout(() => {
+      navigate("/login");
+    }, 3000);
+  }, [t, navigate, setError, setErrorVisible]);
+
+  const verifyToken = useCallback(
+    async (token) => {
+      try {
+        const response = await axios.post(
+          "https://hamster-kombat-tool-server.vercel.app/api/verify-reset-token",
+          { token }
+        );
+        if (response.data.valid) {
+          localStorage.removeItem("token");
+          setIsAuthenticated(false);
+        } else {
+          handleInvalidToken();
+        }
+      } catch (error) {
+        handleInvalidToken();
+      }
+    },
+    [handleInvalidToken, setIsAuthenticated]
+  );
+
   useEffect(() => {
     const token = new URLSearchParams(location.search).get("token");
     if (!token) {
-      setError(t("invalid_or_missing_token"));
-      setErrorVisible(true);
+      handleInvalidToken();
     } else {
-      localStorage.removeItem("token");
-      setIsAuthenticated(false);
+      verifyToken(token);
     }
-  }, [location, setIsAuthenticated, t]);
+  }, [location, handleInvalidToken, verifyToken]);
 
   useEffect(() => {
     if (error || success) {

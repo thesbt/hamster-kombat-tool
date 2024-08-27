@@ -78,8 +78,8 @@ app.post("/api/forgot-password", async (req, res) => {
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: email,
-      subject: "Şifre Sıfırlama",
-      text: `Şifrenizi sıfırlamak için aşağıdaki bağlantıya tıklayın:\n\n${resetUrl}`,
+      subject: "Hamster Kombat Tool Password Reset",
+      text: `To reset your password, please click the following link:\n\n${resetUrl}`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -120,6 +120,27 @@ app.post("/api/reset-password", async (req, res) => {
     res.json({ message: "Şifre başarıyla sıfırlandı" });
   } catch (err) {
     res.status(500).json({ error: "Bir hata oluştu" });
+  }
+});
+
+// Yeni endpoint: Token doğrulama
+app.post("/api/verify-reset-token", async (req, res) => {
+  const { token } = req.body;
+
+  try {
+    const result = await pool.query(
+      "SELECT * FROM Users WHERE reset_password_token = $1 AND reset_password_expires > $2",
+      [token, new Date()]
+    );
+
+    if (result.rows.length === 0) {
+      return res.json({ valid: false });
+    }
+
+    res.json({ valid: true });
+  } catch (err) {
+    console.error('Token doğrulama hatası:', err);
+    res.status(500).json({ error: "Token doğrulanamadı" });
   }
 });
 
