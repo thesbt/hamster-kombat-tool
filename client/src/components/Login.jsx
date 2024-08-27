@@ -27,6 +27,12 @@ const translations = {
 
 const usernameRegex = /^[a-zA-Z0-9ğüşıöçĞÜŞİÖÇ]+$/;
 
+const validateEmail = (email) => {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
+
 function Login({ setIsAuthenticated }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -48,6 +54,18 @@ function Login({ setIsAuthenticated }) {
     setError("");
     setResetSuccess("");
     setResetSuccessVisible(false);
+
+    if (!validateEmail(email)) {
+      setError(t("register_invalid_email_error"));
+      setLoading(false);
+      return;
+    }
+
+    if (email.length > 100) {
+      setError(t("register_email_length_error"));
+      setLoading(false);
+      return;
+    }
 
     try {
       await axios.post(

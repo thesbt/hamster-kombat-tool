@@ -6,9 +6,9 @@ import LanguageSelector from "./LanguageSelector";
 import styles from "./assets/ResetPassword.module.css";
 import logoImage from "./assets/img/Logo.webp";
 import { FaKey, FaSun, FaMoon, FaEye, FaEyeSlash } from "react-icons/fa";
-
 import enTranslations from "../locales/en/translation.json";
 import trTranslations from "../locales/tr/translation.json";
+import zxcvbn from "zxcvbn";
 
 const translations = {
   en: enTranslations,
@@ -18,14 +18,14 @@ const translations = {
 function ResetPassword({ setIsAuthenticated }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const [language, setLanguage] = useState("en");
   const [errorVisible, setErrorVisible] = useState(false);
   const [successVisible, setSuccessVisible] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const { isDarkMode, toggleTheme } = useTheme();
@@ -74,8 +74,48 @@ function ResetPassword({ setIsAuthenticated }) {
     }
   }, [error, success]);
 
+  const handleNewPasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setNewPassword(newPassword);
+    const evaluation = zxcvbn(newPassword);
+    setPasswordStrength(evaluation.score);
+  };
+
+  const getPasswordStrengthColor = () => {
+    switch (passwordStrength) {
+      case 0:
+      case 1:
+        return "red";
+      case 2:
+        return "orange";
+      case 3:
+        return "yellow";
+      case 4:
+        return "green";
+      default:
+        return "white";
+    }
+  };
+
+  const validateInputs = () => {
+    if (newPassword.length < 6 || newPassword.length > 18) {
+      setError(t("register_password_length_error"));
+      setErrorVisible(true);
+      return false;
+    }
+    if (passwordStrength < 2) {
+      setError(t("register_password_weak_error"));
+      setErrorVisible(true);
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateInputs()) {
+      return;
+    }
     if (newPassword !== confirmPassword) {
       setError(t("passwords_do_not_match"));
       setErrorVisible(true);
@@ -108,12 +148,8 @@ function ResetPassword({ setIsAuthenticated }) {
     }
   };
 
-  const toggleNewPasswordVisibility = () => {
-    setShowNewPassword(!showNewPassword);
-  };
-
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -141,35 +177,42 @@ function ResetPassword({ setIsAuthenticated }) {
           <form onSubmit={handleSubmit}>
             <div className={styles.passwordInputContainer}>
               <input
-                type={showNewPassword ? "text" : "password"}
+                type={showPassword ? "text" : "password"}
                 placeholder={t("new_password")}
                 value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
+                onChange={handleNewPasswordChange}
+                minLength="6"
+                maxLength="18"
                 required
               />
               <button
                 type="button"
-                onClick={toggleNewPasswordVisibility}
+                onClick={togglePasswordVisibility}
                 className={styles.togglePassword}
               >
-                {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
+
             <div className={styles.passwordInputContainer}>
               <input
-                type={showConfirmPassword ? "text" : "password"}
+                type={showPassword ? "text" : "password"}
                 placeholder={t("confirm_password")}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                minLength="6"
+                maxLength="18"
                 required
               />
-              <button
-                type="button"
-                onClick={toggleConfirmPasswordVisibility}
-                className={styles.togglePassword}
-              >
-                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
+            </div>
+            <div className={styles.passwordStrength}>
+              <div
+                className={styles.passwordStrengthBar}
+                style={{
+                  width: `${(passwordStrength + 1) * 20}%`,
+                  backgroundColor: getPasswordStrengthColor(),
+                }}
+              ></div>
             </div>
             <button
               type="submit"
