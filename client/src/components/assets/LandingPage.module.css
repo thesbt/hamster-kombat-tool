@@ -82,10 +82,6 @@ svg {
   z-index: 1000;
 }
 
-.welcome {
-  opacity: 0.8;
-  font-size: 2.2em;
-}
 
 .dark .navbar {
   background: rgba(20, 20, 20, 0.9);
@@ -143,7 +139,7 @@ svg {
 }
 
 .content {
-  margin-top: 20px;
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -152,16 +148,15 @@ svg {
   max-height: calc(100vh - 80px); /* Navbar yüksekliğini çıkararak ayarlayın */
   background-color: var(--card-bg-color);
   border-radius: 30px;
-  padding: 40px 20px;
+  padding: 0px 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  font-size: 0.9em;
+  font-size: 0.8em;
   overflow-y: auto; /* İçerik sığmazsa kaydırma çubuğu ekler */
 }
 
 .image-container {
   width: 100%;
-  max-width: 200px;
-  margin-bottom: 20px;
+  max-width: 200px;  
   flex-shrink: 0;
 }
 
@@ -169,15 +164,16 @@ svg {
   width: 60%;
   height: auto;
   transform: scaleX(-1);
+  scale: 0.8;
 }
 
 .text-content {
   text-align: center;
-  padding: 0 20px;
+  padding: 0 20px 20px;
 }
 
 .title {
-  font-size: 28px;
+  font-size: 1.6em;
   font-weight: 700;
   color: var(--primary-color);
   margin-bottom: 10px;
@@ -185,11 +181,17 @@ svg {
   letter-spacing: -0.1rem;
 }
 
+.welcome {
+  opacity: 0.8;
+  font-size: 1.5em;
+}
+
 .description {
-  font-size: 16px;
+  font-size: 1.1em;
   color: var(--description-color);
   line-height: 1.6;
-  margin: 20px 0px;
+  margin-top: 20px;
+
 }
 
 .languageSelector {

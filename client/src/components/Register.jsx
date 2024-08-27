@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react"; // useCallback eklendi
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import styles from "./assets/Register.module.css";
 import { useNavigate, Link } from "react-router-dom";
@@ -12,7 +12,7 @@ import {
   FaSignInAlt,
 } from "react-icons/fa";
 import { useTheme } from "./ThemeContext";
-import LanguageSelector from "./LanguageSelector"; // LanguageSelector import edildi
+import LanguageSelector from "./LanguageSelector";
 import logoImage from "./assets/img/Logo.webp";
 
 import enTranslations from "../locales/en/translation.json";
@@ -41,7 +41,7 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [errorVisible, setErrorVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [language, setLanguage] = useState("en"); // Dil durumu eklendi
+  const [language, setLanguage] = useState("en");
   const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
 
