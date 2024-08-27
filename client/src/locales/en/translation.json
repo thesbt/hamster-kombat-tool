@@ -71,5 +71,18 @@
   "daily_cards": "Daily Combo Cards",
   "morse_code": "Daily Morse Code",
   "last_update": "Last Update",
-  "loading_game_data": "Getting data..."
+  "loading_game_data": "Getting data...",
+  "forgot_password": "Forgot password?",
+  "send_reset_email": "Reset Password",
+  "back_to_login": "Back to Login",
+  "reset_password": "Reset Password",
+  "reset_email_sent": "Reset email sent successfully! Check your email.",
+  "reset_email_error": "User not found. Please enter the email address you used during registration.",
+  "reset_password_button": "Change Password",
+  "new_password": "New Password",
+  "confirm_password": "Confirm Password",
+  "invalid_or_missing_token": "Invalid or missing token",
+  "passwords_do_not_match": "Passwords do not match",
+  "password_reset_success": "Your password has been successfully reset. Redirecting...",
+  "password_reset_failed": "Password reset failed. Please try again."
 }

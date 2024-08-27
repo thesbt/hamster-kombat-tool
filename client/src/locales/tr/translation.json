@@ -71,5 +71,18 @@
   "daily_cards": "Günlük Kombo Kartlar",
   "morse_code": "Günlük Mors Kodu",
   "last_update": "Son Güncelleme",
-  "loading_game_data": "Veriler yükleniyor..."
+  "loading_game_data": "Veriler yükleniyor...",
+  "forgot_password": "Şifremi unuttum",
+  "send_reset_email": "Şifremi Sıfırla",
+  "back_to_login": "Girişe Dön",
+  "reset_password": "Şifre Sıfırlama",
+  "reset_email_sent": "Şifre sıfırlama emaili gönderildi! Lütfen emailinizi kontrol edin.",
+  "reset_email_error": "Kullanıcı bulunamadı. Lütfen kayıt olurken kullandığınız adresi girin.",
+  "reset_password_button": "Şifreyi Değiştir",
+  "new_password": "Yeni Şifre",
+  "confirm_password": "Şifreyi Doğrula",
+  "invalid_or_missing_token": "Geçersiz veya eksik token",
+  "passwords_do_not_match": "Şifreler eşleşmiyor",
+  "password_reset_success": "Şifreniz başarıyla değiştirildi. Yönlendiriliyorsunuz...",
+  "password_reset_failed": "Şifre sıfırlama başarısız oldu. Lütfen tekrar deneyin."
 }

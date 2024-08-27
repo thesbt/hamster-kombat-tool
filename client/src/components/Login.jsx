@@ -13,6 +13,8 @@ import {
   FaEye,
   FaEyeSlash,
   FaSignInAlt,
+  FaArrowLeft,
+  FaEnvelope,
 } from "react-icons/fa";
 
 import enTranslations from "../locales/en/translation.json";
@@ -36,6 +38,7 @@ function Login({ setIsAuthenticated }) {
   const [email, setEmail] = useState("");
   const [isResetMode, setIsResetMode] = useState(false); // Yeni eklenen state
   const [resetSuccess, setResetSuccess] = useState(""); // Yeni eklenen state
+  const [resetSuccessVisible, setResetSuccessVisible] = useState(false); // Yeni eklenen state
   const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
 
@@ -44,6 +47,7 @@ function Login({ setIsAuthenticated }) {
     setLoading(true);
     setError("");
     setResetSuccess("");
+    setResetSuccessVisible(false);
 
     try {
       await axios.post(
@@ -51,9 +55,12 @@ function Login({ setIsAuthenticated }) {
         { email }
       );
       setResetSuccess(t("reset_email_sent"));
+      setResetSuccessVisible(true);
       setIsResetMode(false);
+      setEmail(""); // E-posta girdisini temizle
     } catch (error) {
       setError(t("reset_email_error"));
+      setEmail(""); // Hata durumunda da e-posta girdisini temizle
     } finally {
       setLoading(false);
     }
@@ -91,15 +98,20 @@ function Login({ setIsAuthenticated }) {
   }, []);
 
   useEffect(() => {
-    if (error) {
-      setErrorVisible(true);
+    if (error || resetSuccess) {
+      const isError = !!error;
+      const setVisibility = isError ? setErrorVisible : setResetSuccessVisible;
+      const clearMessage = isError ? setError : setResetSuccess;
+
+      setVisibility(true);
       const timer = setTimeout(() => {
-        setErrorVisible(false);
-        setError("");
+        setVisibility(false);
+        clearMessage("");
       }, 5000);
+
       return () => clearTimeout(timer);
     }
-  }, [error]);
+  }, [error, resetSuccess]);
 
   const handleUsernameChange = (e) => {
     const newValue = e.target.value.toLowerCase();
@@ -140,6 +152,19 @@ function Login({ setIsAuthenticated }) {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const handleBackToLogin = useCallback(() => {
+    setIsResetMode(false);
+    setEmail(""); // E-posta girdisini temizle
+    setError(""); // Hata mesajını temizle
+    setResetSuccess(""); // Başarı mesajını temizle
+    // Odağı kaldırmak için setTimeout kullanıyoruz
+    setTimeout(() => {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    }, 0);
+  }, []);
 
   return (
     <div className={`${styles["login-page"]} ${isDarkMode ? styles.dark : ""}`}>
@@ -205,15 +230,18 @@ function Login({ setIsAuthenticated }) {
                 {!loading && <FaSignInAlt className={styles["login-icon"]} />}
                 {loading ? <div className={styles.spinner}></div> : t("login")}
               </button>
-              <button
-                type="button"
-                onClick={() => setIsResetMode(true)}
-                className={styles["forgot-password"]}
-              >
-                {t("forgot_password")}
-              </button>
               <Link to="/register" className={styles["register-text"]}>
                 {t("no_account")}
+              </Link>
+              <Link
+                to="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsResetMode(true);
+                }}
+                className={styles["forgot-password-text"]}
+              >
+                {t("forgot_password")}
               </Link>
             </form>
           ) : (
@@ -225,6 +253,7 @@ function Login({ setIsAuthenticated }) {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
+
               <button
                 type="submit"
                 disabled={loading}
@@ -233,14 +262,18 @@ function Login({ setIsAuthenticated }) {
                 {loading ? (
                   <div className={styles.spinner}></div>
                 ) : (
-                  t("send_reset_email")
+                  <>
+                    <FaEnvelope className={styles["reset-icon"]} />
+                    {t("send_reset_email")}
+                  </>
                 )}
               </button>
               <button
                 type="button"
-                onClick={() => setIsResetMode(false)}
-                className={styles["back-to-login"]}
+                onClick={handleBackToLogin}
+                className={styles["login-button"]}
               >
+                <FaArrowLeft className={styles["reset-icon"]} />
                 {t("back_to_login")}
               </button>
             </form>
@@ -255,7 +288,13 @@ function Login({ setIsAuthenticated }) {
             </p>
           )}
           {resetSuccess && (
-            <p className={styles["success-message"]}>{resetSuccess}</p>
+            <p
+              className={`${styles["success-message"]} ${
+                resetSuccessVisible ? styles.visible : ""
+              }`}
+            >
+              {resetSuccess}
+            </p>
           )}
         </div>
       </div>

@@ -288,13 +288,38 @@
   font-weight: 400;
 }
 
+.success-message {
+  color: #4caf50;
+  margin-top: 20px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  font-size: 0.9em;
+  font-weight: 400;
+}
+
+
 .error-message.visible {
   animation: fadeInOut 5s ease-in-out;
 }
 
+.success-message.visible {
+  animation: fadeInOut 5s ease-in-out;
+}
+
 .register-text {
-  margin-top: 10px;
-  text-align: left;
+  margin-top: 15px;
+  text-align: center;
+  font-size: 0.8em;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot-password-text {
+  margin-top: 5px;
+  text-align: center;
   font-size: 0.8em;
   color: var(--primary-color);
   text-decoration: none;
