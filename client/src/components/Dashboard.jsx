@@ -534,20 +534,20 @@ function Dashboard({ setIsAuthenticated }) {
     navigate("/");
   };
 
-  const formatNumber = (number) => {
-    if (number < 1000) {
-      return number.toString();
-    }
-    const suffixes = ["", "K", "M", "B", "T"];
-    const suffixNum = Math.floor(("" + number).length / 3);
-    let shortValue = parseFloat(
-      (number / Math.pow(1000, suffixNum)).toPrecision(3)
-    );
-    if (shortValue % 1 !== 0) {
-      shortValue = shortValue.toFixed(2);
-    }
-    return shortValue + suffixes[suffixNum];
-  };
+// ... existing code ...
+
+const formatNumber = (number) => {
+  if (number < 1000) {
+    return number.toString();
+  }
+  const suffixes = ["", "K", "M", "B", "T"];
+  const suffixNum = Math.floor(Math.log10(number) / 3);
+  const shortValue = (number / Math.pow(1000, suffixNum)).toFixed(2);
+  return shortValue.replace(/\.00$/, '') + suffixes[suffixNum];
+};
+
+
+// ... existing code ...
 
   const formatNumberWithCommas = (value) => {
     return new Intl.NumberFormat(language === "tr" ? "tr-TR" : "en-US").format(
@@ -902,7 +902,6 @@ function Dashboard({ setIsAuthenticated }) {
                     <p>{userCard.card_category}</p>
                   </div>
                   <div className="card-line"></div>
-
                   <div className="card-body">
                     <p>
                       {t("level")}: {userCard.level}
@@ -915,8 +914,9 @@ function Dashboard({ setIsAuthenticated }) {
                       <img src={coinIcon} alt="Coin" className="coin-icon" />
                       {t("pph")}: {formatNumber(pph)}
                     </p>
+
                     <p>
-                      {t("ratio")}:{" "}
+                      {t("ratio")}:&nbsp;
                       <span
                         style={{ color: ratioColor.color, fontWeight: "bold" }}
                       >

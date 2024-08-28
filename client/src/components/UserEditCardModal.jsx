@@ -89,12 +89,12 @@ const UserEditCardModal = ({
               type="number"
               inputMode="numeric"
               min="1"
-              max="1000"
+              max="999"
               placeholder={t("current_card_level")}
               value={editLevel}
               onChange={(e) => {
                 const value = e.target.value;
-                if (value.length <= 4) {
+                if (value.length <= 3) {
                   setEditLevel(value);
                 }
               }}
