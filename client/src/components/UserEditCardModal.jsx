@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Modal from "react-modal";
 import { FaSpinner, FaCheck, FaTimes } from "react-icons/fa";
 
@@ -17,10 +17,43 @@ const UserEditCardModal = ({
   setEditCost,
   editPph,
   setEditPph,
-  handleInputChange,
   editingCard,
+  language,
   t,
 }) => {
+  // Yeni state'ler ekleyin
+  const [formattedEditCost, setFormattedEditCost] = useState("");
+  const [formattedEditPph, setFormattedEditPph] = useState("");
+
+  // Formatlama fonksiyonu ekleyin
+  const formatNumberWithCommas = useCallback(
+    (value) => {
+      return new Intl.NumberFormat(
+        language === "tr" ? "tr-TR" : "en-US"
+      ).format(value);
+    },
+    [language]
+  );
+
+  // useEffect ile başlangıç değerlerini ayarlayın
+  useEffect(() => {
+    setFormattedEditCost(formatNumberWithCommas(editCost));
+    setFormattedEditPph(formatNumberWithCommas(editPph));
+  }, [editCost, editPph, formatNumberWithCommas]);
+
+  // Yeni input değişiklik işleyicileri ekleyin
+  const handleEditCostChange = (e) => {
+    const rawValue = e.target.value.replace(/[^\d]/g, "");
+    setEditCost(rawValue);
+    setFormattedEditCost(formatNumberWithCommas(rawValue));
+  };
+
+  const handleEditPphChange = (e) => {
+    const rawValue = e.target.value.replace(/[^\d]/g, "");
+    setEditPph(rawValue);
+    setFormattedEditPph(formatNumberWithCommas(rawValue));
+  };
+
   return (
     <Modal
       isOpen={isEditModalOpen}
@@ -74,10 +107,10 @@ const UserEditCardModal = ({
               required
               type="text"
               inputMode="numeric"
-              maxLength="13"
+              maxLength="17"
               placeholder={t("cost_to_next_level")}
-              value={editCost}
-              onChange={(e) => handleInputChange(e, setEditCost)}
+              value={formattedEditCost}
+              onChange={handleEditCostChange}
             />
           </div>
           <div className="input-group">
@@ -87,10 +120,10 @@ const UserEditCardModal = ({
               required
               type="text"
               inputMode="numeric"
-              maxLength="10"
+              maxLength="13"
               placeholder={t("pph_on_next_level")}
-              value={editPph}
-              onChange={(e) => handleInputChange(e, setEditPph)}
+              value={formattedEditPph}
+              onChange={handleEditPphChange}
             />
           </div>
           <div className="modal-buttons">

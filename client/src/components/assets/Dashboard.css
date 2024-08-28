@@ -409,10 +409,22 @@ html {
 .card-body p {
   margin: 3px 0;
   font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card-body span {
   font-weight: 600;
+}
+
+.coin-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
 }
 
 .card-footer {

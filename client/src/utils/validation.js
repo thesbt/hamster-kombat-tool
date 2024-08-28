@@ -15,18 +15,18 @@ export const validateInput = (
   setError,
   language
 ) => {
-  if (!/^\d+$/.test(currentCost) || currentCost.length > 13) {
+  if (!/^\d+$/.test(currentCost) || currentCost.length > 17) {
     setError(getErrorMessage("current_cost_validate_error", language));
     return false;
   }
   if (
     !/^\d+$/.test(currentHourlyEarnings) ||
-    currentHourlyEarnings.length > 10
+    currentHourlyEarnings.length > 13
   ) {
     setError(getErrorMessage("current_pph_validate_error", language));
     return false;
   }
-  if (!/^\d+$/.test(level) || level.length > 4 || parseInt(level) > 1000) {
+  if (!/^\d+$/.test(level) || level.length > 3 || parseInt(level) > 999) {
     setError(getErrorMessage("current_level_validate_error", language));
     return false;
   }
@@ -56,8 +56,8 @@ export const validateEditInput = (
   }
   if (
     !/^\d+$/.test(editLevel) ||
-    editLevel.length > 4 ||
-    parseInt(editLevel) > 1000
+    editLevel.length > 3 ||
+    parseInt(editLevel) > 9999
   ) {
     setEditError(getErrorMessage("current_level_validate_error", language));
     setTimeout(() => {

@@ -6,6 +6,7 @@ import { useTheme } from "./ThemeContext";
 import "./assets/Dashboard.css";
 import hamsterImage from "./assets/img/Lord.webp";
 import hamsterLogo from "./assets/img/Logo.webp";
+import coinIcon from "./assets/img/coin.webp";
 import { validateInput, validateEditInput } from "../utils/validation";
 import AdminPanel from "./AdminPanel";
 import AdminDeleteModal from "./AdminDeleteModal";
@@ -46,6 +47,7 @@ function Dashboard({ setIsAuthenticated }) {
   );
   const [cardsLoading, setCardsLoading] = useState(true);
   const [imagesLoaded, setImagesLoaded] = useState({});
+  const [coinIconLoaded, setCoinIconLoaded] = useState(false);
   const { isDarkMode, toggleTheme } = useTheme();
   const [cards, setCards] = useState([]);
   const [userCards, setUserCards] = useState([]);
@@ -82,6 +84,9 @@ function Dashboard({ setIsAuthenticated }) {
   const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
   const [isGamesModalOpen, setIsGamesModalOpen] = useState(false);
   const [gameData, setGameData] = useState(null);
+  const [formattedCurrentCost, setFormattedCurrentCost] = useState("");
+  const [formattedCurrentHourlyEarnings, setFormattedCurrentHourlyEarnings] =
+    useState("");
   const [newCard, setNewCard] = useState({
     name: "",
     image_url: "",
@@ -98,9 +103,15 @@ function Dashboard({ setIsAuthenticated }) {
     const token = localStorage.getItem("token");
     if (!token) {
       setIsAuthenticated(false);
-      navigate('/login');
+      navigate("/login");
     }
   }, [navigate, setIsAuthenticated]);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = coinIcon;
+    img.onload = () => setCoinIconLoaded(true);
+  }, []);
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
@@ -524,7 +535,36 @@ function Dashboard({ setIsAuthenticated }) {
   };
 
   const formatNumber = (number) => {
-    return new Intl.NumberFormat("en-US").format(number);
+    if (number < 1000) {
+      return number.toString();
+    }
+    const suffixes = ["", "K", "M", "B", "T"];
+    const suffixNum = Math.floor(("" + number).length / 3);
+    let shortValue = parseFloat(
+      (number / Math.pow(1000, suffixNum)).toPrecision(3)
+    );
+    if (shortValue % 1 !== 0) {
+      shortValue = shortValue.toFixed(2);
+    }
+    return shortValue + suffixes[suffixNum];
+  };
+
+  const formatNumberWithCommas = (value) => {
+    return new Intl.NumberFormat(language === "tr" ? "tr-TR" : "en-US").format(
+      value
+    );
+  };
+
+  const handleCostChange = (e) => {
+    const rawValue = e.target.value.replace(/[^\d]/g, "");
+    setCurrentCost(rawValue);
+    setFormattedCurrentCost(formatNumberWithCommas(rawValue));
+  };
+
+  const handleHourlyEarningsChange = (e) => {
+    const rawValue = e.target.value.replace(/[^\d]/g, "");
+    setCurrentHourlyEarnings(rawValue);
+    setFormattedCurrentHourlyEarnings(formatNumberWithCommas(rawValue));
   };
 
   const calculateRatio = (cost, pph) => {
@@ -722,13 +762,13 @@ function Dashboard({ setIsAuthenticated }) {
             required
             type="number"
             min="1"
-            max="1000"
+            max="999"
             inputMode="numeric"
             placeholder={t("current_card_level")}
             value={level}
             onChange={(e) => {
               const value = e.target.value;
-              if (value.length <= 4) {
+              if (value.length < 4) {
                 setLevel(value);
               }
             }}
@@ -736,20 +776,20 @@ function Dashboard({ setIsAuthenticated }) {
           <input
             required
             type="text"
-            maxLength="13"
+            maxLength="17"
             placeholder={t("cost_to_next_level")}
             inputMode="numeric"
-            value={currentCost}
-            onChange={(e) => handleInputChange(e, setCurrentCost)}
+            value={formattedCurrentCost}
+            onChange={handleCostChange}
           />
           <input
             required
             type="text"
-            maxLength="10"
+            maxLength="13"
             placeholder={t("pph_on_next_level")}
             inputMode="numeric"
-            value={currentHourlyEarnings}
-            onChange={(e) => handleInputChange(e, setCurrentHourlyEarnings)}
+            value={formattedCurrentHourlyEarnings}
+            onChange={handleHourlyEarningsChange}
           />
           <button
             className="add-card-button"
@@ -817,94 +857,99 @@ function Dashboard({ setIsAuthenticated }) {
           <p>{noResultsMessage}</p>
         </div>
       ) : (
-        <div className="cards-container">
-          {filteredCards.map((userCard) => {
-            const cost = parseFloat(userCard.current_cost);
-            const pph = parseFloat(userCard.current_hourly_earnings);
-            const ratio = cost / pph;
-            const ratioColor = calculateRatioColor(
-              ratio,
-              filteredCards.map(
-                (card) =>
-                  parseFloat(card.current_cost) /
-                  parseFloat(card.current_hourly_earnings)
-              )
-            );
+        coinIconLoaded && (
+          <div className="cards-container">
+            {filteredCards.map((userCard) => {
+              const cost = parseFloat(userCard.current_cost);
+              const pph = parseFloat(userCard.current_hourly_earnings);
+              const ratio = cost / pph;
+              const ratioColor = calculateRatioColor(
+                ratio,
+                filteredCards.map(
+                  (card) =>
+                    parseFloat(card.current_cost) /
+                    parseFloat(card.current_hourly_earnings)
+                )
+              );
 
-            return (
-              <div
-                className={`card ${isDarkMode ? "dark" : ""}`}
-                key={userCard.id}
-              >
-                <div className="card-header">
-                  {userCard.ratioColor.showArrow && (
-                    <FaArrowUp className="upgrade-arrow" />
-                  )}
-                  {userCard.has_timer && (
-                    <FaClock
-                      className="timer-icon"
-                      title={t("cooldown_text")}
-                    />
-                  )}
-                  {userCard.image_url && (
-                    <img
-                      src={userCard.image_url}
-                      alt={userCard.name}
-                      className="card-image"
-                      onLoad={() => handleImageLoad(userCard.id)}
-                      onError={() => handleImageLoad(userCard.id)}
-                    />
-                  )}
-                </div>
-                <div className="card-second-header">
-                  <h3>{userCard.name}</h3>
-                  <p>{userCard.card_category}</p>
-                </div>
-                <div className="card-line"></div>
+              return (
+                <div
+                  className={`card ${isDarkMode ? "dark" : ""}`}
+                  key={userCard.id}
+                >
+                  <div className="card-header">
+                    {userCard.ratioColor.showArrow && (
+                      <FaArrowUp className="upgrade-arrow" />
+                    )}
+                    {userCard.has_timer && (
+                      <FaClock
+                        className="timer-icon"
+                        title={t("cooldown_text")}
+                      />
+                    )}
+                    {userCard.image_url && (
+                      <img
+                        src={userCard.image_url}
+                        alt={userCard.name}
+                        className="card-image"
+                        onLoad={() => handleImageLoad(userCard.id)}
+                        onError={() => handleImageLoad(userCard.id)}
+                      />
+                    )}
+                  </div>
+                  <div className="card-second-header">
+                    <h3>{userCard.name}</h3>
+                    <p>{userCard.card_category}</p>
+                  </div>
+                  <div className="card-line"></div>
 
-                <div className="card-body">
-                  <p>
-                    {t("level")}: {userCard.level}
-                  </p>
-                  <p>
-                    {t("cost")}: {formatNumber(cost)}
-                  </p>
-                  <p>
-                    {t("pph")}: {formatNumber(pph)}
-                  </p>
-                  <p>
-                    {t("ratio")}:{" "}
-                    <span
-                      style={{ color: ratioColor.color, fontWeight: "bold" }}
-                    >
-                      {ratio.toFixed(2)}
-                    </span>
-                  </p>
-                </div>
-                <div className="card-footer">
-                  <button
-                    className="edit-button"
-                    title={t("edit_card")}
-                    onClick={() => openEditModal(userCard)}
-                  >
-                    <FaPencilAlt />
-                  </button>
-                  {!userCard.is_default && (
+                  <div className="card-body">
+                    <p>
+                      {t("level")}: {userCard.level}
+                    </p>
+                    <p>
+                      <img src={coinIcon} alt="Coin" className="coin-icon" />
+                      {t("cost")}: {formatNumber(cost)}
+                    </p>
+                    <p>
+                      <img src={coinIcon} alt="Coin" className="coin-icon" />
+                      {t("pph")}: {formatNumber(pph)}
+                    </p>
+                    <p>
+                      {t("ratio")}:{" "}
+                      <span
+                        style={{ color: ratioColor.color, fontWeight: "bold" }}
+                      >
+                        {ratio.toFixed(2)}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="card-footer">
                     <button
-                      className="delete-button"
-                      title={t("delete_card")}
-                      onClick={() => openDeleteModal(userCard.id)}
+                      className="edit-button"
+                      title={t("edit_card")}
+                      onClick={() => openEditModal(userCard)}
                     >
-                      <FaTrash />
+                      <FaPencilAlt />
                     </button>
-                  )}
+                    {!userCard.is_default && (
+                      <button
+                        className="delete-button"
+                        title={t("delete_card")}
+                        onClick={() => openDeleteModal(userCard.id)}
+                      >
+                        <FaTrash />
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )
       )}
       <UserEditCardModal
+        language={language}
         isEditModalOpen={isEditModalOpen}
         closeEditModal={closeEditModal}
         isDarkMode={isDarkMode}
