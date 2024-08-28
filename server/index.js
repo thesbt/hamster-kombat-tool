@@ -13,17 +13,18 @@ const port = 3000;
 const SECRET_KEY = process.env.SECRET_KEY;
 
 //FOR TESTING
-/*
-const limiter = rateLimit({
-  windowMs: 1, 
-  max: Infinity, 
-});
-*/
 
+const limiter = rateLimit({
+  windowMs: 1,
+  max: Infinity,
+});
+
+/*
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
 });
+*/
 
 app.use(limiter);
 app.use(express.json());
