@@ -534,20 +534,15 @@ function Dashboard({ setIsAuthenticated }) {
     navigate("/");
   };
 
-// ... existing code ...
-
-const formatNumber = (number) => {
-  if (number < 1000) {
-    return number.toString();
-  }
-  const suffixes = ["", "K", "M", "B", "T"];
-  const suffixNum = Math.floor(Math.log10(number) / 3);
-  const shortValue = (number / Math.pow(1000, suffixNum)).toFixed(2);
-  return shortValue.replace(/\.00$/, '') + suffixes[suffixNum];
-};
-
-
-// ... existing code ...
+  const formatNumber = (number) => {
+    if (number < 1000) {
+      return number.toString();
+    }
+    const suffixes = ["", "K", "M", "B", "T"];
+    const suffixNum = Math.floor(Math.log10(number) / 3);
+    const shortValue = (number / Math.pow(1000, suffixNum)).toFixed(2);
+    return shortValue.replace(/\.00$/, "") + suffixes[suffixNum];
+  };
 
   const formatNumberWithCommas = (value) => {
     return new Intl.NumberFormat(language === "tr" ? "tr-TR" : "en-US").format(
