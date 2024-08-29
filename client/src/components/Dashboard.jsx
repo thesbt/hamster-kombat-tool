@@ -393,6 +393,8 @@ function Dashboard({ setIsAuthenticated }) {
       setLevel("");
       setCurrentCost("");
       setCurrentHourlyEarnings("");
+      setFormattedCurrentCost("");
+      setFormattedCurrentHourlyEarnings("");
       setSuccess(t("add_card_success_message"));
       setError("");
       setSearchTerm("");
@@ -554,14 +556,14 @@ function Dashboard({ setIsAuthenticated }) {
   const handleCostChange = (e) => {
     const rawValue = e.target.value.replace(/[^\d]/g, "");
     setCurrentCost(rawValue);
-    setFormattedCurrentCost(formatNumberWithCommas(rawValue));
+    setFormattedCurrentCost(rawValue ? formatNumberWithCommas(rawValue) : "");
   };
 
   const handleHourlyEarningsChange = (e) => {
     const rawValue = e.target.value.replace(/[^\d]/g, "");
     setCurrentHourlyEarnings(rawValue);
-    setFormattedCurrentHourlyEarnings(formatNumberWithCommas(rawValue));
-  };
+    setFormattedCurrentHourlyEarnings(rawValue ? formatNumberWithCommas(rawValue) : "");
+};
 
   const calculateRatio = (cost, pph) => {
     return pph !== 0 ? (cost / pph).toFixed(2) : "N/A";
