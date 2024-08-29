@@ -84,5 +84,7 @@
   "invalid_or_missing_token": "Invalid or missing token",
   "passwords_do_not_match": "Passwords do not match",
   "password_reset_success": "Your password has been successfully reset. Redirecting...",
-  "password_reset_failed": "Password reset failed. Please try again."
+  "password_reset_failed": "Password reset failed. Please try again.",
+  "games": "Daily Tasks",
+  "settings": "Settings"
 }

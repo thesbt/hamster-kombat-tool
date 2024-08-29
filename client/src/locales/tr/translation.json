@@ -84,5 +84,7 @@
   "invalid_or_missing_token": "Geçersiz veya eksik token",
   "passwords_do_not_match": "Şifreler eşleşmiyor",
   "password_reset_success": "Şifreniz başarıyla değiştirildi. Yönlendiriliyorsunuz...",
-  "password_reset_failed": "Şifre sıfırlama başarısız oldu. Lütfen tekrar deneyin."
+  "password_reset_failed": "Şifre sıfırlama başarısız oldu. Lütfen tekrar deneyin.",
+  "games": "Günlük Görevler",
+  "settings": "Ayarlar"
 }
