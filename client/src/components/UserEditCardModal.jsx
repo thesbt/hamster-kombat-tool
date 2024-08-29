@@ -35,23 +35,24 @@ const UserEditCardModal = ({
     [language]
   );
 
-  // useEffect ile başlangıç değerlerini ayarlayın
   useEffect(() => {
-    setFormattedEditCost(formatNumberWithCommas(editCost));
-    setFormattedEditPph(formatNumberWithCommas(editPph));
-  }, [editCost, editPph, formatNumberWithCommas]);
+    setFormattedEditCost(editCost === "" ? "" : formatNumberWithCommas(editCost));
+  }, [editCost, formatNumberWithCommas]);
+  
+  useEffect(() => {
+    setFormattedEditPph(editPph === "" ? "" : formatNumberWithCommas(editPph));
+  }, [editPph, formatNumberWithCommas]);
 
-  // Yeni input değişiklik işleyicileri ekleyin
   const handleEditCostChange = (e) => {
     const rawValue = e.target.value.replace(/[^\d]/g, "");
     setEditCost(rawValue);
-    setFormattedEditCost(formatNumberWithCommas(rawValue));
+    setFormattedEditCost(rawValue === "" ? "" : formatNumberWithCommas(rawValue));
   };
-
+  
   const handleEditPphChange = (e) => {
     const rawValue = e.target.value.replace(/[^\d]/g, "");
     setEditPph(rawValue);
-    setFormattedEditPph(formatNumberWithCommas(rawValue));
+    setFormattedEditPph(rawValue === "" ? "" : formatNumberWithCommas(rawValue));
   };
 
   return (
