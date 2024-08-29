@@ -100,7 +100,7 @@ function LandingPage() {
           )}
           <p className={styles.description}>{t("description")}</p>
           <p className={styles["cta-text"]}>{t("not_playing_yet")}</p>
-          <a href="https://t.me/hamster_kombat_bOt/start?startapp=kentId5725201051" className={styles["cta-button"]}>
+          <a href="https://t.me/hamster_kombat_bOt/start?startapp=kentId5725201051" target="_blank" className={styles["cta-button"]}>
             <FaTelegramPlane className={styles["telegram-icon"]} />
             <span>{t("start_playing")}</span>
           </a>
