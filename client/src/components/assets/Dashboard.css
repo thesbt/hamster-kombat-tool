@@ -706,14 +706,14 @@ html {
 }
 
 .theme-switch .slider:before {
-  content: " \2600";
+  content: " ☀️";
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .theme-switch input:checked + .slider:before {
-  content: " \263E";
+  content: " 🌙";
 }
 
 input:checked + .slider {
