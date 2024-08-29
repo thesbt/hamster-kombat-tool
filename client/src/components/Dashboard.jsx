@@ -210,7 +210,7 @@ function Dashboard({ setIsAuthenticated }) {
   const fetchGameData = useCallback(async () => {
     try {
       const response = await axios.get(
-        "https://nabikaz.github.io/HamsterKombat-API/config.json"
+        "https://thesbt.github.io/hamster-kombat-daily-tasks-api/config.json"
       );
       setGameData(response.data);
     } catch (error) {
