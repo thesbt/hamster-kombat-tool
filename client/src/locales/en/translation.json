@@ -86,5 +86,7 @@
   "password_reset_success": "Your password has been successfully reset. Redirecting...",
   "password_reset_failed": "Password reset failed. Please try again.",
   "games": "Daily Tasks",
-  "settings": "Settings"
+  "settings": "Settings",
+  "not_playing_yet": "Not playing Hamster Kombat yet?",
+  "start_playing": "Start Playing"
 }

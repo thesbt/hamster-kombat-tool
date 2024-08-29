@@ -86,5 +86,7 @@
   "password_reset_success": "Şifreniz başarıyla değiştirildi. Yönlendiriliyorsunuz...",
   "password_reset_failed": "Şifre sıfırlama başarısız oldu. Lütfen tekrar deneyin.",
   "games": "Günlük Görevler",
-  "settings": "Ayarlar"
+  "settings": "Ayarlar",
+  "not_playing_yet": "Henüz Hamster Kombat oynamıyor musunuz?",
+  "start_playing": "Oynamaya Başla"
 }

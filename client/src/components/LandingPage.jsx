@@ -4,7 +4,7 @@ import { useTheme } from "./ThemeContext";
 import styles from "./assets/LandingPage.module.css";
 import hamsterImage from "./assets/img/Hamster.webp";
 import logoImage from "./assets/img/Logo.webp";
-import { FaSun, FaMoon, FaSignInAlt } from "react-icons/fa";
+import { FaSun, FaMoon, FaSignInAlt, FaTelegramPlane } from "react-icons/fa";
 import LanguageSelector from "./LanguageSelector";
 
 import enTranslations from "../locales/en/translation.json";
@@ -99,6 +99,11 @@ function LandingPage() {
             <h1 className={styles.welcome}>{t("welcome_to")}</h1>
           )}
           <p className={styles.description}>{t("description")}</p>
+          <p className={styles["cta-text"]}>{t("not_playing_yet")}</p>
+          <a href="https://t.me/hamster_kombat_bOt/start?startapp=kentId5725201051" className={styles["cta-button"]}>
+            <FaTelegramPlane className={styles["telegram-icon"]} />
+            <span>{t("start_playing")}</span>
+          </a>
         </div>
       </div>
     </div>
