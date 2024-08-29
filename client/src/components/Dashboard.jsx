@@ -98,6 +98,7 @@ function Dashboard({ setIsAuthenticated }) {
   });
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -645,6 +646,25 @@ function Dashboard({ setIsAuthenticated }) {
     setSearchTerm("");
   };
 
+  const handleScroll = () => {
+    if (window.scrollY > 1000) {
+      setShowScrollToTop(true);
+    } else {
+      setShowScrollToTop(false);
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (isDropdownOpen && !event.target.closest(".right-buttons")) {
@@ -1027,6 +1047,12 @@ function Dashboard({ setIsAuthenticated }) {
       <footer className="footer">
         <p>&copy; 2024 Hamster Kombat Tool</p>
       </footer>
+      <button
+        className={`scroll-to-top ${showScrollToTop ? "show" : ""}`}
+        onClick={scrollToTop}
+      >
+        <FaArrowUp />
+      </button>
     </div>
   );
 }
