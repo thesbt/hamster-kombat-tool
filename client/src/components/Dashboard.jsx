@@ -562,8 +562,10 @@ function Dashboard({ setIsAuthenticated }) {
   const handleHourlyEarningsChange = (e) => {
     const rawValue = e.target.value.replace(/[^\d]/g, "");
     setCurrentHourlyEarnings(rawValue);
-    setFormattedCurrentHourlyEarnings(rawValue ? formatNumberWithCommas(rawValue) : "");
-};
+    setFormattedCurrentHourlyEarnings(
+      rawValue ? formatNumberWithCommas(rawValue) : ""
+    );
+  };
 
   const calculateRatio = (cost, pph) => {
     return pph !== 0 ? (cost / pph).toFixed(2) : "N/A";

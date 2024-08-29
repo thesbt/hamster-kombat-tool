@@ -12,8 +12,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
-  animation: fadeIn 0.5s ease;
+  animation: fadeIn 0.3s ease;
   user-select: none;
 }
 
@@ -105,13 +104,10 @@ html {
 .App.dark {
   background-color: var(--bg-color);
   color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
-  animation: fadeIn 0.5s ease;
 }
 
 .App {
-  transition: background-color 0.3s ease, color 0.3s ease;
-  animation: fadeIn 0.5s ease;
+  animation: fadeIn 0.3s ease;
 }
 
 /* Dashboard */
@@ -120,7 +116,7 @@ html {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px 20px 0px 20px;
-  animation: fadeIn 0.5s ease;
+  animation: fadeIn 0.3s ease;
   background-color: var(--bg-color);
   color: var(--text-color);
   display: flex;
@@ -182,7 +178,6 @@ html {
   border-radius: 20px;
   cursor: pointer;
   font-size: 14px;
-  transition: all 0.3s ease;
   gap: 5px;
   width: 60%;
 }
@@ -208,7 +203,6 @@ html {
   border-radius: 20px;
   cursor: pointer;
   font-size: 14px;
-  transition: all 0.3s ease;
   gap: 5px;
 }
 
@@ -259,7 +253,6 @@ html {
   padding: 10px;
   border: 1px solid var(--input-border);
   border-radius: 8px;
-  transition: all 0.3s ease;
 }
 
 .error-message,
@@ -336,7 +329,7 @@ html {
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+
   animation: addCard 0.5s ease;
   width: 280px;
   display: flex;
@@ -527,14 +520,12 @@ html {
   display: flex;
   align-items: center;
   margin-right: 10px;
-
   border: none;
   color: var(--button-text);
   padding: 8px 16px;
   border-radius: 20px;
   cursor: pointer;
   font-size: 14px;
-  transition: all 0.3s ease;
   gap: 5px;
 }
 
@@ -675,7 +666,6 @@ html {
   color: var(--text-color);
   display: flex;
   align-items: center;
-  transition: transform 0.3s ease;
 }
 
 .settings-button:hover,
@@ -882,7 +872,6 @@ input:checked + .slider:before {
   color: var(--text-color);
   font-size: 18px;
   cursor: pointer;
-  transition: color 0.3s ease;
 }
 
 .clear-search-icon:hover,
@@ -900,7 +889,6 @@ input:checked + .slider:before {
   padding: 8px;
   border-radius: 4px;
   width: 100%;
-  transition: all 0.3s ease;
 }
 
 .add-card {
@@ -937,7 +925,7 @@ input:checked + .slider:before {
   border-radius: 8px;
   background-color: var(--input-bg);
   color: var(--input-text);
-  transition: all 0.3s ease;
+
   height: 45px;
 }
 
@@ -1003,7 +991,7 @@ input:checked + .slider:before {
   align-items: center;
   height: 100vh;
   background-color: var(--bg-color);
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .loading-image {
@@ -1250,7 +1238,6 @@ button:disabled .button-spinner {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
   padding: 10px 0px;
   display: flex;
   align-items: center;
