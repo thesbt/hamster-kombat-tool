@@ -130,7 +130,7 @@ function Dashboard({ setIsAuthenticated }) {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
-        "https://hamster-kombat-tool-server.vercel.app/api/user-info",
+        "https://api.hamsterkombattool.site/api/user-info",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -154,7 +154,7 @@ function Dashboard({ setIsAuthenticated }) {
     setCardsLoading(true);
     try {
       const response = await axios.get(
-        "https://hamster-kombat-tool-server.vercel.app/api/user-cards",
+        "https://api.hamsterkombattool.site/api/user-cards",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -227,7 +227,7 @@ function Dashboard({ setIsAuthenticated }) {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
-        "https://hamster-kombat-tool-server.vercel.app/api/admin/cards",
+        "https://api.hamsterkombattool.site/api/admin/cards",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -251,7 +251,7 @@ function Dashboard({ setIsAuthenticated }) {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.put(
-        `https://hamster-kombat-tool-server.vercel.app/api/admin/cards/${editingCard.id}`,
+        `https://api.hamsterkombattool.site/api/admin/cards/${editingCard.id}`,
         editingCard,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -288,7 +288,7 @@ function Dashboard({ setIsAuthenticated }) {
     const token = localStorage.getItem("token");
     try {
       await axios.post(
-        "https://hamster-kombat-tool-server.vercel.app/api/admin/cards",
+        "https://api.hamsterkombattool.site/api/admin/cards",
         newCard,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -322,7 +322,7 @@ function Dashboard({ setIsAuthenticated }) {
     const token = localStorage.getItem("token");
     try {
       await axios.delete(
-        `https://hamster-kombat-tool-server.vercel.app/api/admin/cards/${cardToAdminDelete.id}`,
+        `https://api.hamsterkombattool.site/api/admin/cards/${cardToAdminDelete.id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -350,7 +350,7 @@ function Dashboard({ setIsAuthenticated }) {
   const fetchCards = async () => {
     try {
       const response = await axios.get(
-        "https://hamster-kombat-tool-server.vercel.app/api/cards"
+        "https://api.hamsterkombattool.site/api/cards"
       );
       const filteredCards = response.data
         .filter((card) => !card.is_default)
@@ -379,7 +379,7 @@ function Dashboard({ setIsAuthenticated }) {
     const token = localStorage.getItem("token");
     try {
       await axios.post(
-        "https://hamster-kombat-tool-server.vercel.app/api/user-cards",
+        "https://api.hamsterkombattool.site/api/user-cards",
         {
           card_id: parseInt(selectedCard),
           level: parseInt(level),
@@ -434,7 +434,7 @@ function Dashboard({ setIsAuthenticated }) {
     const token = localStorage.getItem("token");
     try {
       await axios.put(
-        `https://hamster-kombat-tool-server.vercel.app/api/user-cards/${cardToEdit}`,
+        `https://api.hamsterkombattool.site/api/user-cards/${cardToEdit}`,
         {
           level: parseInt(editLevel),
           current_cost: editCost,
@@ -484,7 +484,7 @@ function Dashboard({ setIsAuthenticated }) {
     const token = localStorage.getItem("token");
     try {
       await axios.delete(
-        `https://hamster-kombat-tool-server.vercel.app/api/user-cards/${cardToDelete}`,
+        `https://api.hamsterkombattool.site/api/user-cards/${cardToDelete}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

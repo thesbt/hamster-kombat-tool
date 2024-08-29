@@ -138,7 +138,7 @@ function Register() {
 
     try {
       await axios.post(
-        "https://hamster-kombat-tool-server.vercel.app/api/register",
+        "https://api.hamsterkombattool.site/api/register",
         { username, password, email }
       );
       setSuccess(t("registration_success"));

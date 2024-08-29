@@ -59,7 +59,7 @@ function ResetPassword({ setIsAuthenticated }) {
     async (token) => {
       try {
         const response = await axios.post(
-          "https://hamster-kombat-tool-server.vercel.app/api/verify-reset-token",
+          "https://api.hamsterkombattool.site/api/verify-reset-token",
           { token }
         );
         if (response.data.valid) {
@@ -154,7 +154,7 @@ function ResetPassword({ setIsAuthenticated }) {
 
     try {
       await axios.post(
-        "https://hamster-kombat-tool-server.vercel.app/api/reset-password",
+        "https://api.hamsterkombattool.site/api/reset-password",
         {
           token,
           newPassword,
