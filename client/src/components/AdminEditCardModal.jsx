@@ -34,23 +34,30 @@ const AdminEditCardModal = ({
 
   const handleUpload = async () => {
     try {
+      console.log("İmza alma isteği gönderiliyor...");
       const response = await axios.get(
         "https://hamsterkombattool.site/api/get-signature"
       );
+      console.log("İmza alındı:", response.data);
       const { signature, timestamp, cloudName, apiKey } = response.data;
 
+      console.log("Cloudinary widget oluşturuluyor...");
       const myWidget = window.cloudinary.createUploadWidget(
         {
           cloudName: cloudName,
-          uploadPreset: "ml_default", // Preset adınızın doğru olduğundan emin olun
+          uploadPreset: "ml_default",
           apiKey: apiKey,
           timestamp: timestamp,
           signature: signature,
         },
         async (error, result) => {
-          if (!error && result && result.event === "success") {
+          if (error) {
+            console.error("Cloudinary widget hatası:", error);
+            alert("Resim yüklenirken bir hata oluştu.");
+            return;
+          }
+          if (result && result.event === "success") {
             console.log("Yüklenen resim URL:", result.info.secure_url);
-
             try {
               const updateResponse = await axios.put(
                 `https://hamsterkombattool.site/api/admin/cards/${editingCard.id}/image`,
@@ -82,9 +89,10 @@ const AdminEditCardModal = ({
           }
         }
       );
+      console.log("Widget açılıyor...");
       myWidget.open();
     } catch (error) {
-      console.log("İmza alınamadı:", error);
+      console.error("İmza alınamadı:", error);
       alert("Resim yükleme başlatılamadı.");
     }
   };

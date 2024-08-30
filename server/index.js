@@ -45,13 +45,6 @@ app.use(
 );
 */
 
-// Cloudinary yapılandırması
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
 // E-posta gönderici yapılandırması
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -620,23 +613,36 @@ app.delete("/api/user-cards/:id", authenticateToken, async (req, res) => {
   }
 });
 
+// Cloudinary yapılandırması
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 // İmza oluşturma endpoint'i
 app.get("/api/get-signature", authenticateToken, isAdmin, (req, res) => {
+  console.log("İmza oluşturma isteği alındı");
   const timestamp = Math.round(new Date().getTime() / 1000);
+  const params = {
+    timestamp: timestamp,
+    upload_preset: "ml_default",
+  };
+  console.log("İmza parametreleri:", params);
   const signature = cloudinary.utils.api_sign_request(
-    {
-      timestamp: timestamp,
-      upload_preset: "ml_default", // Preset adınızın doğru olduğundan emin olun
-    },
+    params,
     process.env.CLOUDINARY_API_SECRET
   );
+  console.log("Oluşturulan imza:", signature);
 
-  res.json({
+  const response = {
     signature: signature,
     timestamp: timestamp,
-    cloudName,
-    apiKey,
-  });
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+  };
+  console.log("Gönderilen yanıt:", response);
+  res.json(response);
 });
 
 // Kart resmini güncelleme endpoint'i
