@@ -64,21 +64,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Dosya yükleme için storage ve upload konfigürasyonu
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Yüklenen dosyaların kaydedileceği klasör
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); // Benzersiz dosya adı
-  },
-});
-
-const upload = multer({ storage: storage });
-
-// Statik dosya sunumu için
-app.use("/uploads", express.static("uploads"));
-
 // Şifre sıfırlama talebi
 app.post("/api/forgot-password", async (req, res) => {
   const { email } = req.body;
@@ -642,7 +627,7 @@ app.post("/api/upload", authenticateToken, isAdmin, async (req, res) => {
   }
   try {
     const result = await cloudinary.uploader.upload(req.body.image, {
-      upload_preset: "ml_default"
+      upload_preset: "ml_default",
     });
     res.json({ imageUrl: result.secure_url });
   } catch (error) {
