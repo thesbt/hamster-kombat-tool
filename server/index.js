@@ -6,11 +6,12 @@ const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-require("dotenv").config();
-
+const multer = require("multer");
+const path = require("path");
 const app = express();
 const port = 3000;
 const SECRET_KEY = process.env.SECRET_KEY;
+require("dotenv").config();
 
 //FOR TESTING
 
@@ -56,6 +57,35 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
+
+// Dosya yükleme için storage ve upload konfigürasyonu
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // Yüklenen dosyaların kaydedileceği klasör
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); // Benzersiz dosya adı
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// Dosya yükleme endpoint'i
+app.post(
+  "/api/upload",
+  authenticateToken,
+  isAdmin,
+  upload.single("image"),
+  (req, res) => {
+    if (!req.file) {
+      return res.status(400).send("No file uploaded.");
+    }
+    res.json({ imageUrl: `/uploads/${req.file.filename}` });
+  }
+);
+
+// Statik dosya sunumu için
+app.use("/uploads", express.static("uploads"));
 
 // Şifre sıfırlama talebi
 app.post("/api/forgot-password", async (req, res) => {

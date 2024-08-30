@@ -1082,6 +1082,51 @@ input:checked + .slider:before {
   display: flex; /* Görünür yap */
 }
 
+.image-upload-group {
+  display: flex;
+  align-items: stretch; /* Değiştirildi */
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.image-upload-group input[type="text"] {
+  flex-grow: 1;
+}
+
+.file-input-label,
+.upload-button {
+  display: flex; /* Eklendi */
+  flex-direction: column; /* Eklendi */
+  align-items: center; /* Eklendi */
+  justify-content: center; /* Eklendi */
+  padding: 3px 5px;
+  font-size: 0.7em;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+  height: 100%; /* Eklendi */
+  min-height: 45px; /* Eklendi, gerekirse ayarlayın */
+}
+
+.file-input-label {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: 1px solid var(--input-border);
+}
+
+.upload-button {
+  background-color: var(--primary-color);
+  color: var(--button-text);
+  border: none;
+}
+
+/* Eğer input elementinin yüksekliği farklıysa, bunu da ayarlayın */
+.image-upload-group input[type="text"],
+.image-upload-group input[type="file"] {
+  height: 45px; /* Gerekirse ayarlayın */
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

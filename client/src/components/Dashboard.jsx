@@ -85,6 +85,7 @@ function Dashboard({ setIsAuthenticated }) {
   const [isGamesModalOpen, setIsGamesModalOpen] = useState(false);
   const [gameData, setGameData] = useState(null);
   const [formattedCurrentCost, setFormattedCurrentCost] = useState("");
+  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const [formattedCurrentHourlyEarnings, setFormattedCurrentHourlyEarnings] =
     useState("");
   const [newCard, setNewCard] = useState({
@@ -1006,30 +1007,6 @@ function Dashboard({ setIsAuthenticated }) {
         isDarkMode={isDarkMode}
         t={t}
       />
-      <AddCardModal
-        isOpen={isAddCardModalOpen}
-        onRequestClose={() => setIsAddCardModalOpen(false)}
-        newCard={newCard}
-        handleAdminInputChange={handleAdminInputChange}
-        handleAdminAddCard={handleAdminAddCard}
-        isDarkMode={isDarkMode}
-      />
-      <AdminEditCardModal
-        isEditCardModalOpen={isEditCardModalOpen}
-        setIsEditCardModalOpen={setIsEditCardModalOpen}
-        isDarkMode={isDarkMode}
-        editingCard={editingCard}
-        handleAdminEditCard={handleAdminEditCard}
-        handleEditCardInputChange={handleEditCardInputChange}
-      />
-
-      <AdminDeleteModal
-        isOpen={isAdminDeleteModalOpen}
-        onRequestClose={() => setIsAdminDeleteModalOpen(false)}
-        cardToAdminDelete={cardToAdminDelete}
-        confirmAdminDeleteCard={confirmAdminDeleteCard}
-        isDarkMode={isDarkMode}
-      />
 
       <GamesModal
         isOpen={isGamesModalOpen}
@@ -1040,13 +1017,43 @@ function Dashboard({ setIsAuthenticated }) {
       />
 
       {isAdmin && (
-        <AdminPanel
-          allCards={allCards}
-          openEditCardModal={openEditCardModal}
-          handleAdminDeleteCard={handleAdminDeleteCard}
-          setIsAddCardModalOpen={setIsAddCardModalOpen}
-          isDarkMode={isDarkMode}
-        />
+        <>
+          <AdminPanel
+            allCards={allCards}
+            openEditCardModal={openEditCardModal}
+            handleAdminDeleteCard={handleAdminDeleteCard}
+            setIsAddCardModalOpen={setIsAddCardModalOpen}
+            isDarkMode={isDarkMode}
+            setUploadedImageUrl={setUploadedImageUrl}
+          />
+
+          <AddCardModal
+            isOpen={isAddCardModalOpen}
+            onRequestClose={() => setIsAddCardModalOpen(false)}
+            newCard={newCard}
+            handleAdminInputChange={handleAdminInputChange}
+            handleAdminAddCard={handleAdminAddCard}
+            isDarkMode={isDarkMode}
+            uploadedImageUrl={uploadedImageUrl}
+          />
+
+          <AdminEditCardModal
+            isEditCardModalOpen={isEditCardModalOpen}
+            setIsEditCardModalOpen={setIsEditCardModalOpen}
+            isDarkMode={isDarkMode}
+            editingCard={editingCard}
+            handleAdminEditCard={handleAdminEditCard}
+            handleEditCardInputChange={handleEditCardInputChange}
+          />
+
+          <AdminDeleteModal
+            isOpen={isAdminDeleteModalOpen}
+            onRequestClose={() => setIsAdminDeleteModalOpen(false)}
+            cardToAdminDelete={cardToAdminDelete}
+            confirmAdminDeleteCard={confirmAdminDeleteCard}
+            isDarkMode={isDarkMode}
+          />
+        </>
       )}
       <footer className="footer">
         <p>&copy; 2024 Hamster Kombat Tool</p>

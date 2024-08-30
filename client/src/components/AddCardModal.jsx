@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
-import { FaCheck, FaTimes } from "react-icons/fa";
+import { FaCheck, FaTimes, FaUpload } from "react-icons/fa";
+import axios from "axios";
 
 function AddCardModal({
   isOpen,
@@ -10,6 +11,40 @@ function AddCardModal({
   handleAdminAddCard,
   isDarkMode,
 }) {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
+
+  const handleFileSelect = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      alert("Lütfen bir dosya seçin.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+
+    try {
+      const response = await axios.post("https://api.hamsterkombattool.site/api/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setUploadedImageUrl(response.data.imageUrl);
+      handleAdminInputChange({
+        target: { name: "image_url", value: response.data.imageUrl },
+      });
+      alert("Resim başarıyla yüklendi!");
+    } catch (error) {
+      console.error("Resim yükleme hatası:", error);
+      alert("Resim yüklenirken bir hata oluştu.");
+    }
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -37,14 +72,30 @@ function AddCardModal({
           </div>
           <div className="input-group">
             <label htmlFor="addImageUrl">Image URL:</label>
-            <input
-              id="addImageUrl"
-              type="text"
-              name="image_url"
-              value={newCard.image_url}
-              onChange={handleAdminInputChange}
-              placeholder="Image URL"
-            />
+            <div className="image-upload-group">
+              <input
+                id="addImageUrl"
+                type="text"
+                name="image_url"
+                value={newCard.image_url || uploadedImageUrl}
+                onChange={handleAdminInputChange}
+                placeholder="Image URL"
+                required
+              />
+              <input
+                type="file"
+                onChange={handleFileSelect}
+                accept="image/*"
+                style={{ display: "none" }}
+                id="fileInput"
+              />
+              <label htmlFor="fileInput" className="file-input-label">
+                Choose File
+              </label>
+              <button type="button" onClick={handleUpload} className="upload-button">
+                <FaUpload /> Upload
+              </button>
+            </div>
           </div>
           <div className="input-group">
             <label htmlFor="addBaseCost">Base Cost:</label>
