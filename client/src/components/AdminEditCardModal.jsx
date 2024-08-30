@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { FaCheck, FaTimes, FaUpload } from "react-icons/fa";
-import axios from "axios";
 
 const AdminEditCardModal = ({
   isEditCardModalOpen,
@@ -27,8 +26,8 @@ const AdminEditCardModal = ({
   const handleUpload = async () => {
     const myWidget = window.cloudinary.createUploadWidget(
       {
-        cloudName: process.env.REACT_APP_CLOUDINARY_CLOUD_NAME,
-        uploadPreset: process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET,
+        cloudName: "dquxlbwmd",
+        uploadPreset: "ml_default",
       },
       async (error, result) => {
         if (error) {
@@ -36,35 +35,22 @@ const AdminEditCardModal = ({
           return;
         }
         if (result && result.event === "success") {
-          try {
-            const updateResponse = await axios.put(
-              `https://api.hamsterkombattool.site/api/admin/cards/${editingCard.id}/image`,
-              { image_url: result.info.secure_url },
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-              }
-            );
-
-            if (updateResponse.data.success) {
-              setUploadedImageUrl(result.info.secure_url);
-              handleEditCardInputChange({
-                target: { name: "image_url", value: result.info.secure_url },
-              });
-              alert("Resim başarıyla yüklendi ve kart güncellendi!");
-            } else {
-              alert(
-                "Resim yüklendi ancak kart güncellenirken bir hata oluştu."
-              );
-            }
-          } catch (updateError) {
-            alert("Resim yüklendi ancak kart güncellenirken bir hata oluştu.");
-          }
+          const newImageUrl = result.info.secure_url;
+          setUploadedImageUrl(newImageUrl);
+          handleEditCardInputChange({
+            target: { name: "image_url", value: newImageUrl },
+          });
+          alert("Resim başarıyla yüklendi.");
         }
       }
     );
     myWidget.open();
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await handleAdminEditCard(e);
+    setIsEditCardModalOpen(false);
   };
 
   return (
@@ -88,7 +74,7 @@ const AdminEditCardModal = ({
               Category: {editingCard.card_category}
             </p>
           </div>
-          <form onSubmit={handleAdminEditCard}>
+          <form onSubmit={handleSubmit}>
             <div className="input-group">
               <label htmlFor="editName">Card Name:</label>
               <input
@@ -101,13 +87,13 @@ const AdminEditCardModal = ({
               />
             </div>
             <div className="input-group">
-              <label htmlFor="editImageUrl">Image URL:</label>
+              <label htmlFor="editImageUrl">Resim URL:</label>
               <div className="image-upload-group">
                 <input
                   id="editImageUrl"
                   name="image_url"
                   type="text"
-                  value={editingCard.image_url || uploadedImageUrl}
+                  value={editingCard.image_url}
                   onChange={handleEditCardInputChange}
                   required
                 />
@@ -180,14 +166,14 @@ const AdminEditCardModal = ({
             <div className="modal-buttons">
               <button className="confirm-button" type="submit">
                 <FaCheck />
-                Save Changes
+                Değişiklikleri Kaydet
               </button>
               <button
                 className="cancel-button"
                 onClick={() => setIsEditCardModalOpen(false)}
               >
                 <FaTimes />
-                Cancel
+                İptal
               </button>
             </div>
           </form>

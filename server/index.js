@@ -620,6 +620,7 @@ app.delete("/api/user-cards/:id", authenticateToken, async (req, res) => {
   }
 });
 
+/*
 // Kart resmini güncelleme endpoint'i
 app.put(
   "/api/admin/cards/:id/image",
@@ -650,6 +651,7 @@ app.put(
     }
   }
 );
+*/
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
