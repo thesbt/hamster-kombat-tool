@@ -626,7 +626,7 @@ app.get("/api/get-signature", authenticateToken, isAdmin, (req, res) => {
   const signature = cloudinary.utils.api_sign_request(
     {
       timestamp: timestamp,
-      // Diğer parametreler...
+      upload_preset: "ml_default", // Cloudinary'deki upload preset adınız
     },
     process.env.CLOUDINARY_API_SECRET
   );
@@ -634,6 +634,8 @@ app.get("/api/get-signature", authenticateToken, isAdmin, (req, res) => {
   res.json({
     signature: signature,
     timestamp: timestamp,
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+    apiKey: process.env.CLOUDINARY_API_KEY,
   });
 });
 
@@ -661,12 +663,10 @@ app.put(
       res.json({ success: true, card: result.rows[0] });
     } catch (err) {
       console.error("Kart resmi güncellenirken hata oluştu:", err);
-      res
-        .status(500)
-        .json({
-          success: false,
-          error: "Kart resmi güncellenirken bir hata oluştu",
-        });
+      res.status(500).json({
+        success: false,
+        error: "Kart resmi güncellenirken bir hata oluştu",
+      });
     }
   }
 );
