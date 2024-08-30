@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { FaCheck, FaTimes, FaUpload } from "react-icons/fa";
 import axios from "axios";
@@ -11,41 +11,72 @@ const AdminEditCardModal = ({
   handleAdminEditCard,
   handleEditCardInputChange,
 }) => {
-  const [selectedFile, setSelectedFile] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
 
-  const handleFileSelect = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://widget.cloudinary.com/v2.0/global/all.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const handleUpload = async () => {
-    if (!selectedFile) {
-      alert("Lütfen bir dosya seçin.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("image", selectedFile);
-
     try {
-      const response = await axios.post(
-        "https://hamsterkombattool.site/api/upload",
-        formData,
+      const response = await axios.get(
+        "https://hamsterkombattool.site/api/get-signature"
+      );
+      const { signature, timestamp } = response.data;
+
+      const myWidget = window.cloudinary.createUploadWidget(
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+          uploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET,
+          apiKey: process.env.CLOUDINARY_API_KEY,
+          timestamp: timestamp,
+          signature: signature,
+        },
+        async (error, result) => {
+          if (!error && result && result.event === "success") {
+            console.log("Yüklenen resim URL:", result.info.secure_url);
+
+            try {
+              const updateResponse = await axios.put(
+                `https://hamsterkombattool.site/api/admin/cards/${editingCard.id}/image`,
+                { image_url: result.info.secure_url },
+                {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                }
+              );
+
+              if (updateResponse.data.success) {
+                setUploadedImageUrl(result.info.secure_url);
+                handleEditCardInputChange({
+                  target: { name: "image_url", value: result.info.secure_url },
+                });
+                alert("Resim başarıyla yüklendi ve kart güncellendi!");
+              } else {
+                alert(
+                  "Resim yüklendi ancak kart güncellenirken bir hata oluştu."
+                );
+              }
+            } catch (updateError) {
+              console.error("Kart güncelleme hatası:", updateError);
+              alert(
+                "Resim yüklendi ancak kart güncellenirken bir hata oluştu."
+              );
+            }
+          }
         }
       );
-      setUploadedImageUrl(response.data.imageUrl);
-      handleEditCardInputChange({
-        target: { name: "image_url", value: response.data.imageUrl },
-      });
-      alert("Resim başarıyla yüklendi!");
+      myWidget.open();
     } catch (error) {
-      console.error("Resim yükleme hatası:", error);
-      alert("Resim yüklenirken bir hata oluştu.");
+      console.error("İmza alınamadı:", error);
+      alert("Resim yükleme başlatılamadı.");
     }
   };
 
@@ -93,16 +124,6 @@ const AdminEditCardModal = ({
                   onChange={handleEditCardInputChange}
                   required
                 />
-                <input
-                  type="file"
-                  onChange={handleFileSelect}
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  id="fileInput"
-                />
-                <label htmlFor="fileInput" className="file-input-label">
-                  Dosya Seç
-                </label>
                 <button
                   type="button"
                   onClick={handleUpload}

@@ -7,18 +7,10 @@ const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const cloudinary = require("cloudinary").v2;
 const app = express();
 const port = 3000;
 const SECRET_KEY = process.env.SECRET_KEY;
-
-const cloudinary = require("cloudinary").v2;
-
-cloudinary.config({
-  secure: true,
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 //FOR TESTING
 
@@ -52,6 +44,13 @@ app.use(
   })
 );
 */
+
+// Cloudinary yapılandırması
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // E-posta gönderici yapılandırması
 const transporter = nodemailer.createTransport({
@@ -621,23 +620,53 @@ app.delete("/api/user-cards/:id", authenticateToken, async (req, res) => {
   }
 });
 
-// Dosya yükleme endpoint'i
-app.post(
-  "https://hamsterkombattool.site/api/upload",
+// İmza oluşturma endpoint'i
+app.get("/api/get-signature", authenticateToken, isAdmin, (req, res) => {
+  const timestamp = Math.round(new Date().getTime() / 1000);
+  const signature = cloudinary.utils.api_sign_request(
+    {
+      timestamp: timestamp,
+      // Diğer parametreler...
+    },
+    process.env.CLOUDINARY_API_SECRET
+  );
+
+  res.json({
+    signature: signature,
+    timestamp: timestamp,
+  });
+});
+
+// Kart resmini güncelleme endpoint'i
+app.put(
+  "/api/admin/cards/:id/image",
   authenticateToken,
   isAdmin,
   async (req, res) => {
-    if (!req.body || !req.body.image) {
-      return res.status(400).send("No image data provided.");
-    }
+    const { id } = req.params;
+    const { image_url } = req.body;
+
     try {
-      const result = await cloudinary.uploader.upload(req.body.image, {
-        upload_preset: "ml_default",
-      });
-      res.json({ imageUrl: result.secure_url });
-    } catch (error) {
-      console.error("Upload error:", error);
-      res.status(500).send("Error uploading file.");
+      const result = await pool.query(
+        "UPDATE Cards SET image_url = $1 WHERE id = $2 RETURNING *",
+        [image_url, id]
+      );
+
+      if (result.rows.length === 0) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Kart bulunamadı" });
+      }
+
+      res.json({ success: true, card: result.rows[0] });
+    } catch (err) {
+      console.error("Kart resmi güncellenirken hata oluştu:", err);
+      res
+        .status(500)
+        .json({
+          success: false,
+          error: "Kart resmi güncellenirken bir hata oluştu",
+        });
     }
   }
 );
