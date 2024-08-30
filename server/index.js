@@ -622,20 +622,25 @@ app.delete("/api/user-cards/:id", authenticateToken, async (req, res) => {
 });
 
 // Dosya yükleme endpoint'i
-app.post("/api/upload", authenticateToken, isAdmin, async (req, res) => {
-  if (!req.body || !req.body.image) {
-    return res.status(400).send("No image data provided.");
+app.post(
+  "https://hamsterkombattool.site/api/upload",
+  authenticateToken,
+  isAdmin,
+  async (req, res) => {
+    if (!req.body || !req.body.image) {
+      return res.status(400).send("No image data provided.");
+    }
+    try {
+      const result = await cloudinary.uploader.upload(req.body.image, {
+        upload_preset: "ml_default",
+      });
+      res.json({ imageUrl: result.secure_url });
+    } catch (error) {
+      console.error("Upload error:", error);
+      res.status(500).send("Error uploading file.");
+    }
   }
-  try {
-    const result = await cloudinary.uploader.upload(req.body.image, {
-      upload_preset: "ml_default",
-    });
-    res.json({ imageUrl: result.secure_url });
-  } catch (error) {
-    console.error("Upload error:", error);
-    res.status(500).send("Error uploading file.");
-  }
-});
+);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

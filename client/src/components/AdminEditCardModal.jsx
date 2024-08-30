@@ -28,12 +28,16 @@ const AdminEditCardModal = ({
     formData.append("image", selectedFile);
 
     try {
-      const response = await axios.post("/api/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await axios.post(
+        "https://hamsterkombattool.site/api/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       setUploadedImageUrl(response.data.imageUrl);
       handleEditCardInputChange({
         target: { name: "image_url", value: response.data.imageUrl },

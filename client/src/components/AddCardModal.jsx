@@ -30,7 +30,7 @@ function AddCardModal({
       reader.onloadend = async () => {
         const base64data = reader.result;
         const response = await axios.post(
-          "/api/upload",
+          "https://hamsterkombattool.site/api/upload",
           { image: base64data },
           {
             headers: {
