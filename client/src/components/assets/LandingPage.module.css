@@ -23,6 +23,7 @@ svg {
 
 /* Dark mode için yeni değişkenler */
 .dark {
+  --bg-color: #131213;
   --primary-color: #ff9f70;
   --secondary-color: #ff6520;
   --text-color: #f0f0f0;
@@ -128,6 +129,7 @@ svg {
 
 /* Landing Page içerik alanı */
 .landing-page {
+  background-color: var(--bg-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,7 +224,7 @@ svg {
   margin-top: 20px;
   font-size: 1.1em;
   font-weight: 500;
-  color: var(--primary-color);  
+  color: var(--primary-color);
 }
 
 .cta-button {
@@ -242,7 +244,7 @@ svg {
   cursor: pointer;
   font-size: 1em;
   transition: all 0.3s ease;
-  
+
   text-decoration: none;
 }
 
@@ -287,5 +289,4 @@ svg {
     font-size: 18px;
     text-align: left;
   }
-
 }

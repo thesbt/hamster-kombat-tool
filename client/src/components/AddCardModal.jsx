@@ -59,7 +59,7 @@ function AddCardModal({
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       contentLabel={t("add_new_card")}
-      className={`modal edit-modal ${isDarkMode ? "dark" : ""}`}
+      className={`modal admin-edit-modal ${isDarkMode ? "dark" : ""}`}
       overlayClassName={`modal-overlay ${isDarkMode ? "dark" : ""}`}
     >
       <div className="modal-card">
@@ -95,7 +95,7 @@ function AddCardModal({
                 onClick={handleUpload}
                 className="upload-button"
               >
-                <FaUpload /> {t("upload")}
+                <FaUpload className="upload-icon" /> <span>{t("upload")}</span>
               </button>
             </div>
           </div>
@@ -146,8 +146,6 @@ function AddCardModal({
               />
               {t("has_timer")}
             </label>
-          </div>
-          <div className="input-group checkbox-group">
             <label>
               <input
                 type="checkbox"

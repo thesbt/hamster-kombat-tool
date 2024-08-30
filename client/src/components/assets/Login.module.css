@@ -9,6 +9,8 @@
 
 /* Dark mode için yeni değişkenler */
 .dark {
+  --input-bg: #1f1f1e;
+  --bg-color: #131213;
   --primary-color: #ff9f70;
   --secondary-color: #ff6520;
   --text-color: #f0f0f0;
@@ -21,6 +23,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: var(--bg-color);
   color: var(--text-color);
   overflow: hidden;
 }
@@ -298,7 +301,6 @@
   font-size: 0.9em;
   font-weight: 400;
 }
-
 
 .error-message.visible {
   animation: fadeInOut 5s ease-in-out;

@@ -60,7 +60,7 @@ const AdminEditCardModal = ({
       isOpen={isEditCardModalOpen}
       onRequestClose={() => setIsEditCardModalOpen(false)}
       contentLabel={t("edit_card")}
-      className={`modal edit-modal ${isDarkMode ? "dark" : ""}`}
+      className={`modal admin-edit-modal ${isDarkMode ? "dark" : ""}`}
       overlayClassName={`modal-overlay ${isDarkMode ? "dark" : ""}`}
     >
       {editingCard && (
@@ -105,7 +105,8 @@ const AdminEditCardModal = ({
                   onClick={handleUpload}
                   className="upload-button"
                 >
-                  <FaUpload /> {t("upload")}
+                  <FaUpload className="upload-icon" />{" "}
+                  <span>{t("upload")}</span>
                 </button>
               </div>
             </div>
@@ -157,8 +158,6 @@ const AdminEditCardModal = ({
                 />
                 {t("has_timer")}
               </label>
-            </div>
-            <div className="input-group checkbox-group">
               <label>
                 <input
                   type="checkbox"

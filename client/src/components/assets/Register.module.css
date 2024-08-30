@@ -9,6 +9,8 @@
 
 /* Dark mode için yeni değişkenler */
 .dark {
+  --input-bg: #1f1f1e;
+  --bg-color: #131213;
   --primary-color: #ff9f70;
   --secondary-color: #ff6520;
   --text-color: #f0f0f0;
@@ -18,6 +20,7 @@
 }
 
 .login-page {
+  background-color: var(--bg-color);
   display: flex;
   flex-direction: column;
   min-height: 100vh;

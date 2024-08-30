@@ -81,22 +81,22 @@ html {
 }
 
 .dark {
-  --bg-color: #131213;
-  --primary-color: #ff9f70;
-  --secondary-color: #ff6520;
+  --bg-color: #121518;
+  --primary-color: #fd9561;
+  --secondary-color: #ff7332;
   --text-color: #dbdbdb;
-  --card-bg-color: #1f1f1e;
+  --card-bg-color: #1c1f24;
   --card-border-color: #333333;
-  --button-text: #dbdbdb;
-  --input-bg: #1f1f1e;
+  --button-text: white;
+  --input-bg: #1c1f24;
   --input-text: #dbdbdb;
   --input-border: #424242;
-  --form-bg: #1e1e1e;
+  --form-bg: #1c1f24;
   --success-bg: #37663a;
-  --success-text: #f5f5f5;
+  --success-text: #d4d4d4;
   --error-bg: #b93737;
   --error-text: #f5f5f5;
-  --modal-bg: #1e1e1e;
+  --modal-bg: #1c1f24;
   --ratio-green: #4caf50;
   --ratio-orange: #ff9800;
   --ratio-red: #f44336;
@@ -170,7 +170,7 @@ html {
   align-items: center;
   justify-content: center;
   background: linear-gradient(
-    90deg,
+    180deg,
     var(--primary-color),
     var(--secondary-color)
   );
@@ -182,6 +182,7 @@ html {
   font-size: 14px;
   gap: 5px;
   width: 60%;
+  transition: all 0.3s ease;
 }
 
 .logout-button:hover {
@@ -195,7 +196,7 @@ html {
   align-items: center;
   justify-content: center;
   background: linear-gradient(
-    90deg,
+    180deg,
     var(--primary-color),
     var(--secondary-color)
   );
@@ -204,8 +205,9 @@ html {
   padding: 8px 16px;
   border-radius: 20px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 0.9em;
   gap: 5px;
+  transition: all 0.3s ease;
 }
 
 .edit-button:hover,
@@ -331,8 +333,6 @@ html {
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-  animation: addCard 0.5s ease;
   width: 280px;
   display: flex;
   flex-direction: column;
@@ -341,6 +341,8 @@ html {
   margin-bottom: 10px;
   position: relative;
   font-weight: 400;
+  animation: addCard 0.5s ease;
+  cursor: pointer;
 }
 
 .upgrade-arrow {
@@ -364,7 +366,7 @@ html {
 }
 
 .card:hover {
-  transform: translateY(-5px) scale(1.02);
+  transform: translateY(-4px) scale(1.02);
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -407,6 +409,7 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--text-color);
 }
 
 .card-body span {
@@ -472,6 +475,17 @@ html {
   justify-content: center;
 }
 
+.admin-edit-modal {
+  background-color: var(--modal-bg);
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  margin: auto;
+  padding: 25px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  max-height: 90vh;
+  overflow-y: auto;
+}
 .modal-card {
   background-color: var(--card-bg-color);
   border: none;
@@ -479,6 +493,27 @@ html {
   padding: 25px;
   margin: auto;
   width: 100%;
+}
+
+.modal-card .checkbox-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  justify-content: center; /* Yan yana yerleştir */
+  border-radius: 8px; /* Köşeleri yuvarla */
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
+.modal-card .checkbox-group label {
+  color: var(--button-text); /* Yazı rengi */
+  margin: 0; /* Varsayılan marjı kaldır */
+}
+
+.modal-card .checkbox-group input[type="checkbox"] {
+  accent-color: var(--primary-color);
+  transform: scale(1);
 }
 
 .modal-card input {
@@ -492,8 +527,8 @@ html {
 
 .modal-card .card-image,
 .modal-card .logout-icon {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border-radius: 20%;
 }
@@ -533,11 +568,12 @@ html {
 
 .modal-buttons .confirm-button {
   background: linear-gradient(
-    90deg,
+    180deg,
     var(--primary-color),
     var(--secondary-color)
   );
   color: var(--button-text);
+  transition: all 0.3s ease;
 }
 
 .modal-buttons .confirm-button:hover {
@@ -549,6 +585,7 @@ html {
 .modal-buttons .cancel-button {
   background: var(--input-text);
   color: var(--button-text);
+  transition: all 0.3s ease;
 }
 
 .dark .modal-buttons .cancel-button {
@@ -630,28 +667,6 @@ html {
   }
 }
 
-.theme-toggle:hover {
-  color: var(--primary-color);
-  transform: translateY(-2px);
-}
-
-.dark .theme-toggle {
-  color: var(--button-text);
-}
-
-.dark .theme-toggle:hover {
-  color: #ff9f70;
-  transform: translateY(-2px);
-}
-
-@media (hover: none) {
-  .theme-toggle:hover,
-  .dark .theme-toggle:hover {
-    color: inherit;
-    transform: none;
-  }
-}
-
 .right-buttons {
   position: relative;
   display: flex;
@@ -668,6 +683,7 @@ html {
   color: var(--text-color);
   display: flex;
   align-items: center;
+  transition: all 0.3s ease;
 }
 
 .settings-button:hover,
@@ -874,6 +890,7 @@ input:checked + .slider:before {
   color: var(--text-color);
   font-size: 18px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .clear-search-icon:hover,
@@ -931,19 +948,7 @@ input:checked + .slider:before {
   border-radius: 8px;
   background-color: var(--input-bg);
   color: var(--input-text);
-
   height: 45px;
-}
-
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-  text-align: center;
-}
-
-.checkbox-group input[type="checkbox"] {
-  margin-right: 10px;
 }
 
 .loading-cards {
@@ -1115,14 +1120,19 @@ input:checked + .slider:before {
 
 .file-input-label {
   background-color: var(--button-bg);
-  color: var(--button-text);
+  color: white;
   border: 1px solid var(--input-border);
 }
 
 .upload-button {
-  background-color: var(--primary-color);
-  color: var(--button-text);
+  background: linear-gradient(
+    180deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: white;
   border: none;
+  width: 30%;
 }
 
 /* Eğer input elementinin yüksekliği farklıysa, bunu da ayarlayın */
@@ -1143,14 +1153,12 @@ input:checked + .slider:before {
   height: 100px;
   object-fit: cover;
   border-radius: 8px;
-  
 }
 
 .card-to-delete-info h3 {
   margin: 0.5rem 0;
   color: var(--primary-color);
 }
-
 
 @keyframes spin {
   0% {
@@ -1276,6 +1284,51 @@ button:disabled .button-spinner {
   .game-data h3 {
     font-size: 1em;
   }
+
+  .modal-card {
+    padding: 0;
+  }
+
+  .modal-card .card-header {
+    margin-bottom: 15px;
+  }
+
+  .modal-card .card-image {
+    scale: 0.65;
+  }
+
+  .modal-card .card-header h2 {
+    font-size: 1em;
+  }
+
+  .modal-card .card-category {
+    font-size: 0.8em;
+  }
+
+  .modal-card label {
+    font-size: 0.8em;
+  }
+
+  .modal-card input {
+    height: 30px;
+  }
+
+  .upload-button {
+    min-height: 30px;
+  }
+
+  .upload-button span {
+    display: none; /* Yazıyı gizle */
+  }
+
+  .image-upload-group input[type="text"] {
+    height: 30px;
+  }
+
+  .modal-card .checkbox-group input[type="checkbox"] {
+    accent-color: var(--primary-color);
+    transform: scale(0.5);
+  }
 }
 
 @media (min-width: 1024px) {
@@ -1317,11 +1370,12 @@ button:disabled .button-spinner {
   gap: 5px;
   font-size: 14px;
   background: linear-gradient(
-    90deg,
+    180deg,
     var(--primary-color),
     var(--secondary-color)
   );
-  color: var(--button-text);
+  color: white;
+  transition: all 0.3s ease;
 }
 
 .admin-button-area {
@@ -1352,7 +1406,7 @@ button:disabled .button-spinner {
 }
 
 .admin-section th {
-  background-color: var(--primary-color);
+  background-color: var(--secondary-color);
   color: var(--button-text);
   font-weight: 600;
 }
@@ -1417,8 +1471,8 @@ button:disabled .button-spinner {
 
   .admin-section table .edit-button svg,
   .admin-section table .delete-button svg {
-    width: 16px;
-    height: 16px;
+    width: 0.9em;
+    height: 0.9em;
     margin: 0;
   }
 
