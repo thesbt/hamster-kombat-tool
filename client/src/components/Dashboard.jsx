@@ -85,7 +85,7 @@ function Dashboard({ setIsAuthenticated }) {
   const [isGamesModalOpen, setIsGamesModalOpen] = useState(false);
   const [gameData, setGameData] = useState(null);
   const [formattedCurrentCost, setFormattedCurrentCost] = useState("");
-  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
+
   const [formattedCurrentHourlyEarnings, setFormattedCurrentHourlyEarnings] =
     useState("");
   const [newCard, setNewCard] = useState({
@@ -1023,8 +1023,6 @@ function Dashboard({ setIsAuthenticated }) {
             openEditCardModal={openEditCardModal}
             handleAdminDeleteCard={handleAdminDeleteCard}
             setIsAddCardModalOpen={setIsAddCardModalOpen}
-            isDarkMode={isDarkMode}
-            setUploadedImageUrl={setUploadedImageUrl}
           />
 
           <AddCardModal
@@ -1034,7 +1032,6 @@ function Dashboard({ setIsAuthenticated }) {
             handleAdminInputChange={handleAdminInputChange}
             handleAdminAddCard={handleAdminAddCard}
             isDarkMode={isDarkMode}
-            uploadedImageUrl={uploadedImageUrl}
           />
 
           <AdminEditCardModal

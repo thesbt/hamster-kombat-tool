@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Modal from "react-modal";
 import { FaCheck, FaTimes, FaUpload } from "react-icons/fa";
 
@@ -10,8 +10,6 @@ const AdminEditCardModal = ({
   handleAdminEditCard,
   handleEditCardInputChange,
 }) => {
-  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
-
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://widget.cloudinary.com/v2.0/global/all.js";
@@ -36,11 +34,10 @@ const AdminEditCardModal = ({
         }
         if (result && result.event === "success") {
           const newImageUrl = result.info.secure_url;
-          setUploadedImageUrl(newImageUrl);
+
           handleEditCardInputChange({
             target: { name: "image_url", value: newImageUrl },
           });
-          alert("Resim başarıyla yüklendi.");
         }
       }
     );

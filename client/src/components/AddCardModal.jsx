@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import Modal from "react-modal";
 import { FaCheck, FaTimes, FaUpload } from "react-icons/fa";
-import axios from "axios";
 
 function AddCardModal({
   isOpen,
@@ -11,47 +10,38 @@ function AddCardModal({
   handleAdminAddCard,
   isDarkMode,
 }) {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://widget.cloudinary.com/v2.0/global/all.js";
+    script.async = true;
+    document.body.appendChild(script);
 
-  const handleFileSelect = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const handleUpload = async () => {
-    if (!selectedFile) {
-      alert("Lütfen bir dosya seçin.");
-      return;
-    }
+    const myWidget = window.cloudinary.createUploadWidget(
+      {
+        cloudName: "dquxlbwmd",
+        uploadPreset: "ml_default",
+      },
+      async (error, result) => {
+        if (error) {
+          alert("Resim yüklenirken bir hata oluştu.");
+          return;
+        }
+        if (result && result.event === "success") {
+          const newImageUrl = result.info.secure_url;
 
-    try {
-      const reader = new FileReader();
-      reader.readAsDataURL(selectedFile);
-      reader.onloadend = async () => {
-        const base64data = reader.result;
-        const response = await axios.post(
-          "https://hamsterkombattool.site/api/upload",
-          { image: base64data },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        setUploadedImageUrl(response.data.imageUrl);
-        handleAdminInputChange({
-          target: { name: "image_url", value: response.data.imageUrl },
-        });
-        alert("Resim başarıyla yüklendi!");
-      };
-    } catch (error) {
-      console.error("Resim yükleme hatası:", error);
-      alert(
-        "Resim yüklenirken bir hata oluştu: " +
-          (error.response?.data || error.message)
-      );
-    }
+          handleAdminInputChange({
+            target: { name: "image_url", value: newImageUrl },
+          });
+        }
+      }
+    );
+    myWidget.open();
   };
 
   return (
@@ -80,33 +70,23 @@ function AddCardModal({
             />
           </div>
           <div className="input-group">
-            <label htmlFor="addImageUrl">Image URL:</label>
+            <label htmlFor="addImageUrl">Resim URL:</label>
             <div className="image-upload-group">
               <input
                 id="addImageUrl"
                 type="text"
                 name="image_url"
-                value={newCard.image_url || uploadedImageUrl}
+                value={newCard.image_url}
                 onChange={handleAdminInputChange}
-                placeholder="Image URL"
+                placeholder="Resim URL"
                 required
               />
-              <input
-                type="file"
-                onChange={handleFileSelect}
-                accept="image/*"
-                style={{ display: "none" }}
-                id="fileInput"
-              />
-              <label htmlFor="fileInput" className="file-input-label">
-                Choose File
-              </label>
               <button
                 type="button"
                 onClick={handleUpload}
                 className="upload-button"
               >
-                <FaUpload /> Upload
+                <FaUpload /> Yükle
               </button>
             </div>
           </div>

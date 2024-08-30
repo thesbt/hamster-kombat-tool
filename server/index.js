@@ -620,39 +620,6 @@ app.delete("/api/user-cards/:id", authenticateToken, async (req, res) => {
   }
 });
 
-/*
-// Kart resmini güncelleme endpoint'i
-app.put(
-  "/api/admin/cards/:id/image",
-  authenticateToken,
-  isAdmin,
-  async (req, res) => {
-    const { id } = req.params;
-    const { image_url } = req.body;
-
-    try {
-      const result = await pool.query(
-        "UPDATE Cards SET image_url = $1 WHERE id = $2 RETURNING *",
-        [image_url, id]
-      );
-
-      if (result.rows.length === 0) {
-        return res
-          .status(404)
-          .json({ success: false, error: "Kart bulunamadı" });
-      }
-
-      res.json({ success: true, card: result.rows[0] });
-    } catch (err) {
-      res.status(500).json({
-        success: false,
-        error: "Kart resmi güncellenirken bir hata oluştu",
-      });
-    }
-  }
-);
-*/
-
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });

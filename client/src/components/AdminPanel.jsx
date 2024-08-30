@@ -6,7 +6,6 @@ function AdminPanel({
   openEditCardModal,
   handleAdminDeleteCard,
   setIsAddCardModalOpen,
-  isDarkMode,
 }) {
   return (
     <div className="admin-section">
