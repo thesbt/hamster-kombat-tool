@@ -84,7 +84,7 @@ const AdminEditCardModal = ({
       );
       myWidget.open();
     } catch (error) {
-      console.error("İmza alınamadı:", error);
+      console.log("İmza alınamadı:", error);
       alert("Resim yükleme başlatılamadı.");
     }
   };

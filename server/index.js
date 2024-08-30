@@ -634,8 +634,8 @@ app.get("/api/get-signature", authenticateToken, isAdmin, (req, res) => {
   res.json({
     signature: signature,
     timestamp: timestamp,
-    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
-    apiKey: process.env.CLOUDINARY_API_KEY,
+    cloudName,
+    apiKey,
   });
 });
 
