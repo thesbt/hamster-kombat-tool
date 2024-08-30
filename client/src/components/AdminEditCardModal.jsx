@@ -36,7 +36,7 @@ const AdminEditCardModal = ({
     try {
       console.log("İmza alma isteği gönderiliyor...");
       const response = await axios.get(
-        "https://hamsterkombattool.site/api/get-signature"
+        "https://api.hamsterkombattool.site/api/get-signature"
       );
       console.log("İmza alındı:", response.data);
       const { signature, timestamp, cloudName, apiKey } = response.data;
