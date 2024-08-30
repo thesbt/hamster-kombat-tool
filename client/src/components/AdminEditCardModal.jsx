@@ -19,82 +19,52 @@ const AdminEditCardModal = ({
     script.async = true;
     document.body.appendChild(script);
 
-    script.onload = () => {
-      console.log("Cloudinary script yüklendi");
-    };
-
-    script.onerror = (error) => {
-      console.error("Cloudinary script yüklenemedi", error);
-    };
-
     return () => {
       document.body.removeChild(script);
     };
   }, []);
 
   const handleUpload = async () => {
-    try {
-      console.log("İmza alma isteği gönderiliyor...");
-      const response = await axios.get(
-        "https://api.hamsterkombattool.site/api/get-signature"
-      );
-      console.log("İmza alındı:", response.data);
-      const { signature, timestamp, cloudName, apiKey } = response.data;
-
-      console.log("Cloudinary widget oluşturuluyor...");
-      const myWidget = window.cloudinary.createUploadWidget(
-        {
-          cloudName: cloudName,
-          uploadPreset: "ml_default",
-          apiKey: apiKey,
-          timestamp: timestamp,
-          signature: signature,
-        },
-        async (error, result) => {
-          if (error) {
-            console.error("Cloudinary widget hatası:", error);
-            alert("Resim yüklenirken bir hata oluştu.");
-            return;
-          }
-          if (result && result.event === "success") {
-            console.log("Yüklenen resim URL:", result.info.secure_url);
-            try {
-              const updateResponse = await axios.put(
-                `https://hamsterkombattool.site/api/admin/cards/${editingCard.id}/image`,
-                { image_url: result.info.secure_url },
-                {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                  },
-                }
-              );
-
-              if (updateResponse.data.success) {
-                setUploadedImageUrl(result.info.secure_url);
-                handleEditCardInputChange({
-                  target: { name: "image_url", value: result.info.secure_url },
-                });
-                alert("Resim başarıyla yüklendi ve kart güncellendi!");
-              } else {
-                alert(
-                  "Resim yüklendi ancak kart güncellenirken bir hata oluştu."
-                );
+    const myWidget = window.cloudinary.createUploadWidget(
+      {
+        cloudName: process.env.REACT_APP_CLOUDINARY_CLOUD_NAME,
+        uploadPreset: process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET,
+      },
+      async (error, result) => {
+        if (error) {
+          alert("Resim yüklenirken bir hata oluştu.");
+          return;
+        }
+        if (result && result.event === "success") {
+          try {
+            const updateResponse = await axios.put(
+              `https://api.hamsterkombattool.site/api/admin/cards/${editingCard.id}/image`,
+              { image_url: result.info.secure_url },
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
               }
-            } catch (updateError) {
-              console.error("Kart güncelleme hatası:", updateError);
+            );
+
+            if (updateResponse.data.success) {
+              setUploadedImageUrl(result.info.secure_url);
+              handleEditCardInputChange({
+                target: { name: "image_url", value: result.info.secure_url },
+              });
+              alert("Resim başarıyla yüklendi ve kart güncellendi!");
+            } else {
               alert(
                 "Resim yüklendi ancak kart güncellenirken bir hata oluştu."
               );
             }
+          } catch (updateError) {
+            alert("Resim yüklendi ancak kart güncellenirken bir hata oluştu.");
           }
         }
-      );
-      console.log("Widget açılıyor...");
-      myWidget.open();
-    } catch (error) {
-      console.error("İmza alınamadı:", error);
-      alert("Resim yükleme başlatılamadı.");
-    }
+      }
+    );
+    myWidget.open();
   };
 
   return (

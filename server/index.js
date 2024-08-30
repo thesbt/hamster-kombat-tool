@@ -45,6 +45,13 @@ app.use(
 );
 */
 
+// Cloudinary yapılandırması
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 // E-posta gönderici yapılandırması
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -613,41 +620,6 @@ app.delete("/api/user-cards/:id", authenticateToken, async (req, res) => {
   }
 });
 
-// Cloudinary yapılandırması
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-// İmza oluşturma endpoint'i
-app.get("/api/get-signature", authenticateToken, isAdmin, (_, res) => {
-  try {
-    const timestamp = Math.round(new Date().getTime() / 1000);
-    const params = {
-      timestamp: timestamp,
-      upload_preset: "ml_default",
-    };
-
-    const signature = cloudinary.utils.api_sign_request(
-      params,
-      process.env.CLOUDINARY_API_SECRET
-    );
-
-    const response = {
-      signature: signature,
-      timestamp: timestamp,
-      cloudName: process.env.CLOUDINARY_CLOUD_NAME,
-      apiKey: process.env.CLOUDINARY_API_KEY,
-    };
-
-    console.log("İmza başarıyla oluşturuldu:", response);
-    res.json(response);
-  } catch (error) {
-    console.error("İmza oluşturma hatası:", error);
-    res.status(500).json({ error: "İmza oluşturulurken bir hata oluştu" });
-  }
-});
 // Kart resmini güncelleme endpoint'i
 app.put(
   "/api/admin/cards/:id/image",
@@ -671,7 +643,6 @@ app.put(
 
       res.json({ success: true, card: result.rows[0] });
     } catch (err) {
-      console.error("Kart resmi güncellenirken hata oluştu:", err);
       res.status(500).json({
         success: false,
         error: "Kart resmi güncellenirken bir hata oluştu",
