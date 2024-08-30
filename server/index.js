@@ -7,8 +7,6 @@ const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-const multer = require("multer");
-const path = require("path");
 const app = express();
 const port = 3000;
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -638,24 +636,20 @@ app.delete("/api/user-cards/:id", authenticateToken, async (req, res) => {
 });
 
 // Dosya yükleme endpoint'i
-app.post(
-  "/api/upload",
-  authenticateToken,
-  isAdmin,
-  upload.single("image"),
-  async (req, res) => {
-    if (!req.file) {
-      return res.status(400).send("No file uploaded.");
-    }
-    try {
-      const result = await cloudinary.uploader.upload(req.file.path);
-      res.json({ imageUrl: result.secure_url });
-    } catch (error) {
-      console.error("Upload error:", error);
-      res.status(500).send("Error uploading file.");
-    }
+app.post("/api/upload", authenticateToken, isAdmin, async (req, res) => {
+  if (!req.body || !req.body.image) {
+    return res.status(400).send("No image data provided.");
   }
-);
+  try {
+    const result = await cloudinary.uploader.upload(req.body.image, {
+      upload_preset: "ml_default"
+    });
+    res.json({ imageUrl: result.secure_url });
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).send("Error uploading file.");
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

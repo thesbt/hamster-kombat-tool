@@ -24,24 +24,33 @@ function AddCardModal({
       return;
     }
 
-    const formData = new FormData();
-    formData.append("image", selectedFile);
-
     try {
-      const response = await axios.post("/api/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      setUploadedImageUrl(response.data.imageUrl);
-      handleAdminInputChange({
-        target: { name: "image_url", value: response.data.imageUrl },
-      });
-      alert("Resim başarıyla yüklendi!");
+      const reader = new FileReader();
+      reader.readAsDataURL(selectedFile);
+      reader.onloadend = async () => {
+        const base64data = reader.result;
+        const response = await axios.post(
+          "/api/upload",
+          { image: base64data },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setUploadedImageUrl(response.data.imageUrl);
+        handleAdminInputChange({
+          target: { name: "image_url", value: response.data.imageUrl },
+        });
+        alert("Resim başarıyla yüklendi!");
+      };
     } catch (error) {
       console.error("Resim yükleme hatası:", error);
-      alert("Resim yüklenirken bir hata oluştu.");
+      alert(
+        "Resim yüklenirken bir hata oluştu: " +
+          (error.response?.data || error.message)
+      );
     }
   };
 
