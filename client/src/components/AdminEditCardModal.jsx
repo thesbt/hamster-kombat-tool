@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-import { FaCheck, FaTimes, FaUpload } from "react-icons/fa";
+import { FaCheck, FaTimes, FaUpload, FaSpinner } from "react-icons/fa";
 
 const AdminEditCardModal = ({
   isEditCardModalOpen,
@@ -9,7 +9,10 @@ const AdminEditCardModal = ({
   editingCard,
   handleAdminEditCard,
   handleEditCardInputChange,
+  t, // Dil çevirisi için t fonksiyonunu ekledik
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://widget.cloudinary.com/v2.0/global/all.js";
@@ -29,7 +32,7 @@ const AdminEditCardModal = ({
       },
       async (error, result) => {
         if (error) {
-          alert("Resim yüklenirken bir hata oluştu.");
+          alert(t("image_upload_error"));
           return;
         }
         if (result && result.event === "success") {
@@ -46,7 +49,9 @@ const AdminEditCardModal = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     await handleAdminEditCard(e);
+    setIsLoading(false);
     setIsEditCardModalOpen(false);
   };
 
@@ -54,7 +59,7 @@ const AdminEditCardModal = ({
     <Modal
       isOpen={isEditCardModalOpen}
       onRequestClose={() => setIsEditCardModalOpen(false)}
-      contentLabel="Edit Card"
+      contentLabel={t("edit_card")}
       className={`modal edit-modal ${isDarkMode ? "dark" : ""}`}
       overlayClassName={`modal-overlay ${isDarkMode ? "dark" : ""}`}
     >
@@ -68,23 +73,24 @@ const AdminEditCardModal = ({
             />
             <h2>{editingCard.name}</h2>
             <p className="card-category">
-              Category: {editingCard.card_category}
+              {t("category")}: {editingCard.card_category}
             </p>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="input-group">
-              <label htmlFor="editName">Card Name:</label>
+              <label htmlFor="editName">{t("card_name")}:</label>
               <input
                 id="editName"
                 name="name"
                 type="text"
                 value={editingCard.name}
                 onChange={handleEditCardInputChange}
+                placeholder={t("card_name_placeholder")}
                 required
               />
             </div>
             <div className="input-group">
-              <label htmlFor="editImageUrl">Resim URL:</label>
+              <label htmlFor="editImageUrl">{t("image_url")}:</label>
               <div className="image-upload-group">
                 <input
                   id="editImageUrl"
@@ -92,6 +98,7 @@ const AdminEditCardModal = ({
                   type="text"
                   value={editingCard.image_url}
                   onChange={handleEditCardInputChange}
+                  placeholder={t("image_url_placeholder")}
                   required
                 />
                 <button
@@ -99,24 +106,25 @@ const AdminEditCardModal = ({
                   onClick={handleUpload}
                   className="upload-button"
                 >
-                  <FaUpload /> Yükle
+                  <FaUpload /> {t("upload")}
                 </button>
               </div>
             </div>
             <div className="input-group">
-              <label htmlFor="editBaseCost">Base Cost:</label>
+              <label htmlFor="editBaseCost">{t("base_cost")}:</label>
               <input
                 id="editBaseCost"
                 name="base_cost"
                 type="number"
                 value={editingCard.base_cost}
                 onChange={handleEditCardInputChange}
+                placeholder={t("base_cost_placeholder")}
                 required
               />
             </div>
             <div className="input-group">
               <label htmlFor="editBaseHourlyEarnings">
-                Base Hourly Earnings:
+                {t("base_hourly_earnings")}:
               </label>
               <input
                 id="editBaseHourlyEarnings"
@@ -124,17 +132,19 @@ const AdminEditCardModal = ({
                 type="number"
                 value={editingCard.base_hourly_earnings}
                 onChange={handleEditCardInputChange}
+                placeholder={t("base_hourly_earnings_placeholder")}
                 required
               />
             </div>
             <div className="input-group">
-              <label htmlFor="editCategory">Card Category:</label>
+              <label htmlFor="editCategory">{t("card_category")}:</label>
               <input
                 id="editCategory"
                 name="card_category"
                 type="text"
                 value={editingCard.card_category}
                 onChange={handleEditCardInputChange}
+                placeholder={t("card_category_placeholder")}
                 required
               />
             </div>
@@ -146,7 +156,7 @@ const AdminEditCardModal = ({
                   checked={editingCard.has_timer}
                   onChange={handleEditCardInputChange}
                 />
-                Has Timer
+                {t("has_timer")}
               </label>
             </div>
             <div className="input-group checkbox-group">
@@ -157,20 +167,28 @@ const AdminEditCardModal = ({
                   checked={editingCard.is_default}
                   onChange={handleEditCardInputChange}
                 />
-                Is Default
+                {t("is_default")}
               </label>
             </div>
             <div className="modal-buttons">
-              <button className="confirm-button" type="submit">
-                <FaCheck />
-                Değişiklikleri Kaydet
+              <button
+                className="confirm-button"
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <FaSpinner className="button-spinner" />
+                ) : (
+                  <FaCheck />
+                )}
+                {isLoading ? t("admin_update_card") : t("update")}
               </button>
               <button
                 className="cancel-button"
                 onClick={() => setIsEditCardModalOpen(false)}
               >
                 <FaTimes />
-                İptal
+                {t("cancel")}
               </button>
             </div>
           </form>

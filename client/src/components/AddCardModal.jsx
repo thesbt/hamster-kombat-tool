@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-import { FaCheck, FaTimes, FaUpload } from "react-icons/fa";
+import { FaCheck, FaTimes, FaUpload, FaSpinner } from "react-icons/fa";
 
 function AddCardModal({
   isOpen,
@@ -9,7 +9,10 @@ function AddCardModal({
   handleAdminInputChange,
   handleAdminAddCard,
   isDarkMode,
+  t, // Dil çevirisi için t fonksiyonunu ekledik
 }) {
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://widget.cloudinary.com/v2.0/global/all.js";
@@ -29,7 +32,7 @@ function AddCardModal({
       },
       async (error, result) => {
         if (error) {
-          alert("Resim yüklenirken bir hata oluştu.");
+          alert(t("image_upload_error"));
           return;
         }
         if (result && result.event === "success") {
@@ -44,33 +47,40 @@ function AddCardModal({
     myWidget.open();
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    await handleAdminAddCard(e);
+    setIsLoading(false);
+  };
+
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      contentLabel="Add New Card"
+      contentLabel={t("add_new_card")}
       className={`modal edit-modal ${isDarkMode ? "dark" : ""}`}
       overlayClassName={`modal-overlay ${isDarkMode ? "dark" : ""}`}
     >
       <div className="modal-card">
         <div className="card-header">
-          <h2>Add New Card</h2>
+          <h2>{t("add_new_card")}</h2>
         </div>
-        <form onSubmit={handleAdminAddCard}>
+        <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label htmlFor="addName">Card Name:</label>
+            <label htmlFor="addName">{t("card_name")}:</label>
             <input
               id="addName"
               type="text"
               name="name"
               value={newCard.name}
               onChange={handleAdminInputChange}
-              placeholder="Card Name"
+              placeholder={t("card_name_placeholder")}
               required
             />
           </div>
           <div className="input-group">
-            <label htmlFor="addImageUrl">Resim URL:</label>
+            <label htmlFor="addImageUrl">{t("image_url")}:</label>
             <div className="image-upload-group">
               <input
                 id="addImageUrl"
@@ -78,7 +88,7 @@ function AddCardModal({
                 name="image_url"
                 value={newCard.image_url}
                 onChange={handleAdminInputChange}
-                placeholder="Resim URL"
+                placeholder={t("image_url_placeholder")}
                 required
               />
               <button
@@ -86,42 +96,44 @@ function AddCardModal({
                 onClick={handleUpload}
                 className="upload-button"
               >
-                <FaUpload /> Yükle
+                <FaUpload /> {t("upload")}
               </button>
             </div>
           </div>
           <div className="input-group">
-            <label htmlFor="addBaseCost">Base Cost:</label>
+            <label htmlFor="addBaseCost">{t("base_cost")}:</label>
             <input
               id="addBaseCost"
               type="number"
               name="base_cost"
               value={newCard.base_cost}
               onChange={handleAdminInputChange}
-              placeholder="Base Cost"
+              placeholder={t("base_cost_placeholder")}
             />
           </div>
           <div className="input-group">
-            <label htmlFor="addBaseHourlyEarnings">Base Hourly Earnings:</label>
+            <label htmlFor="addBaseHourlyEarnings">
+              {t("base_hourly_earnings")}:
+            </label>
             <input
               id="addBaseHourlyEarnings"
               type="number"
               name="base_hourly_earnings"
               value={newCard.base_hourly_earnings}
               onChange={handleAdminInputChange}
-              placeholder="Base Hourly Earnings"
+              placeholder={t("base_hourly_earnings_placeholder")}
               required
             />
           </div>
           <div className="input-group">
-            <label htmlFor="addCardCategory">Card Category:</label>
+            <label htmlFor="addCardCategory">{t("card_category")}:</label>
             <input
               id="addCardCategory"
               type="text"
               name="card_category"
               value={newCard.card_category}
               onChange={handleAdminInputChange}
-              placeholder="Card Category"
+              placeholder={t("card_category_placeholder")}
               required
             />
           </div>
@@ -133,7 +145,7 @@ function AddCardModal({
                 checked={newCard.has_timer}
                 onChange={handleAdminInputChange}
               />
-              Has Timer
+              {t("has_timer")}
             </label>
           </div>
           <div className="input-group checkbox-group">
@@ -144,15 +156,20 @@ function AddCardModal({
                 checked={newCard.is_default}
                 onChange={handleAdminInputChange}
               />
-              Is Default
+              {t("is_default")}
             </label>
           </div>
           <div className="modal-buttons">
-            <button type="submit" className="confirm-button">
-              <FaCheck /> Add Card
+            <button
+              type="submit"
+              className="confirm-button"
+              disabled={isLoading}
+            >
+              {isLoading ? <FaSpinner className="button-spinner" /> : <FaCheck />}
+              {isLoading ? t("admin_adding_card") : t("add")}
             </button>
             <button onClick={onRequestClose} className="cancel-button">
-              <FaTimes /> Cancel
+              <FaTimes /> {t("cancel")}
             </button>
           </div>
         </form>

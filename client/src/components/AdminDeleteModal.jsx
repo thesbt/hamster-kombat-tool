@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
-import { FaCheck, FaTimes } from "react-icons/fa";
+import { FaCheck, FaTimes, FaSpinner } from "react-icons/fa";
 
 function AdminDeleteModal({
   isOpen,
@@ -8,30 +8,57 @@ function AdminDeleteModal({
   cardToAdminDelete,
   confirmAdminDeleteCard,
   isDarkMode,
+  t,
 }) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleDelete = async () => {
+    setIsLoading(true);
+    await confirmAdminDeleteCard();
+    setIsLoading(false);
+  };
+
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      contentLabel="Confirm Admin Delete"
+      contentLabel={t("confirm_admin_delete")}
       className={`modal delete-modal ${isDarkMode ? "dark" : ""}`}
       overlayClassName={`modal-overlay ${isDarkMode ? "dark" : ""}`}
     >
       <div className="modal-card">
         <div className="card-header">
-          <h2>Delete Card</h2>
+          <h2>{t("delete_card")}</h2>
         </div>
+        {cardToAdminDelete && (
+          <div className="card-to-delete-info">
+            <img
+              src={cardToAdminDelete.image_url}
+              alt={cardToAdminDelete.name}
+              className="card-image"
+            />
+            <h3>{cardToAdminDelete.name}</h3>            
+          </div>
+        )}
         <p className="delete-message">
-          Are you sure you want to delete the card "{cardToAdminDelete?.name}"?
+          {t("delete_card_confirmation", { cardName: cardToAdminDelete?.name })}
         </p>
         <div className="modal-buttons">
-          <button className="confirm-button" onClick={confirmAdminDeleteCard}>
-            <FaCheck />
-            Delete
+          <button
+            className="confirm-button"
+            onClick={handleDelete}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <FaSpinner className="button-spinner" />
+            ) : (
+              <FaCheck />
+            )}
+            {isLoading ? t("deleting") : t("delete")}
           </button>
           <button className="cancel-button" onClick={onRequestClose}>
             <FaTimes />
-            Cancel
+            {t("cancel")}
           </button>
         </div>
       </div>

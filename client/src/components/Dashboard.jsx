@@ -264,9 +264,9 @@ function Dashboard({ setIsAuthenticated }) {
         )
       );
       setIsEditCardModalOpen(false);
-      setSuccess("Card successfully updated!");
+      setSuccess(t("admin_card_update_success"));
     } catch (error) {
-      setError("Failed to update card. Please try again.");
+      setError(t("admin_card_update_error"));
       console.error("Error updating card:", error);
     }
   };
@@ -306,8 +306,9 @@ function Dashboard({ setIsAuthenticated }) {
         image_url: "",
         has_timer: false,
       });
-      setSuccess("Card added to database successfully.");
+      setSuccess(t("admin_card_add_success"));
     } catch (error) {
+      setError(t("admin_card_add_error"));
       console.error("Error adding card:", error);
     }
   };
@@ -329,18 +330,9 @@ function Dashboard({ setIsAuthenticated }) {
         }
       );
       fetchAllCards();
-      setSuccess("Card successfully deleted from database!");
+      setSuccess(t("admin_card_delete_success"));
     } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        setError(`Failed to delete card: ${error.response.data.message}`);
-      } else {
-        setError("Failed to delete card.");
-      }
-      console.error("Error deleting card:", error);
+      setError(t("admin_card_delete_error"));
     } finally {
       setIsAdminDeleteModalOpen(false);
       setCardToAdminDelete(null);
@@ -1023,6 +1015,7 @@ function Dashboard({ setIsAuthenticated }) {
             openEditCardModal={openEditCardModal}
             handleAdminDeleteCard={handleAdminDeleteCard}
             setIsAddCardModalOpen={setIsAddCardModalOpen}
+            t={t}
           />
 
           <AddCardModal
@@ -1032,6 +1025,7 @@ function Dashboard({ setIsAuthenticated }) {
             handleAdminInputChange={handleAdminInputChange}
             handleAdminAddCard={handleAdminAddCard}
             isDarkMode={isDarkMode}
+            t={t}
           />
 
           <AdminEditCardModal
@@ -1041,6 +1035,7 @@ function Dashboard({ setIsAuthenticated }) {
             editingCard={editingCard}
             handleAdminEditCard={handleAdminEditCard}
             handleEditCardInputChange={handleEditCardInputChange}
+            t={t}
           />
 
           <AdminDeleteModal
@@ -1049,6 +1044,7 @@ function Dashboard({ setIsAuthenticated }) {
             cardToAdminDelete={cardToAdminDelete}
             confirmAdminDeleteCard={confirmAdminDeleteCard}
             isDarkMode={isDarkMode}
+            t={t}
           />
         </>
       )}

@@ -899,7 +899,11 @@ input:checked + .slider:before {
 }
 
 .your-cards {
-  margin-top: 15px;
+  margin: 15px 0px;
+  font-weight: 500;
+}
+
+.admin-panel {
   margin-bottom: 15px;
   font-weight: 500;
 }
@@ -1126,6 +1130,27 @@ input:checked + .slider:before {
 .image-upload-group input[type="file"] {
   height: 45px; /* Gerekirse ayarlayın */
 }
+
+.card-to-delete-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.card-to-delete-info .card-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  
+}
+
+.card-to-delete-info h3 {
+  margin: 0.5rem 0;
+  color: var(--primary-color);
+}
+
 
 @keyframes spin {
   0% {
