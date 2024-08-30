@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -11,7 +12,14 @@ const path = require("path");
 const app = express();
 const port = 3000;
 const SECRET_KEY = process.env.SECRET_KEY;
-require("dotenv").config();
+
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 //FOR TESTING
 
@@ -635,11 +643,17 @@ app.post(
   authenticateToken,
   isAdmin,
   upload.single("image"),
-  (req, res) => {
+  async (req, res) => {
     if (!req.file) {
       return res.status(400).send("No file uploaded.");
     }
-    res.json({ imageUrl: `/uploads/${req.file.filename}` });
+    try {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      res.json({ imageUrl: result.secure_url });
+    } catch (error) {
+      console.error("Upload error:", error);
+      res.status(500).send("Error uploading file.");
+    }
   }
 );
 

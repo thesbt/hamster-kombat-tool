@@ -28,7 +28,7 @@ const AdminEditCardModal = ({
     formData.append("image", selectedFile);
 
     try {
-      const response = await axios.post("https://api.hamsterkombattool.site/api/upload", formData, {
+      const response = await axios.post("/api/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -99,7 +99,11 @@ const AdminEditCardModal = ({
                 <label htmlFor="fileInput" className="file-input-label">
                   Dosya Seç
                 </label>
-                <button type="button" onClick={handleUpload} className="upload-button">
+                <button
+                  type="button"
+                  onClick={handleUpload}
+                  className="upload-button"
+                >
                   <FaUpload /> Yükle
                 </button>
               </div>
