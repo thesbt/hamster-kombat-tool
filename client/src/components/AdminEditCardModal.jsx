@@ -18,6 +18,15 @@ const AdminEditCardModal = ({
     script.src = "https://widget.cloudinary.com/v2.0/global/all.js";
     script.async = true;
     document.body.appendChild(script);
+
+    script.onload = () => {
+      console.log("Cloudinary script yüklendi");
+    };
+
+    script.onerror = (error) => {
+      console.error("Cloudinary script yüklenemedi", error);
+    };
+
     return () => {
       document.body.removeChild(script);
     };
@@ -28,13 +37,13 @@ const AdminEditCardModal = ({
       const response = await axios.get(
         "https://hamsterkombattool.site/api/get-signature"
       );
-      const { signature, timestamp } = response.data;
+      const { signature, timestamp, cloudName, apiKey } = response.data;
 
       const myWidget = window.cloudinary.createUploadWidget(
         {
-          cloudName: process.env.CLOUDINARY_CLOUD_NAME,
-          uploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET,
-          apiKey: process.env.CLOUDINARY_API_KEY,
+          cloudName: cloudName,
+          uploadPreset: "ml_default", // Preset adınızın doğru olduğundan emin olun
+          apiKey: apiKey,
           timestamp: timestamp,
           signature: signature,
         },

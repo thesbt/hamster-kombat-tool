@@ -626,7 +626,7 @@ app.get("/api/get-signature", authenticateToken, isAdmin, (req, res) => {
   const signature = cloudinary.utils.api_sign_request(
     {
       timestamp: timestamp,
-      upload_preset: "ml_default", // Cloudinary'deki upload preset adınız
+      upload_preset: "ml_default", // Preset adınızın doğru olduğundan emin olun
     },
     process.env.CLOUDINARY_API_SECRET
   );
