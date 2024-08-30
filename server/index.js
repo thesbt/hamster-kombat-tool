@@ -30,12 +30,12 @@ app.use(limiter);
 app.use(express.json());
 
 //DISABLE THIS LATER
-/*
+
 app.use(cors());
-*/
 
 // ENABLE THIS LATER
 
+/*
 app.use(
   cors({
     origin: "https://hamsterkombattool.site",
@@ -43,6 +43,7 @@ app.use(
     credentials: true,
   })
 );
+*/
 
 // E-posta gönderici yapılandırması
 const transporter = nodemailer.createTransport({
