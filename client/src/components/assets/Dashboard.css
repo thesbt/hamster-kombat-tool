@@ -110,6 +110,7 @@ html {
 
 .App {
   animation: fadeIn 0.3s ease;
+  
 }
 
 /* Dashboard */
@@ -507,7 +508,7 @@ html {
 }
 
 .modal-card .checkbox-group label {
-  color: var(--button-text); /* Yazı rengi */
+  color: var(--text-color); /* Yazı rengi */
   margin: 0; /* Varsayılan marjı kaldır */
 }
 
@@ -1065,8 +1066,8 @@ input:checked + .slider:before {
 
 .footer {
   font-size: 12px;
-  padding-top: 20px;
-  margin: 20px 0px;
+  margin-top: 20px;
+  padding-bottom: 20px;
   text-align: center;
   color: var(--text-color);
   width: 100%;
@@ -1075,7 +1076,7 @@ input:checked + .slider:before {
 
 .scroll-to-top {
   position: fixed;
-  bottom: 20px;
+  bottom: 5vh;
   right: 20px;
   background-color: #333;
   color: #fff;
@@ -1329,6 +1330,8 @@ button:disabled .button-spinner {
     accent-color: var(--primary-color);
     transform: scale(0.5);
   }
+
+  
 }
 
 @media (min-width: 1024px) {
