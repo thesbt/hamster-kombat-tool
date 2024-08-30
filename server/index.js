@@ -70,20 +70,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Dosya yükleme endpoint'i
-app.post(
-  "/api/upload",
-  authenticateToken,
-  isAdmin,
-  upload.single("image"),
-  (req, res) => {
-    if (!req.file) {
-      return res.status(400).send("No file uploaded.");
-    }
-    res.json({ imageUrl: `/uploads/${req.file.filename}` });
-  }
-);
-
 // Statik dosya sunumu için
 app.use("/uploads", express.static("uploads"));
 
@@ -642,6 +628,20 @@ app.delete("/api/user-cards/:id", authenticateToken, async (req, res) => {
       .json({ error: "An error occurred while deleting the card" });
   }
 });
+
+// Dosya yükleme endpoint'i
+app.post(
+  "/api/upload",
+  authenticateToken,
+  isAdmin,
+  upload.single("image"),
+  (req, res) => {
+    if (!req.file) {
+      return res.status(400).send("No file uploaded.");
+    }
+    res.json({ imageUrl: `/uploads/${req.file.filename}` });
+  }
+);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
