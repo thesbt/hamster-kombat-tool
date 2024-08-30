@@ -11,6 +11,8 @@ const cloudinary = require("cloudinary").v2;
 const app = express();
 const port = 3000;
 const SECRET_KEY = process.env.SECRET_KEY;
+const DEFAULT_IMAGE_URL =
+  "https://res.cloudinary.com/dquxlbwmd/image/upload/v1725012351/hamster/qwawyy6fabmtfazqmvcv.webp";
 
 //FOR TESTING
 
@@ -420,7 +422,7 @@ app.post("/api/admin/cards", authenticateToken, isAdmin, async (req, res) => {
       "INSERT INTO Cards (name, image_url, base_cost, base_hourly_earnings, card_category, has_timer, is_default) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
       [
         name,
-        image_url,
+        image_url || DEFAULT_IMAGE_URL, // Eğer image_url boşsa, varsayılan URL'yi kullan
         base_cost,
         base_hourly_earnings,
         card_category,
@@ -459,7 +461,7 @@ app.put(
         "UPDATE Cards SET name = $1, image_url = $2, base_cost = $3, base_hourly_earnings = $4, card_category = $5, has_timer = $6, is_default = $7 WHERE id = $8 RETURNING *",
         [
           name,
-          image_url,
+          image_url || DEFAULT_IMAGE_URL, // Eğer image_url boşsa, varsayılan URL'yi kullan
           base_cost,
           base_hourly_earnings,
           card_category,

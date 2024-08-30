@@ -99,7 +99,6 @@ const AdminEditCardModal = ({
                   value={editingCard.image_url}
                   onChange={handleEditCardInputChange}
                   placeholder={t("image_url_placeholder")}
-                  required
                 />
                 <button
                   type="button"

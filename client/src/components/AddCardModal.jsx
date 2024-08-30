@@ -89,7 +89,6 @@ function AddCardModal({
                 value={newCard.image_url}
                 onChange={handleAdminInputChange}
                 placeholder={t("image_url_placeholder")}
-                required
               />
               <button
                 type="button"
@@ -165,7 +164,11 @@ function AddCardModal({
               className="confirm-button"
               disabled={isLoading}
             >
-              {isLoading ? <FaSpinner className="button-spinner" /> : <FaCheck />}
+              {isLoading ? (
+                <FaSpinner className="button-spinner" />
+              ) : (
+                <FaCheck />
+              )}
               {isLoading ? t("admin_adding_card") : t("add")}
             </button>
             <button onClick={onRequestClose} className="cancel-button">
