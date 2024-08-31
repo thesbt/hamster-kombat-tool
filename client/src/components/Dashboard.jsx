@@ -1016,14 +1016,6 @@ function Dashboard({ setIsAuthenticated }) {
         t={t}
       />
 
-      <AdminPanel
-        allCards={allCards}
-        openEditCardModal={openEditCardModal}
-        handleAdminDeleteCard={handleAdminDeleteCard}
-        setIsAddCardModalOpen={setIsAddCardModalOpen}
-        t={t}
-      />
-
       {isAdmin && (
         <>
           <AdminPanel
