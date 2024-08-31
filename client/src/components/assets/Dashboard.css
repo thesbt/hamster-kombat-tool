@@ -110,13 +110,12 @@ html {
 
 .App {
   animation: fadeIn 0.3s ease;
-  
 }
 
 /* Dashboard */
 .dashboard {
   min-height: 100vh;
-  max-width: 1200px;
+  max-width: 1366px;
   margin: 0 auto;
   padding: 20px 20px 0px 20px;
   animation: fadeIn 0.3s ease;
@@ -929,7 +928,7 @@ input:checked + .slider:before {
 .form-container {
   display: flex;
   flex-direction: column;
-  padding: 15px;
+  padding: 25px;
   background-color: var(--form-bg);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -1274,6 +1273,10 @@ button:disabled .button-spinner {
     font-size: 14px;
   }
 
+  .form-container {
+    padding: 20px;
+  }
+
   .dashboard-title {
     font-size: 1em;
   }
@@ -1330,8 +1333,6 @@ button:disabled .button-spinner {
     accent-color: var(--primary-color);
     transform: scale(0.5);
   }
-
-  
 }
 
 @media (min-width: 1024px) {
