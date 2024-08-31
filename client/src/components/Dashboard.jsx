@@ -21,11 +21,9 @@ import trTranslations from "../locales/tr/translation.json";
 import {
   FaSearch,
   FaPlus,
-  FaTrash,
   FaSignOutAlt,
   FaTimes,
   FaClock,
-  FaPencilAlt,
   FaSpinner,
   FaCog,
   FaGamepad,
@@ -461,7 +459,8 @@ function Dashboard({ setIsAuthenticated }) {
     }
   };
 
-  const openDeleteModal = (cardId) => {
+  const openDeleteModal = (cardId, e) => {
+    e.stopPropagation();
     setCardToDelete(cardId);
     setIsDeleteModalOpen(true);
   };
@@ -538,6 +537,17 @@ function Dashboard({ setIsAuthenticated }) {
     const suffixNum = Math.floor(Math.log10(number) / 3);
     const shortValue = (number / Math.pow(1000, suffixNum)).toFixed(2);
     return shortValue.replace(/\.00$/, "") + suffixes[suffixNum];
+  };
+
+  // Güncellenmiş fonksiyon: Ratio için özel formatlama
+  const formatRatio = (ratio) => {
+    if (ratio < 1000) {
+      return ratio.toFixed(1).replace(/\.0$/, "");
+    }
+    const suffixes = ["", "K", "M", "B", "T"];
+    const suffixNum = Math.floor(Math.log10(ratio) / 3);
+    const shortValue = (ratio / Math.pow(1000, suffixNum)).toFixed(1);
+    return shortValue.replace(/\.0$/, "") + suffixes[suffixNum];
   };
 
   const formatNumberWithCommas = (value) => {
@@ -888,17 +898,22 @@ function Dashboard({ setIsAuthenticated }) {
                 <div
                   className={`card ${isDarkMode ? "dark" : ""}`}
                   key={userCard.id}
+                  onClick={() => openEditModal(userCard)}
                 >
+                  {userCard.has_timer && (
+                    <FaClock
+                      className="timer-icon"
+                      title={t("cooldown_text")}
+                    />
+                  )}
+                  {!userCard.is_default && (
+                    <FaTimes
+                      className="user-delete-button"
+                      title={t("delete_card")}
+                      onClick={(e) => openDeleteModal(userCard.id, e)}
+                    />
+                  )}
                   <div className="card-header">
-                    {userCard.ratioColor.showArrow && (
-                      <FaArrowUp className="upgrade-arrow" />
-                    )}
-                    {userCard.has_timer && (
-                      <FaClock
-                        className="timer-icon"
-                        title={t("cooldown_text")}
-                      />
-                    )}
                     {userCard.image_url && (
                       <img
                         src={userCard.image_url}
@@ -908,51 +923,44 @@ function Dashboard({ setIsAuthenticated }) {
                         onError={() => handleImageLoad(userCard.id)}
                       />
                     )}
+                    <div className="card-title">
+                      <h3>{userCard.name}</h3>
+                      <p>{userCard.card_category}</p>
+                    </div>
                   </div>
-                  <div className="card-second-header">
-                    <h3>{userCard.name}</h3>
-                    <p>{userCard.card_category}</p>
-                  </div>
-                  <div className="card-line"></div>
-                  <div className="card-body">
-                    <p>
-                      {t("level")}: {userCard.level}
-                    </p>
-                    <p>
-                      <img src={coinIcon} alt="Coin" className="coin-icon" />
-                      {t("cost")}: {formatNumber(cost)}
-                    </p>
-                    <p>
-                      <img src={coinIcon} alt="Coin" className="coin-icon" />
-                      {t("pph")}: {formatNumber(pph)}
-                    </p>
-
-                    <p>
-                      {t("ratio")}:&nbsp;
-                      <span
-                        style={{ color: ratioColor.color, fontWeight: "bold" }}
+                  <div className="card-stats">
+                    <div className="stat">
+                      <div className="stat-value">
+                        {userCard.ratioColor.showArrow && (
+                          <FaArrowUp className="upgrade-arrow" />
+                        )}
+                        {userCard.level}
+                      </div>
+                      <div className="stat-label">{t("level")}</div>
+                    </div>
+                    <div className="stat">
+                      <div className="stat-value">
+                        <img src={coinIcon} alt="Coin" className="coin-icon" />
+                        {formatNumber(cost)}
+                      </div>
+                      <div className="stat-label">{t("cost")}</div>
+                    </div>
+                    <div className="stat">
+                      <div className="stat-value">
+                        <img src={coinIcon} alt="Coin" className="coin-icon" />
+                        {formatNumber(pph)}
+                      </div>
+                      <div className="stat-label">{t("pph")}</div>
+                    </div>
+                    <div className="stat">
+                      <div
+                        className="stat-value"
+                        style={{ color: ratioColor.color }}
                       >
-                        {ratio.toFixed(2)}
-                      </span>
-                    </p>
-                  </div>
-                  <div className="card-footer">
-                    <button
-                      className="edit-button"
-                      title={t("edit_card")}
-                      onClick={() => openEditModal(userCard)}
-                    >
-                      <FaPencilAlt />
-                    </button>
-                    {!userCard.is_default && (
-                      <button
-                        className="delete-button"
-                        title={t("delete_card")}
-                        onClick={() => openDeleteModal(userCard.id)}
-                      >
-                        <FaTrash />
-                      </button>
-                    )}
+                        {formatRatio(ratio)}
+                      </div>
+                      <div className="stat-label">{t("ratio")}</div>
+                    </div>
                   </div>
                 </div>
               );
