@@ -503,6 +503,7 @@ html {
   height: 100px;
   object-fit: cover;
   border-radius: 20%;
+  margin-bottom: 10px;
 }
 
 .modal-card h2 {
@@ -1232,10 +1233,12 @@ button:disabled .button-spinner {
 
   .modal-card .card-header {
     margin-bottom: 15px;
+    margin-top: 10px;
   }
 
   .modal-card .card-image {
     scale: 0.8;
+    margin-bottom: 5px;
   }
 
   .modal-card .card-header h2 {
