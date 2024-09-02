@@ -121,30 +121,54 @@ function Dashboard({ setIsAuthenticated }) {
     }
   }, []);
 
-  // Axios interceptor ekleyelim
-  axios.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-      const originalRequest = error.config;
-      if (error.response.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
-        try {
-          const res = await axios.post(
-            "https://api.hamsterkombattool.site/api/refresh-token"
-          );
-          localStorage.setItem("token", res.data.accessToken);
-          originalRequest.headers["Authorization"] =
-            "Bearer " + res.data.accessToken;
-          return axios(originalRequest);
-        } catch (refreshError) {
-          // Yenileme başarısız olursa kullanıcıyı logout yapalım
-          handleLogout();
-          return Promise.reject(refreshError);
-        }
-      }
-      return Promise.reject(error);
+  // Logout işlemini güncelleyelim
+  const handleLogout = useCallback(async () => {
+    setLoggingOut(true);
+    try {
+      await axios.post("https://api.hamsterkombattool.site/api/logout");
+      setAccessToken(null);
+      localStorage.removeItem("token");
+      setIsAuthenticated(false);
+      navigate("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setLoggingOut(false);
     }
-  );
+  }, [navigate, setIsAuthenticated]);
+
+  // Axios interceptor ekleyelim
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const originalRequest = error.config;
+        if (error.response.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true;
+          try {
+            const res = await axios.post(
+              "https://api.hamsterkombattool.site/api/refresh-token",
+              {},
+              { withCredentials: true } // withCredentials ekleyelim
+            );
+            localStorage.setItem("token", res.data.accessToken);
+            originalRequest.headers["Authorization"] =
+              "Bearer " + res.data.accessToken;
+            return axios(originalRequest);
+          } catch (refreshError) {
+            // Yenileme başarısız olursa kullanıcıyı logout yapalım
+            handleLogout();
+            return Promise.reject(refreshError);
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, [handleLogout]);
 
   const handleLanguageChange = (newLanguage) => {
     setLanguage(newLanguage);
@@ -546,22 +570,6 @@ function Dashboard({ setIsAuthenticated }) {
 
   const closeLogoutModal = () => {
     setIsLogoutModalOpen(false);
-  };
-
-  // Logout işlemini güncelleyelim
-  const handleLogout = async () => {
-    setLoggingOut(true);
-    try {
-      await axios.post("https://api.hamsterkombattool.site/api/logout");
-      setAccessToken(null);
-      localStorage.removeItem("token");
-      setIsAuthenticated(false);
-      navigate("/");
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
-      setLoggingOut(false);
-    }
   };
 
   const formatNumber = (number) => {

@@ -16,27 +16,28 @@ const DEFAULT_IMAGE_URL =
 
 //FOR TESTING
 
-/*
 const limiter = rateLimit({
   windowMs: 1,
   max: Infinity,
 });
-*/
 
+/*
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 200,
 });
+*/
 
 app.use(limiter);
 app.use(express.json());
 
 //DISABLE THIS LATER
 
-//app.use(cors());
+app.use(cors());
 
 // ENABLE THIS LATER
 
+/*
 app.use(
   cors({
     origin: "https://hamsterkombattool.site",
@@ -44,6 +45,7 @@ app.use(
     credentials: true,
   })
 );
+*/
 
 // Cloudinary yapılandırması
 cloudinary.config({
