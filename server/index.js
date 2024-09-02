@@ -66,6 +66,17 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Token süresini kısaltalım ve yenileme token'ı ekleyelim
+const generateTokens = (userId) => {
+  const accessToken = jwt.sign({ id: userId }, SECRET_KEY, {
+    expiresIn: "15m",
+  });
+  const refreshToken = jwt.sign({ id: userId }, SECRET_KEY, {
+    expiresIn: "7d",
+  });
+  return { accessToken, refreshToken };
+};
+
 // Şifre sıfırlama talebi
 app.post("/api/forgot-password", async (req, res) => {
   const { email } = req.body;
@@ -160,12 +171,15 @@ const authenticateToken = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
 
-  if (token == null) return res.sendStatus(401);
+  if (!token) return res.sendStatus(401);
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    const user = await pool.query("SELECT id, username, is_admin FROM Users WHERE id = $1", [decoded.id]);
-    
+    const user = await pool.query(
+      "SELECT id, username, is_admin FROM Users WHERE id = $1",
+      [decoded.id]
+    );
+
     if (user.rows.length === 0) {
       return res.sendStatus(403);
     }
@@ -173,6 +187,9 @@ const authenticateToken = async (req, res, next) => {
     req.user = user.rows[0];
     next();
   } catch (err) {
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token expired" });
+    }
     return res.sendStatus(403);
   }
 };
@@ -396,15 +413,41 @@ app.post("/api/login", async (req, res) => {
       return res.status(400).json({ error: "Invalid password" });
     }
 
-    const token = jwt.sign(
-      { id: user.id },
-      SECRET_KEY,
-      { expiresIn: '30d' } // Token'ın 30 gün geçerli olmasını sağlar
-    );
-    res.json({ token });
+    const { accessToken, refreshToken } = generateTokens(user.id);
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+    });
+    res.json({ accessToken });
   } catch (err) {
     res.status(500).json({ error: "An error occurred during login" });
   }
+});
+
+app.post("/api/refresh-token", async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+
+  try {
+    const decoded = jwt.verify(refreshToken, SECRET_KEY);
+    const { accessToken, refreshToken: newRefreshToken } = generateTokens(
+      decoded.id
+    );
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+    });
+    res.json({ accessToken });
+  } catch (err) {
+    return res.sendStatus(403);
+  }
+});
+
+app.post("/api/logout", (req, res) => {
+  res.clearCookie("refreshToken");
+  res.sendStatus(200);
 });
 
 app.get("/api/admin/cards", authenticateToken, isAdmin, async (req, res) => {
