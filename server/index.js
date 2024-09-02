@@ -222,6 +222,7 @@ const deleteCardAndUserCards = async (cardId) => {
 const addNewDefaultCardToAllUsers = async (cardId) => {
   const client = await pool.connect();
   try {
+    await client.query("BEGIN");
     const users = await client.query("SELECT id FROM Users");
     const cardDetails = await client.query(
       "SELECT base_cost, base_hourly_earnings FROM cards WHERE id = $1",
@@ -242,7 +243,10 @@ const addNewDefaultCardToAllUsers = async (cardId) => {
         [user.id, cardId, base_cost, base_hourly_earnings]
       );
     }
+
+    await client.query("COMMIT");
   } catch (error) {
+    await client.query("ROLLBACK");
     throw error;
   } finally {
     client.release();
