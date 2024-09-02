@@ -33,11 +33,10 @@ app.use(express.json());
 
 //DISABLE THIS LATER
 
-app.use(cors());
+//app.use(cors());
 
 // ENABLE THIS LATER
 
-/*
 app.use(
   cors({
     origin: "https://hamsterkombattool.site",
@@ -45,7 +44,6 @@ app.use(
     credentials: true,
   })
 );
-*/
 
 // Cloudinary yapılandırması
 cloudinary.config({

@@ -11,6 +11,7 @@ import Dashboard from "./components/Dashboard";
 import LandingPage from "./components/LandingPage";
 import ResetPassword from "./components/ResetPassword";
 import { ThemeProvider, useTheme } from "./components/ThemeContext";
+import NotFound from "./components/NotFound";
 import "./App.css";
 
 function AppContent() {
@@ -71,6 +72,7 @@ function AppContent() {
             path="/reset-password"
             element={<ResetPassword setIsAuthenticated={setIsAuthenticated} />}
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </Router>
