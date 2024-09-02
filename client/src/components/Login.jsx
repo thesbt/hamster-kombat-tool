@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useTheme } from "./ThemeContext";
-import LanguageSelector from "./LanguageSelector"; // LanguageSelector import edildi
+import LanguageSelector from "./LanguageSelector";
 import styles from "./assets/Login.module.css";
 import logoImage from "./assets/img/Logo.webp";
 
@@ -42,11 +42,39 @@ function Login({ setIsAuthenticated }) {
   const [errorVisible, setErrorVisible] = useState(false);
   const [language, setLanguage] = useState("en");
   const [email, setEmail] = useState("");
-  const [isResetMode, setIsResetMode] = useState(false); // Yeni eklenen state
-  const [resetSuccess, setResetSuccess] = useState(""); // Yeni eklenen state
-  const [resetSuccessVisible, setResetSuccessVisible] = useState(false); // Yeni eklenen state
+  const [isResetMode, setIsResetMode] = useState(false);
+  const [resetSuccess, setResetSuccess] = useState("");
+  const [resetSuccessVisible, setResetSuccessVisible] = useState(false);
+  const [accessToken, setAccessToken] = useState(localStorage.getItem("token"));
   const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
+
+  axios.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const originalRequest = error.config;
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        try {
+          const res = await axios.post(
+            "https://api.hamsterkombattool.site/api/refresh-token"
+          );
+          const newAccessToken = res.data.accessToken;
+          setAccessToken(newAccessToken);
+          localStorage.setItem("token", newAccessToken);
+          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          return axios(originalRequest);
+        } catch (refreshError) {
+          setAccessToken(null);
+          localStorage.removeItem("token");
+          setIsAuthenticated(false);
+          navigate("/login");
+          return Promise.reject(refreshError);
+        }
+      }
+      return Promise.reject(error);
+    }
+  );
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
@@ -75,10 +103,10 @@ function Login({ setIsAuthenticated }) {
       setResetSuccess(t("reset_email_sent"));
       setResetSuccessVisible(true);
       setIsResetMode(false);
-      setEmail(""); // E-posta girdisini temizle
+      setEmail("");
     } catch (error) {
       setError(t("reset_email_error"));
-      setEmail(""); // Hata durumunda da e-posta girdisini temizle
+      setEmail("");
     } finally {
       setLoading(false);
     }
@@ -154,7 +182,9 @@ function Login({ setIsAuthenticated }) {
         "https://api.hamsterkombattool.site/api/login",
         { username: username.toLowerCase(), password }
       );
-      localStorage.setItem("token", response.data.token);
+      const newAccessToken = response.data.accessToken;
+      setAccessToken(newAccessToken);
+      localStorage.setItem("token", newAccessToken);
       setIsAuthenticated(true);
       navigate("/dashboard");
     } catch (error) {
@@ -167,16 +197,22 @@ function Login({ setIsAuthenticated }) {
     }
   };
 
+  useEffect(() => {
+    if (accessToken) {
+      setIsAuthenticated(true);
+      navigate("/dashboard");
+    }
+  }, [accessToken, setIsAuthenticated, navigate]);
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   const handleBackToLogin = useCallback(() => {
     setIsResetMode(false);
-    setEmail(""); // E-posta girdisini temizle
-    setError(""); // Hata mesajını temizle
-    setResetSuccess(""); // Başarı mesajını temizle
-    // Odağı kaldırmak için setTimeout kullanıyoruz
+    setEmail("");
+    setError("");
+    setResetSuccess("");
     setTimeout(() => {
       if (document.activeElement instanceof HTMLElement) {
         document.activeElement.blur();
