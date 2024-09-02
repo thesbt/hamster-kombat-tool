@@ -15,37 +15,28 @@ const DEFAULT_IMAGE_URL =
   "https://res.cloudinary.com/dquxlbwmd/image/upload/v1725012351/hamster/qwawyy6fabmtfazqmvcv.webp";
 
 //FOR TESTING
-
+/*
 const limiter = rateLimit({
   windowMs: 1,
   max: Infinity,
 });
+*/
 
-/*
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 200,
 });
-*/
 
 app.use(limiter);
 app.use(express.json());
 
-//DISABLE THIS LATER
-
-app.use(cors());
-
-// ENABLE THIS LATER
-
-/*
 app.use(
   cors({
-    origin: "https://hamsterkombattool.site",
+    origin: ["https://hamsterkombattool.site", "http://localhost:3000"], // localhost'u ekledik
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
-*/
 
 // Cloudinary yapılandırması
 cloudinary.config({
