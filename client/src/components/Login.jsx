@@ -183,8 +183,14 @@ function Login({ setIsAuthenticated }) {
         { username: username.toLowerCase(), password }
       );
       const newAccessToken = response.data.accessToken;
+      const refreshToken = response.data.refreshToken; // Refresh token'ı al
+
       setAccessToken(newAccessToken);
       localStorage.setItem("token", newAccessToken);
+
+      // Refresh token'ı çerez olarak ayarla
+      document.cookie = `refreshToken=${refreshToken}; HttpOnly; Secure; SameSite=Strict`;
+
       setIsAuthenticated(true);
       navigate("/dashboard");
     } catch (error) {

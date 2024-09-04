@@ -146,17 +146,24 @@ function Dashboard({ setIsAuthenticated }) {
         if (error.response.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true;
           try {
+            // Çerezden refresh token'ı al
+            const refreshToken = document.cookie
+              .split("; ")
+              .find((row) => row.startsWith("refreshToken="))
+              ?.split("=")[1];
+
             const res = await axios.post(
               "https://api.hamsterkombattool.site/api/refresh-token",
-              {},
-              { withCredentials: true } // withCredentials ekleyelim
+              { refreshToken }, // Refresh token'ı gönder
+              { withCredentials: true }
             );
-            localStorage.setItem("token", res.data.accessToken);
+
+            const newAccessToken = res.data.accessToken;
+            localStorage.setItem("token", newAccessToken);
             originalRequest.headers["Authorization"] =
-              "Bearer " + res.data.accessToken;
+              "Bearer " + newAccessToken;
             return axios(originalRequest);
           } catch (refreshError) {
-            // Yenileme başarısız olursa kullanıcıyı logout yapalım
             handleLogout();
             return Promise.reject(refreshError);
           }

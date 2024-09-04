@@ -63,7 +63,7 @@ const generateTokens = (userId) => {
     expiresIn: "15m",
   });
   const refreshToken = jwt.sign({ id: userId }, SECRET_KEY, {
-    expiresIn: "7d",
+    expiresIn: "360d",
   });
   return { accessToken, refreshToken };
 };
@@ -421,7 +421,7 @@ app.post("/api/login", async (req, res) => {
 });
 
 app.post("/api/refresh-token", async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
+  const refreshToken = req.body;
   if (!refreshToken) return res.sendStatus(401);
 
   try {
