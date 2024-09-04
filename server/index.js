@@ -31,21 +31,13 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(express.json());
 
-//DISABLE THIS LATER
-
-app.use(cors());
-
-// ENABLE THIS LATER
-
-/*
 app.use(
   cors({
-    origin: "https://hamsterkombattool.site",
+    origin: ["https://hamsterkombattool.site", "http://localhost:3000"], // remove localhost later
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
-*/
 
 // Cloudinary yapılandırması
 cloudinary.config({
