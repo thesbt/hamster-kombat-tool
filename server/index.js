@@ -627,7 +627,6 @@ app.delete("/api/user-cards/:id", authenticateToken, async (req, res) => {
 });
 
 app.get("/api/card-levels/:cardId", async (req, res) => {
-  // level parametresini kaldırdık
   const { cardId } = req.params;
 
   try {
@@ -643,6 +642,27 @@ app.get("/api/card-levels/:cardId", async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ error: "An error occurred" });
+  }
+});
+
+app.put("/api/card-levels/:cardId", async (req, res) => {
+  const { cardId } = req.params;
+  const { base_cost, base_hourly_earnings } = req.body;
+
+  try {
+    const result = await pool.query(
+      "UPDATE card_levels SET base_cost = $1, base_hourly_earnings = $2 WHERE card_id = $3 RETURNING *",
+      [base_cost, base_hourly_earnings, cardId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Card level not found" });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the card level" });
   }
 });
 
