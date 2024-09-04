@@ -60,7 +60,7 @@ const transporter = nodemailer.createTransport({
 // Token süresini kısaltalım ve yenileme token'ı ekleyelim
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ id: userId }, SECRET_KEY, {
-    expiresIn: "15m",
+    expiresIn: "2m",
   });
   const refreshToken = jwt.sign({ id: userId }, SECRET_KEY, {
     expiresIn: "360d",

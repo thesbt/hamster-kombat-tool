@@ -56,13 +56,21 @@ function Login({ setIsAuthenticated }) {
       if (error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
         try {
+          // Çerezden refresh token'ı al
+          const refreshToken = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("refreshToken="))
+            ?.split("=")[1];
+
           const res = await axios.post(
-            "https://api.hamsterkombattool.site/api/refresh-token"
+            "https://api.hamsterkombattool.site/api/refresh-token",
+            { refreshToken }, // Refresh token'ı gönder
+            { withCredentials: true }
           );
+
           const newAccessToken = res.data.accessToken;
-          setAccessToken(newAccessToken);
           localStorage.setItem("token", newAccessToken);
-          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          originalRequest.headers["Authorization"] = "Bearer " + newAccessToken;
           return axios(originalRequest);
         } catch (refreshError) {
           setAccessToken(null);
@@ -189,7 +197,7 @@ function Login({ setIsAuthenticated }) {
       localStorage.setItem("token", newAccessToken);
 
       // Refresh token'ı çerez olarak ayarla
-      document.cookie = `refreshToken=${refreshToken}; HttpOnly; Secure; SameSite=Strict`;
+      document.cookie = `refreshToken=${refreshToken}; HttpOnly; Secure; SameSite=Strict; Path=/`; // Path ekleyin
 
       setIsAuthenticated(true);
       navigate("/dashboard");
