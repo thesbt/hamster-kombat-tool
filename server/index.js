@@ -15,6 +15,7 @@ const DEFAULT_IMAGE_URL =
   "https://res.cloudinary.com/dquxlbwmd/image/upload/v1725012351/hamster/qwawyy6fabmtfazqmvcv.webp";
 
 //FOR TESTING
+
 /*
 const limiter = rateLimit({
   windowMs: 1,
@@ -30,13 +31,21 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(express.json());
 
+//DISABLE THIS LATER
+
+app.use(cors());
+
+// ENABLE THIS LATER
+
+/*
 app.use(
   cors({
-    origin: ["https://hamsterkombattool.site", "http://localhost:3000"], // localhost'u ekledik
+    origin: "https://hamsterkombattool.site",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
+*/
 
 // Cloudinary yapılandırması
 cloudinary.config({
@@ -56,17 +65,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-
-// Token süresini kısaltalım ve yenileme token'ı ekleyelim
-const generateTokens = (userId) => {
-  const accessToken = jwt.sign({ id: userId }, SECRET_KEY, {
-    expiresIn: "2m",
-  });
-  const refreshToken = jwt.sign({ id: userId }, SECRET_KEY, {
-    expiresIn: "360d",
-  });
-  return { accessToken, refreshToken };
-};
 
 // Şifre sıfırlama talebi
 app.post("/api/forgot-password", async (req, res) => {
@@ -162,7 +160,7 @@ const authenticateToken = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
 
-  if (!token) return res.sendStatus(401);
+  if (token == null) return res.sendStatus(401);
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
@@ -178,9 +176,6 @@ const authenticateToken = async (req, res, next) => {
     req.user = user.rows[0];
     next();
   } catch (err) {
-    if (err.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Token expired" });
-    }
     return res.sendStatus(403);
   }
 };
@@ -215,7 +210,6 @@ const deleteCardAndUserCards = async (cardId) => {
 const addNewDefaultCardToAllUsers = async (cardId) => {
   const client = await pool.connect();
   try {
-    await client.query("BEGIN");
     const users = await client.query("SELECT id FROM Users");
     const cardDetails = await client.query(
       "SELECT base_cost, base_hourly_earnings FROM cards WHERE id = $1",
@@ -236,10 +230,7 @@ const addNewDefaultCardToAllUsers = async (cardId) => {
         [user.id, cardId, base_cost, base_hourly_earnings]
       );
     }
-
-    await client.query("COMMIT");
   } catch (error) {
-    await client.query("ROLLBACK");
     throw error;
   } finally {
     client.release();
@@ -408,41 +399,15 @@ app.post("/api/login", async (req, res) => {
       return res.status(400).json({ error: "Invalid password" });
     }
 
-    const { accessToken, refreshToken } = generateTokens(user.id);
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-    });
-    res.json({ accessToken });
+    const token = jwt.sign(
+      { id: user.id },
+      SECRET_KEY,
+      { expiresIn: "30d" } // Token'ın 30 gün geçerli olmasını sağlar
+    );
+    res.json({ token });
   } catch (err) {
     res.status(500).json({ error: "An error occurred during login" });
   }
-});
-
-app.post("/api/refresh-token", async (req, res) => {
-  const refreshToken = req.body;
-  if (!refreshToken) return res.sendStatus(401);
-
-  try {
-    const decoded = jwt.verify(refreshToken, SECRET_KEY);
-    const { accessToken, refreshToken: newRefreshToken } = generateTokens(
-      decoded.id
-    );
-    res.cookie("refreshToken", newRefreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-    });
-    res.json({ accessToken });
-  } catch (err) {
-    return res.sendStatus(403);
-  }
-});
-
-app.post("/api/logout", (req, res) => {
-  res.clearCookie("refreshToken");
-  res.sendStatus(200);
 });
 
 app.get("/api/admin/cards", authenticateToken, isAdmin, async (req, res) => {

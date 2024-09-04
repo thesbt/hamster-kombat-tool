@@ -83,7 +83,6 @@ function Dashboard({ setIsAuthenticated }) {
   const [isGamesModalOpen, setIsGamesModalOpen] = useState(false);
   const [gameData, setGameData] = useState(null);
   const [formattedCurrentCost, setFormattedCurrentCost] = useState("");
-  const [accessToken, setAccessToken] = useState(localStorage.getItem("token"));
 
   const [formattedCurrentHourlyEarnings, setFormattedCurrentHourlyEarnings] =
     useState("");
@@ -121,87 +120,18 @@ function Dashboard({ setIsAuthenticated }) {
     }
   }, []);
 
-  // Logout işlemini güncelleyelim
-  const handleLogout = useCallback(async () => {
-    setLoggingOut(true);
-    try {
-      await axios.post("https://api.hamsterkombattool.site/api/logout");
-      setAccessToken(null);
-      localStorage.removeItem("token");
-      setIsAuthenticated(false);
-      navigate("/");
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
-      setLoggingOut(false);
-    }
-  }, [navigate, setIsAuthenticated]);
-
-  // Axios interceptor ekleyelim
-  useEffect(() => {
-    const interceptor = axios.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        const originalRequest = error.config;
-        if (error.response.status === 401 && !originalRequest._retry) {
-          originalRequest._retry = true;
-          try {
-            // Çerezden refresh token'ı al
-            const refreshToken = document.cookie
-              .split("; ")
-              .find((row) => row.startsWith("refreshToken="))
-              ?.split("=")[1];
-
-            const res = await axios.post(
-              "https://api.hamsterkombattool.site/api/refresh-token",
-              { refreshToken }, // Refresh token'ı gönder
-              { withCredentials: true }
-            );
-
-            const newAccessToken = res.data.accessToken;
-            localStorage.setItem("token", newAccessToken);
-            originalRequest.headers["Authorization"] =
-              "Bearer " + newAccessToken;
-            return axios(originalRequest);
-          } catch (refreshError) {
-            handleLogout();
-            return Promise.reject(refreshError);
-          }
-        }
-        return Promise.reject(error);
-      }
-    );
-
-    return () => {
-      axios.interceptors.response.eject(interceptor);
-    };
-  }, [handleLogout]);
-
   const handleLanguageChange = (newLanguage) => {
     setLanguage(newLanguage);
     localStorage.setItem("language", newLanguage);
   };
 
-  const fetchAllCards = useCallback(async () => {
-    try {
-      const response = await axios.get(
-        "https://api.hamsterkombattool.site/api/admin/cards",
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
-      setAllCards(response.data);
-    } catch (error) {
-      console.error("Error fetching all cards:", error);
-    }
-  }, [accessToken]);
-
   const fetchUserInfo = useCallback(async () => {
+    const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
         "https://api.hamsterkombattool.site/api/user-info",
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       setUsername(response.data.username);
@@ -212,19 +142,20 @@ function Dashboard({ setIsAuthenticated }) {
     } catch (error) {
       console.error("Error fetching user info:", error);
     }
-  }, [accessToken, fetchAllCards]);
+  }, []);
 
   const handleImageLoad = useCallback((cardId) => {
     setImagesLoaded((prev) => ({ ...prev, [cardId]: true }));
   }, []);
 
   const fetchUserCards = useCallback(async () => {
+    const token = localStorage.getItem("token");
     setCardsLoading(true);
     try {
       const response = await axios.get(
         "https://api.hamsterkombattool.site/api/user-cards",
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       setUserCards(response.data);
@@ -246,25 +177,7 @@ function Dashboard({ setIsAuthenticated }) {
       setCardsLoading(false);
       window.scrollTo(0, 0);
     }
-  }, [handleImageLoad, accessToken]);
-
-  const fetchCards = useCallback(async () => {
-    try {
-      const response = await axios.get(
-        "https://api.hamsterkombattool.site/api/cards",
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
-      const filteredCards = response.data
-        .filter((card) => !card.is_default)
-        .sort((a, b) => a.name.localeCompare(b.name));
-
-      setCards(filteredCards);
-    } catch (error) {
-      throw error;
-    }
-  }, [accessToken]);
+  }, [handleImageLoad]);
 
   useEffect(() => {
     document.title = "Dashboard | Hamster Kombat Tool";
@@ -279,7 +192,7 @@ function Dashboard({ setIsAuthenticated }) {
       }
     };
     fetchData();
-  }, [fetchUserInfo, fetchUserCards, fetchCards]);
+  }, [fetchUserInfo, fetchUserCards]);
 
   useEffect(() => {
     if (success || error) {
@@ -309,6 +222,21 @@ function Dashboard({ setIsAuthenticated }) {
     setIsGamesModalOpen(true);
   };
 
+  const fetchAllCards = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        "https://api.hamsterkombattool.site/api/admin/cards",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setAllCards(response.data);
+    } catch (error) {
+      console.error("Error fetching all cards:", error);
+    }
+  };
+
   const handleAdminInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setNewCard((prev) => ({
@@ -319,13 +247,13 @@ function Dashboard({ setIsAuthenticated }) {
 
   const handleAdminEditCard = async (e) => {
     e.preventDefault();
-
+    const token = localStorage.getItem("token");
     try {
       const response = await axios.put(
         `https://api.hamsterkombattool.site/api/admin/cards/${editingCard.id}`,
         editingCard,
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       setAllCards((prevCards) =>
@@ -356,12 +284,13 @@ function Dashboard({ setIsAuthenticated }) {
 
   const handleAdminAddCard = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
     try {
       await axios.post(
         "https://api.hamsterkombattool.site/api/admin/cards",
         newCard,
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       fetchAllCards();
@@ -390,11 +319,12 @@ function Dashboard({ setIsAuthenticated }) {
   const confirmAdminDeleteCard = async () => {
     if (cardToAdminDelete === null) return;
 
+    const token = localStorage.getItem("token");
     try {
       await axios.delete(
         `https://api.hamsterkombattool.site/api/admin/cards/${cardToAdminDelete.id}`,
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       fetchAllCards();
@@ -405,6 +335,21 @@ function Dashboard({ setIsAuthenticated }) {
       setIsAdminDeleteModalOpen(false);
       setCardToAdminDelete(null);
       window.scrollTo(0, 0);
+    }
+  };
+
+  const fetchCards = async () => {
+    try {
+      const response = await axios.get(
+        "https://api.hamsterkombattool.site/api/cards"
+      );
+      const filteredCards = response.data
+        .filter((card) => !card.is_default)
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      setCards(filteredCards);
+    } catch (error) {
+      throw error;
     }
   };
 
@@ -422,7 +367,7 @@ function Dashboard({ setIsAuthenticated }) {
       return;
     }
     setAddingCard(true);
-
+    const token = localStorage.getItem("token");
     try {
       await axios.post(
         "https://api.hamsterkombattool.site/api/user-cards",
@@ -432,9 +377,7 @@ function Dashboard({ setIsAuthenticated }) {
           current_cost: currentCost,
           current_hourly_earnings: currentHourlyEarnings,
         },
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       await fetchUserCards();
       setSelectedCard("");
@@ -479,6 +422,7 @@ function Dashboard({ setIsAuthenticated }) {
     }
 
     setEditingCard(true);
+    const token = localStorage.getItem("token");
     try {
       await axios.put(
         `https://api.hamsterkombattool.site/api/user-cards/${cardToEdit}`,
@@ -487,9 +431,7 @@ function Dashboard({ setIsAuthenticated }) {
           current_cost: editCost,
           current_hourly_earnings: editPph,
         },
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       await fetchUserCards();
       setEditLevel("");
@@ -531,11 +473,12 @@ function Dashboard({ setIsAuthenticated }) {
   const handleDeleteCard = async () => {
     if (cardToDelete === null) return;
     setDeletingCard(true);
+    const token = localStorage.getItem("token");
     try {
       await axios.delete(
         `https://api.hamsterkombattool.site/api/user-cards/${cardToDelete}`,
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       setUserCards((prevCards) =>
@@ -577,6 +520,13 @@ function Dashboard({ setIsAuthenticated }) {
 
   const closeLogoutModal = () => {
     setIsLogoutModalOpen(false);
+  };
+
+  const handleLogout = () => {
+    setLoggingOut(true);
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+    navigate("/");
   };
 
   const formatNumber = (number) => {
