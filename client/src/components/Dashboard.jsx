@@ -83,9 +83,9 @@ function Dashboard({ setIsAuthenticated }) {
   const [isGamesModalOpen, setIsGamesModalOpen] = useState(false);
   const [gameData, setGameData] = useState(null);
   const [formattedCurrentCost, setFormattedCurrentCost] = useState("");
-  const [cost, setCost] = useState("");
-  const [pph, setPph] = useState("");
-  const [isCostPphVisible, setIsCostPphVisible] = useState(false);
+  const [showCostInput, setShowCostInput] = useState(false);
+  const [showPphInput, setShowPphInput] = useState(false);
+  const [cardLevels, setCardLevels] = useState([]); // Yeni state eklendi
 
   const [formattedCurrentHourlyEarnings, setFormattedCurrentHourlyEarnings] =
     useState("");
@@ -123,43 +123,9 @@ function Dashboard({ setIsAuthenticated }) {
     }
   }, []);
 
-  // Kart ekleme işlemi sırasında cost ve pph değerlerini veritabanından al
-  const fetchCostAndPph = useCallback(
-    async (level) => {
-      const token = localStorage.getItem("token");
-      try {
-        const response = await axios.get(
-          `https://api.hamsterkombattool.site/api/card-levels/${selectedCard}/${level}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setCost(response.data.base_cost);
-        setPph(response.data.base_hourly_earnings);
-        setIsCostPphVisible(true);
-      } catch (error) {
-        setIsCostPphVisible(false);
-        setCost("");
-        setPph("");
-      }
-    },
-    [selectedCard]
-  );
-
   const handleLanguageChange = (newLanguage) => {
     setLanguage(newLanguage);
     localStorage.setItem("language", newLanguage);
-  };
-
-  // Level değiştiğinde cost ve pph değerlerini güncelle
-  const handleLevelChange = (e) => {
-    const value = e.target.value;
-    setLevel(value);
-    if (value > 0) {
-      fetchCostAndPph(value);
-    } else {
-      setIsCostPphVisible(false);
-    }
   };
 
   const fetchUserInfo = useCallback(async () => {
@@ -176,9 +142,7 @@ function Dashboard({ setIsAuthenticated }) {
       if (response.data.is_admin) {
         fetchAllCards();
       }
-    } catch (error) {
-      console.error("Error fetching user info:", error);
-    }
+    } catch (error) {}
   }, []);
 
   const handleImageLoad = useCallback((cardId) => {
@@ -208,7 +172,6 @@ function Dashboard({ setIsAuthenticated }) {
         }
       });
     } catch (error) {
-      console.error("Error fetching user cards:", error);
       setError("fetch_user_cards_error");
     } finally {
       setCardsLoading(false);
@@ -220,7 +183,13 @@ function Dashboard({ setIsAuthenticated }) {
     document.title = "Dashboard | Hamster Kombat Tool";
     const fetchData = async () => {
       try {
-        await Promise.all([fetchUserInfo(), fetchCards(), fetchUserCards()]);
+        await Promise.all([
+          fetchUserInfo(),
+          fetchCards(),
+          fetchUserCards(),
+          setShowCostInput(false),
+          setShowPphInput(false),
+        ]);
       } catch (error) {
         setError("fetch_error");
       } finally {
@@ -249,9 +218,7 @@ function Dashboard({ setIsAuthenticated }) {
         "https://thesbt.github.io/hamster-kombat-daily-tasks-api/config.json"
       );
       setGameData(response.data);
-    } catch (error) {
-      console.error("Oyun verileri yüklenirken hata oluştu:", error);
-    }
+    } catch (error) {}
   }, []);
 
   const openGamesModal = () => {
@@ -269,9 +236,7 @@ function Dashboard({ setIsAuthenticated }) {
         }
       );
       setAllCards(response.data);
-    } catch (error) {
-      console.error("Error fetching all cards:", error);
-    }
+    } catch (error) {}
   };
 
   const handleAdminInputChange = (e) => {
@@ -302,7 +267,6 @@ function Dashboard({ setIsAuthenticated }) {
       setSuccess(t("admin_card_update_success"));
     } catch (error) {
       setError(t("admin_card_update_error"));
-      console.error("Error updating card:", error);
     }
   };
 
@@ -344,7 +308,6 @@ function Dashboard({ setIsAuthenticated }) {
       setSuccess(t("admin_card_add_success"));
     } catch (error) {
       setError(t("admin_card_add_error"));
-      console.error("Error adding card:", error);
     }
   };
 
@@ -389,6 +352,27 @@ function Dashboard({ setIsAuthenticated }) {
       throw error;
     }
   };
+
+  const fetchCardLevels = useCallback(async () => {
+    if (!selectedCard) return; // Eğer selectedCard yoksa, sorgu yapma
+
+    try {
+      const response = await axios.get(
+        `https://api.hamsterkombattool.site/api/card-levels/${selectedCard}`
+      );
+      setCardLevels(response.data); // Veriler state'e kaydedildi
+    } catch (error) {
+      // 404 hatası durumunda kullanıcıdan manuel giriş alabilmesi için inputları göster
+      if (error.response && error.response.status === 404) {
+        setShowCostInput(true); // Kullanıcıdan cost girmesini sağla
+        setShowPphInput(true); // Kullanıcıdan pph girmesini sağla
+        setCurrentCost(""); // Boş olarak ayarla
+        setCurrentHourlyEarnings(""); // Boş olarak ayarla
+      } else {
+        setError("fetch_card_levels_error"); // Hata mesajı ayarla
+      }
+    }
+  }, [selectedCard]);
 
   const handleAddCardToUser = async (e) => {
     e.preventDefault();
@@ -436,6 +420,36 @@ function Dashboard({ setIsAuthenticated }) {
     }
   };
 
+  useEffect(() => {
+    if (selectedCard) {
+      fetchCardLevels(); // Sadece selectedCard değiştiğinde çağır
+    }
+  }, [selectedCard, fetchCardLevels]);
+
+  useEffect(() => {
+    const targetLevel = parseInt(level) + 1; // Kullanıcının girdiği level + 1
+    const currentLevelData = cardLevels.find(
+      (card) => card.level === targetLevel
+    );
+
+    if (level === "") {
+      setShowCostInput(false);
+      setShowPphInput(false);
+    } else if (currentLevelData) {
+      setCurrentCost(currentLevelData.base_cost.toString());
+      setCurrentHourlyEarnings(
+        currentLevelData.base_hourly_earnings.toString()
+      );
+      setShowCostInput(false);
+      setShowPphInput(false);
+    } else {
+      setCurrentCost(""); // Boş olarak ayarla
+      setCurrentHourlyEarnings(""); // Boş olarak ayarla
+      setShowCostInput(true); // Kullanıcıdan cost girmesini sağla
+      setShowPphInput(true); // Kullanıcıdan pph girmesini sağla
+    }
+  }, [level, cardLevels]); // cardLevels bağımlılığa eklendi
+
   const [noChangesError, setNoChangesError] = useState("");
 
   const handleEditCard = async (e) => {
@@ -445,7 +459,15 @@ function Dashboard({ setIsAuthenticated }) {
     ) {
       return;
     }
+
     const originalCard = userCards.find((card) => card.id === cardToEdit);
+    if (!originalCard) {
+      // Eşleşen kart yoksa işlemi durdur
+      setEditError(t("card_not_found_error")); // Hata mesajı ayarla
+      return;
+    }
+
+    // Burada editLevel, editCost ve editPph değerlerini orijinal kartın değerleri ile karşılaştırın
     if (
       originalCard.level === parseInt(editLevel) &&
       originalCard.current_cost === editCost &&
@@ -808,7 +830,11 @@ function Dashboard({ setIsAuthenticated }) {
           <select
             required
             value={selectedCard}
-            onChange={(e) => setSelectedCard(e.target.value)}
+            onChange={(e) => {
+              setSelectedCard(e.target.value);
+              setShowCostInput(false); // Kart seçildiğinde cost ve pph inputlarını gizle
+              setShowPphInput(false); // Kart seçildiğinde cost ve pph inputlarını gizle
+            }}
           >
             <option value="">{t("select_card")}</option>
             {availableCards.map((card) => (
@@ -825,44 +851,34 @@ function Dashboard({ setIsAuthenticated }) {
             inputMode="numeric"
             placeholder={t("current_card_level")}
             value={level}
-            onChange={handleLevelChange} // Değişiklik burada
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value.length < 4) {
+                setLevel(value);
+              }
+            }}
           />
-          {isCostPphVisible ? (
-            <>
-              <input
-                readOnly
-                type="text"
-                value={cost}
-                placeholder={t("cost_to_next_level")}
-              />
-              <input
-                readOnly
-                type="text"
-                value={pph}
-                placeholder={t("pph_on_next_level")}
-              />
-            </>
-          ) : (
-            <>
-              <input
-                required
-                type="text"
-                maxLength="17"
-                placeholder={t("cost_to_next_level")}
-                inputMode="numeric"
-                value={formattedCurrentCost}
-                onChange={handleCostChange}
-              />
-              <input
-                required
-                type="text"
-                maxLength="13"
-                placeholder={t("pph_on_next_level")}
-                inputMode="numeric"
-                value={formattedCurrentHourlyEarnings}
-                onChange={handleHourlyEarningsChange}
-              />
-            </>
+          {showCostInput && (
+            <input
+              required
+              type="text"
+              maxLength="17"
+              placeholder={t("cost_to_next_level")}
+              inputMode="numeric"
+              value={formattedCurrentCost}
+              onChange={handleCostChange}
+            />
+          )}
+          {showPphInput && (
+            <input
+              required
+              type="text"
+              maxLength="13"
+              placeholder={t("pph_on_next_level")}
+              inputMode="numeric"
+              value={formattedCurrentHourlyEarnings}
+              onChange={handleHourlyEarningsChange}
+            />
           )}
           <button
             className="add-card-button"

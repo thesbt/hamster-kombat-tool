@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Modal from "react-modal";
 import { FaSpinner, FaCheck, FaTimes } from "react-icons/fa";
+import axios from "axios"; // Axios kütüphanesini ekledik
 
 const UserEditCardModal = ({
   isEditModalOpen,
@@ -21,11 +22,14 @@ const UserEditCardModal = ({
   language,
   t,
 }) => {
-  // Yeni state'ler ekleyin
   const [formattedEditCost, setFormattedEditCost] = useState("");
   const [formattedEditPph, setFormattedEditPph] = useState("");
+  const [isEditCostDisabled, setIsEditCostDisabled] = useState(false);
+  const [isEditPphDisabled, setIsEditPphDisabled] = useState(false);
+  const [showCostInput, setShowCostInput] = useState(true);
+  const [showPphInput, setShowPphInput] = useState(true);
+  const [cardLevels, setCardLevels] = useState([]); // Yeni state eklendi
 
-  // Formatlama fonksiyonu ekleyin
   const formatNumberWithCommas = useCallback(
     (value) => {
       return new Intl.NumberFormat(
@@ -36,9 +40,11 @@ const UserEditCardModal = ({
   );
 
   useEffect(() => {
-    setFormattedEditCost(editCost === "" ? "" : formatNumberWithCommas(editCost));
+    setFormattedEditCost(
+      editCost === "" ? "" : formatNumberWithCommas(editCost)
+    );
   }, [editCost, formatNumberWithCommas]);
-  
+
   useEffect(() => {
     setFormattedEditPph(editPph === "" ? "" : formatNumberWithCommas(editPph));
   }, [editPph, formatNumberWithCommas]);
@@ -46,14 +52,65 @@ const UserEditCardModal = ({
   const handleEditCostChange = (e) => {
     const rawValue = e.target.value.replace(/[^\d]/g, "");
     setEditCost(rawValue);
-    setFormattedEditCost(rawValue === "" ? "" : formatNumberWithCommas(rawValue));
+    setFormattedEditCost(
+      rawValue === "" ? "" : formatNumberWithCommas(rawValue)
+    );
   };
-  
+
   const handleEditPphChange = (e) => {
     const rawValue = e.target.value.replace(/[^\d]/g, "");
     setEditPph(rawValue);
-    setFormattedEditPph(rawValue === "" ? "" : formatNumberWithCommas(rawValue));
+    setFormattedEditPph(
+      rawValue === "" ? "" : formatNumberWithCommas(rawValue)
+    );
   };
+
+  useEffect(() => {
+    const fetchCardLevels = async () => {
+      if (!cardToEdit) return; // cardToEdit yoksa işlemi durdur
+      try {
+        const response = await axios.get(
+          `https://api.hamsterkombattool.site/api/card-levels/${cardToEdit}`
+        );
+        if (response.data.length > 0) {
+          setCardLevels(response.data); // Veriler state'e kaydedildi
+        } else {
+          setCardLevels([]); // Eşleşme yoksa state'i temizle
+        }
+      } catch (error) {
+        setCardLevels([]); // Hata durumunda state'i temizle
+      }
+    };
+
+    fetchCardLevels(); // Fonksiyonu çağır
+  }, [cardToEdit]); // cardToEdit bağımlılığı
+
+  useEffect(() => {
+    const targetLevel = parseInt(editLevel) + 1; // Kullanıcının girdiği level + 1
+    const currentLevelData = cardLevels.find(
+      (level) => level.level === targetLevel
+    );
+
+    if (editLevel === "") {
+      setShowCostInput(false);
+      setShowPphInput(false);
+    } else if (currentLevelData) {
+      setEditCost(currentLevelData.base_cost.toString());
+      setEditPph(currentLevelData.base_hourly_earnings.toString());
+      setIsEditCostDisabled(true);
+      setIsEditPphDisabled(true);
+      setShowCostInput(false);
+      setShowPphInput(false);
+    } else {
+      // Eğer currentLevelData yoksa, state'leri temizle
+      setEditCost(""); // Boş olarak ayarla
+      setEditPph(""); // Boş olarak ayarla
+      setShowCostInput(true);
+      setShowPphInput(true);
+      setIsEditCostDisabled(false);
+      setIsEditPphDisabled(false);
+    }
+  }, [editLevel, cardLevels, setEditCost, setEditPph]); // cardLevels bağımlılığı
 
   return (
     <Modal
@@ -101,7 +158,10 @@ const UserEditCardModal = ({
               }}
             />
           </div>
-          <div className="input-group">
+          <div
+            className="input-group"
+            style={{ display: showCostInput ? "block" : "none" }}
+          >
             <label htmlFor="editCost">{t("cost_to_next_level")}:</label>
             <input
               id="editCost"
@@ -112,9 +172,13 @@ const UserEditCardModal = ({
               placeholder={t("cost_to_next_level")}
               value={formattedEditCost}
               onChange={handleEditCostChange}
+              disabled={isEditCostDisabled}
             />
           </div>
-          <div className="input-group">
+          <div
+            className="input-group"
+            style={{ display: showPphInput ? "block" : "none" }}
+          >
             <label htmlFor="editPph">{t("pph_on_next_level")}:</label>
             <input
               id="editPph"
@@ -125,6 +189,7 @@ const UserEditCardModal = ({
               placeholder={t("pph_on_next_level")}
               value={formattedEditPph}
               onChange={handleEditPphChange}
+              disabled={isEditPphDisabled}
             />
           </div>
           <div className="modal-buttons">

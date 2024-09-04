@@ -13,8 +13,19 @@ export const validateInput = (
   currentHourlyEarnings,
   level,
   setError,
-  language
+  language,
+  isCostPphVisible // Yeni parametre
 ) => {
+  if (!/^\d+$/.test(level) || level.length > 3 || parseInt(level) > 999) {
+    setError(getErrorMessage("current_level_validate_error", language));
+    return false;
+  }
+
+  // Eğer cost ve pph alanları readonly ise, bu alanları kontrol etme
+  if (isCostPphVisible) {
+    return true; // Validation geçerli
+  }
+
   if (!/^\d+$/.test(currentCost) || currentCost.length > 17) {
     setError(getErrorMessage("current_cost_validate_error", language));
     return false;
@@ -26,10 +37,7 @@ export const validateInput = (
     setError(getErrorMessage("current_pph_validate_error", language));
     return false;
   }
-  if (!/^\d+$/.test(level) || level.length > 3 || parseInt(level) > 999) {
-    setError(getErrorMessage("current_level_validate_error", language));
-    return false;
-  }
+
   return true;
 };
 
@@ -38,32 +46,31 @@ export const validateEditInput = (
   editPph,
   editLevel,
   setEditError,
-  language
+  language,
+  isCostPphVisible // Yeni parametre
 ) => {
-  if (!/^\d+$/.test(editCost) || editCost.length > 13) {
-    setEditError(getErrorMessage("current_cost_validate_error", language));
-    setTimeout(() => {
-      setEditError("");
-    }, 3500);
-    return false;
-  }
-  if (!/^\d+$/.test(editPph) || editPph.length > 10) {
-    setEditError(getErrorMessage("current_pph_validate_error", language));
-    setTimeout(() => {
-      setEditError("");
-    }, 3500);
-    return false;
-  }
   if (
     !/^\d+$/.test(editLevel) ||
     editLevel.length > 3 ||
     parseInt(editLevel) > 9999
   ) {
     setEditError(getErrorMessage("current_level_validate_error", language));
-    setTimeout(() => {
-      setEditError("");
-    }, 3500);
     return false;
   }
+
+  // Eğer cost ve pph alanları readonly ise, bu alanları kontrol etme
+  if (isCostPphVisible) {
+    return true; // Validation geçerli
+  }
+
+  if (!/^\d+$/.test(editCost) || editCost.length > 13) {
+    setEditError(getErrorMessage("current_cost_validate_error", language));
+    return false;
+  }
+  if (!/^\d+$/.test(editPph) || editPph.length > 10) {
+    setEditError(getErrorMessage("current_pph_validate_error", language));
+    return false;
+  }
+
   return true;
 };
