@@ -396,7 +396,7 @@ app.post("/api/login", async (req, res) => {
     // HttpOnly çerezi ayarlama
     res.cookie("token", token, {
       httpOnly: true, // JavaScript ile erişilemez
-      secure: process.env.NODE_ENV === "production", // Sadece HTTPS üzerinden gönder
+      secure: false,
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 gün
     });
 
