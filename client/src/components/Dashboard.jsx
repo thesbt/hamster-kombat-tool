@@ -100,10 +100,7 @@ function Dashboard({ setIsAuthenticated }) {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   useEffect(() => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      .split("=")[1];
+    const token = localStorage.getItem("token");
     if (!token) {
       setIsAuthenticated(false);
       navigate("/login");
@@ -129,10 +126,7 @@ function Dashboard({ setIsAuthenticated }) {
   };
 
   const fetchUserInfo = useCallback(async () => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      .split("=")[1];
+    const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
         "https://api.hamsterkombattool.site/api/user-info",
@@ -155,10 +149,7 @@ function Dashboard({ setIsAuthenticated }) {
   }, []);
 
   const fetchUserCards = useCallback(async () => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      .split("=")[1];
+    const token = localStorage.getItem("token");
     setCardsLoading(true);
     try {
       const response = await axios.get(
@@ -232,10 +223,7 @@ function Dashboard({ setIsAuthenticated }) {
   };
 
   const fetchAllCards = async () => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      .split("=")[1];
+    const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
         "https://api.hamsterkombattool.site/api/admin/cards",
@@ -259,10 +247,7 @@ function Dashboard({ setIsAuthenticated }) {
 
   const handleAdminEditCard = async (e) => {
     e.preventDefault();
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      .split("=")[1];
+    const token = localStorage.getItem("token");
     try {
       const response = await axios.put(
         `https://api.hamsterkombattool.site/api/admin/cards/${editingCard.id}`,
@@ -299,10 +284,7 @@ function Dashboard({ setIsAuthenticated }) {
 
   const handleAdminAddCard = async (e) => {
     e.preventDefault();
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      .split("=")[1];
+    const token = localStorage.getItem("token");
     try {
       await axios.post(
         "https://api.hamsterkombattool.site/api/admin/cards",
@@ -337,10 +319,7 @@ function Dashboard({ setIsAuthenticated }) {
   const confirmAdminDeleteCard = async () => {
     if (cardToAdminDelete === null) return;
 
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      .split("=")[1];
+    const token = localStorage.getItem("token");
     try {
       await axios.delete(
         `https://api.hamsterkombattool.site/api/admin/cards/${cardToAdminDelete.id}`,
@@ -388,10 +367,7 @@ function Dashboard({ setIsAuthenticated }) {
       return;
     }
     setAddingCard(true);
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      .split("=")[1];
+    const token = localStorage.getItem("token");
     try {
       await axios.post(
         "https://api.hamsterkombattool.site/api/user-cards",
@@ -446,10 +422,7 @@ function Dashboard({ setIsAuthenticated }) {
     }
 
     setEditingCard(true);
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      .split("=")[1];
+    const token = localStorage.getItem("token");
     try {
       await axios.put(
         `https://api.hamsterkombattool.site/api/user-cards/${cardToEdit}`,
@@ -500,10 +473,7 @@ function Dashboard({ setIsAuthenticated }) {
   const handleDeleteCard = async () => {
     if (cardToDelete === null) return;
     setDeletingCard(true);
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      .split("=")[1];
+    const token = localStorage.getItem("token");
     try {
       await axios.delete(
         `https://api.hamsterkombattool.site/api/user-cards/${cardToDelete}`,

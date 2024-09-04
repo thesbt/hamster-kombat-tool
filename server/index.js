@@ -156,16 +156,28 @@ app.post("/api/verify-reset-token", async (req, res) => {
   }
 });
 
-const authenticateToken = (req, res, next) => {
-  const token = req.cookies.token; // Çerezi oku
+const authenticateToken = async (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
 
-  if (token == null) return res.sendStatus(401); // Token yoksa yetkisiz
+  if (token == null) return res.sendStatus(401);
 
-  jwt.verify(token, SECRET_KEY, (err, decoded) => {
-    if (err) return res.sendStatus(403); // Token geçersiz
-    req.user = decoded; // Kullanıcı bilgilerini ekle
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const user = await pool.query(
+      "SELECT id, username, is_admin FROM Users WHERE id = $1",
+      [decoded.id]
+    );
+
+    if (user.rows.length === 0) {
+      return res.sendStatus(403);
+    }
+
+    req.user = user.rows[0];
     next();
-  });
+  } catch (err) {
+    return res.sendStatus(403);
+  }
 };
 
 const isAdmin = (req, res, next) => {
@@ -392,15 +404,7 @@ app.post("/api/login", async (req, res) => {
       SECRET_KEY,
       { expiresIn: "30d" } // Token'ın 30 gün geçerli olmasını sağlar
     );
-
-    // HttpOnly çerezi ayarlama
-    res.cookie("token", token, {
-      httpOnly: true, // JavaScript ile erişilemez
-      secure: false,
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 gün
-    });
-
-    res.json({ message: "Giriş başarılı" });
+    res.json({ token });
   } catch (err) {
     res.status(500).json({ error: "An error occurred during login" });
   }
@@ -628,11 +632,6 @@ app.delete("/api/user-cards/:id", authenticateToken, async (req, res) => {
       .status(500)
       .json({ error: "An error occurred while deleting the card" });
   }
-});
-
-app.post("/api/logout", (req, res) => {
-  res.clearCookie("token"); // Çerezi temizle
-  res.json({ message: "Çıkış yapıldı" });
 });
 
 app.listen(port, () => {

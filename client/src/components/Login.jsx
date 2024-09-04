@@ -150,11 +150,12 @@ function Login({ setIsAuthenticated }) {
     }
 
     try {
-      await axios.post("https://api.hamsterkombattool.site/api/login", {
-        username: username.toLowerCase(),
-        password,
-      });
-      // Giriş başarılı, yönlendirme yapılabilir
+      const response = await axios.post(
+        "https://api.hamsterkombattool.site/api/login",
+        { username: username.toLowerCase(), password }
+      );
+      localStorage.setItem("token", response.data.token);
+      setIsAuthenticated(true);
       navigate("/dashboard");
     } catch (error) {
       setError(t("login_error"));
