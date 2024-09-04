@@ -632,7 +632,7 @@ app.get("/api/card-levels/:cardId/:level", async (req, res) => {
   try {
     const result = await pool.query(
       "SELECT base_cost, base_hourly_earnings FROM card_levels WHERE card_id = $1 AND level = $2",
-      [cardId, parseInt(level)]
+      [cardId, parseInt(level) + 1]
     );
 
     if (result.rows.length > 0) {
