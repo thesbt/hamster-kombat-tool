@@ -626,20 +626,18 @@ app.delete("/api/user-cards/:id", authenticateToken, async (req, res) => {
   }
 });
 
-app.get("/api/card-levels/:cardId/:level", async (req, res) => {
-  const { cardId, level } = req.params;
+app.get("/api/card-levels/:cardId", async (req, res) => {
+  // level parametresini kaldırdık
+  const { cardId } = req.params;
 
   try {
     const result = await pool.query(
-      "SELECT base_cost, base_hourly_earnings FROM card_levels WHERE card_id = $1 AND level = $2",
-      [cardId, parseInt(level) + 1]
+      "SELECT level, base_cost, base_hourly_earnings FROM card_levels WHERE card_id = $1",
+      [cardId]
     );
 
     if (result.rows.length > 0) {
-      return res.json({
-        base_cost: result.rows[0].base_cost,
-        base_hourly_earnings: result.rows[0].base_hourly_earnings,
-      });
+      return res.json(result.rows); // Tüm seviyeleri döndür
     } else {
       return res.status(404).json({ error: "Values not found" });
     }
