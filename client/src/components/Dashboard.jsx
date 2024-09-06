@@ -950,13 +950,12 @@ function Dashboard({ setIsAuthenticated }) {
         <div className="search-container">
           <input
             type="text"
-            onClick={() =>
-              window.scrollTo({
-                top: document.querySelector(".your-cards-header-area")
-                  .offsetTop,
-                behavior: "smooth",
-              })
-            }
+            onClick={() => {
+              const element = document.querySelector(".your-cards-header-area");
+              if (element) {
+                element.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
             placeholder={t("search_cards")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -1174,7 +1173,11 @@ function Dashboard({ setIsAuthenticated }) {
         </>
       )}
       <footer className="footer">
-        <p>&copy; 2024 Hamster Kombat Tool</p>
+        <p>&copy; 2024 Hamster Kombat Tool.</p>
+        <p>
+          This project is not officially affiliated with the Hamster Kombat
+          Telegram MiniApp.
+        </p>
       </footer>
       <button
         className={`scroll-to-top ${showScrollToTop ? "show" : ""}`}
