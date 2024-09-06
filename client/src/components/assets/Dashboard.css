@@ -14,6 +14,7 @@ body {
   color: var(--text-color);
   animation: fadeIn 0.3s ease;
   user-select: none;
+  min-width: 320px;
 }
 
 img,
@@ -1345,6 +1346,9 @@ button:disabled .button-spinner {
 
   .modal-buttons .cancel-button {
     font-size: 0.7em;
+  }
+  .tooltip-bottom {
+    width: 97vw;
   }
 }
 
