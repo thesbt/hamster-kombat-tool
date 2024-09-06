@@ -123,5 +123,7 @@
   "admin_card_delete_success": "Card successfully deleted from database and user cards.",
   "admin_card_delete_error": "Failed to delete card.",
   "manual_input_warning": "The data for the selected card is still being populated. Please enter values manually.",
-  "getting_card_data": "Getting card details..."
+  "getting_card_data": "Getting card details...",
+  "your_cards_info": "In this section, you will find the default cards that are unlocked and upgradable when you first start the game on Telegram. You can add the cards you unlock later to your existing collection using the list in the Add New Card section above.",
+  "your_cards_info_details": "To edit your existing cards, simply click on the card you want to modify."
 }

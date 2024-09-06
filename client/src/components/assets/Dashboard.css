@@ -895,9 +895,36 @@ input:checked + .slider:before {
   font-weight: 500;
 }
 
-.your-cards {
+.your-cards-header-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+}
+
+.your-cards h3 {
   margin: 15px 0px;
   font-weight: 500;
+  display: flex; /* Flex kullanarak dikey hizalamayı sağla */
+  align-items: center; /* Dikey hizalama */
+}
+
+.info-icon {
+  width: 1em;
+  height: 1em;
+  color: var(--text-color);
+}
+
+.tooltip-bottom {
+  text-align: center;
+  background-color: var(--card-bg-color);
+  color: var(--text-color);
+  border-radius: 4px; /* Kenar yuvarlama */
+  padding: 30px 15px 30px 15px; /* İç boşluk */
+  font-size: 14px; /* Yazı boyutu */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Gölge efekti */
+  width: 50vw;
+  border: 1px solid var(--card-border-color);
 }
 
 .admin-panel {

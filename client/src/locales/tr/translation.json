@@ -123,5 +123,7 @@
   "admin_card_delete_success": "Kart veritabanından ve kullanıcı kartlarından başarıyla silindi.",
   "admin_card_delete_error": "Kart silinirken hata oluştu.",
   "manual_input_warning": "Seçilen kart ve level için veri bulunamadı. Lütfen değerleri manuel olarak girin.",
-  "getting_card_data": "Kart bilgileri alınıyor..."
+  "getting_card_data": "Kart bilgileri alınıyor...",
+  "your_cards_info": "Bu alanda oyuna ilk başladığınızda varsayılan olarak açık ve yükseltilebilir olan kartlar mevcut. Kilidini daha sonradan açtığınız kartları, yukarıdaki Yeni Kart Ekle alanındaki listeden mevcut kartlarınızın arasına ekleyebilirsiniz.",
+  "your_cards_info_details": "Mevcut kartlarınızı düzenlemek için, düzenlemek istediğiniz kartın üzerine tıklayabilirsiniz."
 }

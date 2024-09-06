@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import axios from "axios";
+import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import { useTheme } from "./ThemeContext";
@@ -29,6 +30,7 @@ import {
   FaGamepad,
   FaArrowUp,
   FaInfoCircle,
+  FaQuestionCircle,
 } from "react-icons/fa";
 
 const translations = {
@@ -915,7 +917,28 @@ function Dashboard({ setIsAuthenticated }) {
           {success}
         </p>
       )}
-      <h3 className="your-cards">{t("your_cards")}</h3>
+      <div className="your-cards-header-area">
+        <OverlayTrigger
+          placement="bottom"
+          overlay={
+            <Tooltip id="tooltip-bottom" className="tooltip-bottom">
+              {t("your_cards_info")}
+              <br />
+              <br />
+              {t("your_cards_info_details")}
+            </Tooltip>
+          }
+        >
+          <div className="info-icon-container">
+            <FaQuestionCircle className="info-icon" />
+          </div>
+        </OverlayTrigger>
+        <div className="your-cards">
+          <h3>
+            {t("your_cards")} ({userCards.length})
+          </h3>
+        </div>
+      </div>
       <div className="search-and-sort-container">
         <div className="search-container">
           <input
