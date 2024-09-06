@@ -33,7 +33,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["https://hamsterkombattool.site", "http://localhost:3000"], // remove localhost later
+    origin: ["https://hamsterkombattool.site", "http://localhost:3000", "http://192.168.1.20:3000"], // remove localhost later
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
