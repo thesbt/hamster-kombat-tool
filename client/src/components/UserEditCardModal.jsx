@@ -157,6 +157,7 @@ const UserEditCardModal = ({
               <input
                 id="editLevel"
                 required
+                autoFocus
                 type="number"
                 inputMode="numeric"
                 min="1"

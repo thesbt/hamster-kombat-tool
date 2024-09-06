@@ -833,6 +833,9 @@ function Dashboard({ setIsAuthenticated }) {
           <select
             required
             value={selectedCard}
+            onClick={() =>
+              window.scrollTo(0, document.querySelector(".add-card").offsetTop)
+            }
             onChange={(e) => {
               setSelectedCard(e.target.value);
               setShowCostInput(false); // Kart seçildiğinde cost ve pph inputlarını gizle
@@ -943,6 +946,12 @@ function Dashboard({ setIsAuthenticated }) {
         <div className="search-container">
           <input
             type="text"
+            onClick={() =>
+              window.scrollTo(
+                0,
+                document.querySelector(".your-cards-header-area").offsetTop
+              )
+            }
             placeholder={t("search_cards")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
