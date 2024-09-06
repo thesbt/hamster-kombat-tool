@@ -950,15 +950,21 @@ function Dashboard({ setIsAuthenticated }) {
         <div className="search-container">
           <input
             type="text"
-            onClick={() => {
+            onFocus={() => {
               const element = document.querySelector(".your-cards-header-area");
               if (element) {
                 element.scrollIntoView({ behavior: "smooth" });
               }
             }}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              const element = document.querySelector(".your-cards-header-area");
+              if (element) {
+                element.scrollIntoView({ behavior: "smooth" }); // Arama terimi değiştiğinde kaydırma eklendi
+              }
+            }}
             placeholder={t("search_cards")}
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
           {searchTerm ? (
