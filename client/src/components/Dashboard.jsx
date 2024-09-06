@@ -833,8 +833,12 @@ function Dashboard({ setIsAuthenticated }) {
           <select
             required
             value={selectedCard}
-            onClick={() =>
-              window.scrollTo(0, document.querySelector(".add-card").offsetTop)
+            onClick={
+              () =>
+                window.scrollTo({
+                  top: document.querySelector(".add-card").offsetTop,
+                  behavior: "smooth",
+                }) // 'smooth' davranışı eklendi
             }
             onChange={(e) => {
               setSelectedCard(e.target.value);
@@ -947,10 +951,11 @@ function Dashboard({ setIsAuthenticated }) {
           <input
             type="text"
             onClick={() =>
-              window.scrollTo(
-                0,
-                document.querySelector(".your-cards-header-area").offsetTop
-              )
+              window.scrollTo({
+                top: document.querySelector(".your-cards-header-area")
+                  .offsetTop,
+                behavior: "smooth",
+              })
             }
             placeholder={t("search_cards")}
             value={searchTerm}
