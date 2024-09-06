@@ -122,5 +122,6 @@
   "admin_card_add_error": "Kart eklenirken hata oluştu. Lütfen tekrar deneyin.",
   "admin_card_delete_success": "Kart veritabanından ve kullanıcı kartlarından başarıyla silindi.",
   "admin_card_delete_error": "Kart silinirken hata oluştu.",
-  "manual_input_warning": "Seçilen kart için veriler toplanıyor. Lütfen değerleri manuel olarak girin."
+  "manual_input_warning": "Seçilen kart ve level için veri bulunamadı. Lütfen değerleri manuel olarak girin.",
+  "getting_card_data": "Kart bilgileri alınıyor..."
 }

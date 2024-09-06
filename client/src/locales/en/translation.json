@@ -122,5 +122,6 @@
   "admin_card_add_error": "Failed to add card. Please try again.",
   "admin_card_delete_success": "Card successfully deleted from database and user cards.",
   "admin_card_delete_error": "Failed to delete card.",
-  "manual_input_warning": "The data for the selected card is still being populated. Please enter values manually."
+  "manual_input_warning": "The data for the selected card is still being populated. Please enter values manually.",
+  "getting_card_data": "Getting card details..."
 }

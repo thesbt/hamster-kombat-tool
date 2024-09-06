@@ -593,7 +593,7 @@ function Dashboard({ setIsAuthenticated }) {
     if (number < 1000) {
       return number.toString();
     }
-    const suffixes = ["", "K", "M", "B", "T"];
+    const suffixes = ["", "K", "M", "B", "T", "Q"];
     const suffixNum = Math.floor(Math.log10(number) / 3);
     const shortValue = (number / Math.pow(1000, suffixNum)).toFixed(2);
     return shortValue.replace(/\.00$/, "") + suffixes[suffixNum];
@@ -604,7 +604,7 @@ function Dashboard({ setIsAuthenticated }) {
     if (ratio < 1000) {
       return ratio.toFixed(1).replace(/\.0$/, "");
     }
-    const suffixes = ["", "K", "M", "B", "T"];
+    const suffixes = ["", "K", "M", "B", "T", "Q"];
     const suffixNum = Math.floor(Math.log10(ratio) / 3);
     const shortValue = (ratio / Math.pow(1000, suffixNum)).toFixed(1);
     return shortValue.replace(/\.0$/, "") + suffixes[suffixNum];
@@ -858,6 +858,10 @@ function Dashboard({ setIsAuthenticated }) {
                 setLevel(value);
               }
             }}
+            disabled={selectedCard === ""} // Kart seçilmediğinde inputu devre dışı bırak
+            style={{
+              cursor: selectedCard === "" ? "not-allowed" : "text", // Devre dışı olduğunda imleci değiştir
+            }}
           />
           {showCostInput && (
             <input
@@ -893,7 +897,9 @@ function Dashboard({ setIsAuthenticated }) {
         {showCostInput && (
           <div className="manual-input-warning-area">
             <FaInfoCircle />
-            <p className="manual-input-warning" style={{ marginLeft: '10px' }}>{t("manual_input_warning")}</p>
+            <p className="manual-input-warning" style={{ marginLeft: "10px" }}>
+              {t("manual_input_warning")}
+            </p>
           </div>
         )}
       </div>
