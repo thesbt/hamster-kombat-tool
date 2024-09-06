@@ -211,10 +211,7 @@ const UserEditCardModal = ({
                 {showCostInput && (
                   <div className="manual-input-warning-area">
                     <FaInfoCircle />
-                    <p
-                      className="manual-input-warning"
-                      style={{ marginLeft: "10px" }}
-                    >
+                    <p className="manual-input-warning">
                       {t("manual_input_warning")}
                     </p>
                   </div>

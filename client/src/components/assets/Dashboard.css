@@ -1279,9 +1279,14 @@ button:disabled .button-spinner {
     font-size: 1em;
   }
 
+  .modal-card {
+    padding: 0;
+  }
+
   .modal-card .card-header {
     margin-bottom: 15px;
     margin-top: 10px;
+    padding: 0;
   }
 
   .modal-card .card-image {
@@ -1320,6 +1325,22 @@ button:disabled .button-spinner {
   .modal-card .checkbox-group input[type="checkbox"] {
     accent-color: var(--primary-color);
     transform: scale(0.5);
+  }
+
+  .edit-modal .manual-input-warning {
+    font-size: 0.7em;
+  }
+
+  .edit-modal .manual-input-warning-area {
+    margin-top: 10px;
+  }
+
+  .modal-buttons .confirm-button {
+    font-size: 0.7em;
+  }
+
+  .modal-buttons .cancel-button {
+    font-size: 0.7em;
   }
 }
 
@@ -1414,7 +1435,6 @@ button:disabled .button-spinner {
   width: 100%;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
   text-align: center;
 }
 
