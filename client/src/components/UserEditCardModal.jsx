@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Modal from "react-modal";
-import { FaSpinner, FaCheck, FaTimes } from "react-icons/fa";
+import { FaSpinner, FaCheck, FaTimes, FaInfoCircle } from "react-icons/fa";
 import axios from "axios"; // Axios kütüphanesini ekledik
 
 const UserEditCardModal = ({
@@ -192,6 +192,17 @@ const UserEditCardModal = ({
               disabled={isEditPphDisabled}
             />
           </div>
+          {showCostInput && (
+            <div className="manual-input-warning-area">
+              <FaInfoCircle />
+              <p
+                className="manual-input-warning"
+                style={{ marginLeft: "10px" }}
+              >
+                {t("manual_input_warning")}
+              </p>
+            </div>
+          )}
           <div className="modal-buttons">
             <button
               className="confirm-button"

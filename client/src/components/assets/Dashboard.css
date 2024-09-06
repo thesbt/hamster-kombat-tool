@@ -1202,6 +1202,18 @@ button:disabled .button-spinner {
   }
 }
 
+@media (max-width: 768px) {
+  .manual-input-warning-area {
+    flex-direction: column;
+  }
+
+  .manual-input-warning-area svg {
+    margin-right: 0;
+    margin-bottom: 5px;
+    
+  }
+}
+
 @media (max-width: 560px) {
   .sort-select {
     font-size: 14px;
@@ -1341,6 +1353,42 @@ button:disabled .button-spinner {
   );
   color: white;
   transition: all 0.3s ease;
+}
+
+.manual-input-warning-area {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.edit-modal .manual-input-warning-area {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.manual-input-warning-area svg {
+  flex-shrink: 0;
+  margin-right: 10px;
+  color: var(--primary-color);
+}
+
+.edit-modal .manual-input-warning-area svg {
+  flex-shrink: 0;
+  margin-bottom: 10px;
+  color: var(--primary-color);
+}
+
+.manual-input-warning {
+  color: var(--primary-color);
+  font-weight: 600;
 }
 
 .admin-button-area {

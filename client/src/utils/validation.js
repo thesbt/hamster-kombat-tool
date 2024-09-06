@@ -26,7 +26,7 @@ export const validateInput = (
     return true; // Validation geçerli
   }
 
-  if (!/^\d+$/.test(currentCost) || currentCost.length > 17) {
+  if (!/^\d+$/.test(currentCost) || currentCost.length > 20) {
     setError(getErrorMessage("current_cost_validate_error", language));
     return false;
   }
@@ -63,7 +63,7 @@ export const validateEditInput = (
     return true; // Validation geçerli
   }
 
-  if (!/^\d+$/.test(editCost) || editCost.length > 13) {
+  if (!/^\d+$/.test(editCost) || editCost.length > 20) {
     setEditError(getErrorMessage("current_cost_validate_error", language));
     return false;
   }

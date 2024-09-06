@@ -538,7 +538,7 @@ app.post("/api/user-cards", authenticateToken, async (req, res) => {
     if (level <= 0 || level > 999) {
       return res.status(400).json({ error: "Invalid Level" });
     }
-    if (current_cost <= 0 || current_cost > 9999999999999) {
+    if (current_cost <= 0 || current_cost > 9999999999999999) {
       return res.status(400).json({ error: "Invalid Cost" });
     }
     if (current_hourly_earnings <= 0 || current_hourly_earnings > 9999999999) {
@@ -569,7 +569,7 @@ app.put("/api/user-cards/:id", authenticateToken, async (req, res) => {
   if (level <= 0 || level > 999) {
     return res.status(400).json({ error: "Invalid Level" });
   }
-  if (current_cost <= 0 || current_cost > 9999999999999) {
+  if (current_cost <= 0 || current_cost > 9999999999999999) {
     return res.status(400).json({ error: "Invalid Cost" });
   }
   if (current_hourly_earnings <= 0 || current_hourly_earnings > 9999999999) {
@@ -642,27 +642,6 @@ app.get("/api/card-levels/:cardId", async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ error: "An error occurred" });
-  }
-});
-
-app.put("/api/card-levels/:cardId", async (req, res) => {
-  const { cardId } = req.params;
-  const { base_cost, base_hourly_earnings } = req.body;
-
-  try {
-    const result = await pool.query(
-      "UPDATE card_levels SET base_cost = $1, base_hourly_earnings = $2 WHERE card_id = $3 RETURNING *",
-      [base_cost, base_hourly_earnings, cardId]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Card level not found" });
-    }
-    res.json(result.rows[0]);
-  } catch (err) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while updating the card level" });
   }
 });
 

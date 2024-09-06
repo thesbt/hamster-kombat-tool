@@ -28,6 +28,7 @@ import {
   FaCog,
   FaGamepad,
   FaArrowUp,
+  FaInfoCircle,
 } from "react-icons/fa";
 
 const translations = {
@@ -862,7 +863,7 @@ function Dashboard({ setIsAuthenticated }) {
             <input
               required
               type="text"
-              maxLength="17"
+              maxLength="20"
               placeholder={t("cost_to_next_level")}
               inputMode="numeric"
               value={formattedCurrentCost}
@@ -889,6 +890,12 @@ function Dashboard({ setIsAuthenticated }) {
             {addingCard ? t("adding_card") : t("add_card")}
           </button>
         </form>
+        {showCostInput && (
+          <div className="manual-input-warning-area">
+            <FaInfoCircle />
+            <p className="manual-input-warning" style={{ marginLeft: '10px' }}>{t("manual_input_warning")}</p>
+          </div>
+        )}
       </div>
       {error && (
         <p className={`message ${!showMessage ? "hidden" : ""} error-message`}>
