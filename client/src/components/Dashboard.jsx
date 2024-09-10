@@ -1179,7 +1179,7 @@ function Dashboard({ setIsAuthenticated }) {
         </>
       )}
       <footer className="footer">
-        <p>&copy; 2024 Hamster Kombat Tool.</p>
+        <p>&copy; 2024 Hamster Kombat Tool. Askosumu seviyom.</p>
         <p>
           This project is not officially affiliated with the Hamster Kombat
           Telegram MiniApp.
