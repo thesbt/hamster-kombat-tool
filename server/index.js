@@ -16,17 +16,20 @@ const DEFAULT_IMAGE_URL =
 
 //FOR TESTING
 
-/*
+
 const limiter = rateLimit({
   windowMs: 1,
   max: Infinity,
 });
-*/
 
+
+/*
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 200,
+  max: 2000,
 });
+
+*/
 
 app.use(limiter);
 app.use(express.json());
