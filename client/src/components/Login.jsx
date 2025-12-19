@@ -69,7 +69,7 @@ function Login({ setIsAuthenticated }) {
 
     try {
       await axios.post(
-        "https://hamster-kombat-tool-server-git-master-thesbts-projects.vercel.app/api/forgot-password",
+        "https://hamster-kombat-tool-server.vercel.app/api/forgot-password",
         { email }
       );
       setResetSuccess(t("reset_email_sent"));
@@ -151,7 +151,7 @@ function Login({ setIsAuthenticated }) {
 
     try {
       const response = await axios.post(
-        "https://hamster-kombat-tool-server-git-master-thesbts-projects.vercel.app/api/login",
+        "https://hamster-kombat-tool-server.vercel.app/api/login",
         { username: username.toLowerCase(), password }
       );
       localStorage.setItem("token", response.data.token);

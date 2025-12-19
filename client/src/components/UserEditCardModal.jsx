@@ -37,7 +37,7 @@ const UserEditCardModal = ({
       setIsLoading(true);
       try {
         const response = await axios.get(
-          `https://hamster-kombat-tool-front.vercel.app/api/card-levels/${cardToEdit}`
+          `https://hamster-kombat-tool-server.vercel.app/api/card-levels/${cardToEdit}`
         );
         if (response.data.length > 0) {
           setCardLevels(response.data);
